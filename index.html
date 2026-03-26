@@ -3,133 +3,310 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Librería Central - Recetas Médicas Personalizadas</title>
+    <title>Librería Central - Recetas Médicas Profesionales</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Roboto', sans-serif; }
         .gradient-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .template-card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
+        .template-card { transition: all 0.3s ease; }
+        .template-card:hover { transform: translateY(-8px); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
         .editor-panel { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); }
-        .preview-canvas { background-image: radial-gradient(#ddd 1px, transparent 1px); background-size: 20px 20px; }
+        .preview-canvas { background-image: radial-gradient(#d1d5db 1px, transparent 1px); background-size: 24px 24px; }
         .color-picker::-webkit-color-swatch-wrapper { padding: 0; }
-        .color-picker::-webkit-color-swatch { border: none; border-radius: 4px; }
+        .color-picker::-webkit-color-swatch { border: none; border-radius: 6px; }
+        .btn-animate:active { transform: scale(0.95); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade { animation: fadeIn 0.5s ease; }
     </style>
 </head>
 <body class="bg-gray-50">
 
     <!-- Header -->
-    <header class="gradient-header text-white shadow-xl sticky top-0 z-50">
+    <header class="gradient-header text-white shadow-2xl sticky top-0 z-50">
         <div class="container mx-auto px-4 py-4">
             <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="mb-3 md:mb-0">
-                    <h1 class="text-3xl font-bold">🏥 Librería Central</h1>
-                    <p class="text-sm opacity-90">Recetas Médicas Personalizadas - Puerto Montt</p>
+                <div class="mb-3 md:mb-0 text-center md:text-left">
+                    <h1 class="text-3xl md:text-4xl font-black tracking-tight">🏥 Librería Central</h1>
+                    <p class="text-sm opacity-95 mt-1">Recetas Médicas Profesionales - Puerto Montt</p>
                 </div>
-                <div class="text-sm bg-white/20 p-3 rounded-lg">
-                    <p>📍 Urmeneta #300, Galería Caracol Local 15</p>
+                <div class="text-sm text-center md:text-right bg-white/20 p-3 rounded-xl backdrop-blur-sm">
+                    <p class="font-semibold">📍 Urmeneta #300, Galería Caracol Local 15</p>
                     <p>📱 +569 78 47 2489</p>
+                    <p>📧 fta.tecno@gmail.com</p>
                 </div>
             </div>
         </div>
     </header>
 
     <!-- Hero Section -->
-    <section class="py-12 bg-white">
+    <section class="py-16 bg-white">
         <div class="container mx-auto px-4 text-center">
-            <h2 class="text-4xl font-bold text-gray-800 mb-4">
-                📋 Diseña tu Receta Médica Profesional
+            <h2 class="text-4xl md:text-5xl font-black text-gray-800 mb-4">
+                 Diseña tu Receta Médica <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">Profesional</span>
             </h2>
-            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                Elige entre nuestras plantillas profesionales, personaliza con tus datos 
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto mb-8">
+                Elige entre <strong>9 plantillas profesionales</strong>, personaliza colores y datos, 
                 y recibe tus recetas impresas en Puerto Montt.
             </p>
+            <div class="flex flex-wrap justify-center gap-4 text-sm">
+                <div class="bg-blue-100 text-blue-800 px-4 py-2 rounded-full">✅ 9 Diseños Profesionales</div>
+                <div class="bg-green-100 text-green-800 px-4 py-2 rounded-full">✅ Personalización Total</div>
+                <div class="bg-purple-100 text-purple-800 px-4 py-2 rounded-full">✅ Desde $9.990</div>
+            </div>
         </div>
     </section>
 
     <!-- Templates Gallery -->
     <section class="py-12 bg-gray-100">
         <div class="container mx-auto px-4">
-            <h3 class="text-2xl font-bold text-center mb-8">🎨 Selecciona una Plantilla</h3>
+            <h3 class="text-3xl font-bold text-center mb-4">🎨 Selecciona tu Plantilla</h3>
+            <p class="text-center text-gray-600 mb-12">9 diseños profesionales para elegir</p>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <!-- Template 1 -->
-                <div class="template-card bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer transition-all" onclick="selectTemplate(1)">
-                    <div class="h-64 bg-gradient-to-br from-blue-50 to-blue-100 p-4 flex items-center justify-center">
-                        <div class="bg-white w-full h-full rounded shadow p-3 text-xs">
-                            <div class="flex justify-between items-center mb-2">
-                                <div class="font-bold text-blue-800">Dr. [Tu Nombre]</div>
-                                <div class="w-10 h-10 rounded-full bg-pink-200 flex items-center justify-center">💜</div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <!-- Template 1: Dental -->
+                <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-green-400" onclick="selectTemplate(1)">
+                    <div class="h-72 bg-gradient-to-br from-green-50 to-emerald-100 p-6 flex items-center justify-center">
+                        <div class="bg-white w-full h-full rounded-xl shadow-lg p-4 text-xs relative overflow-hidden">
+                            <div class="absolute top-0 right-0 w-20 h-20 bg-green-100 rounded-bl-full -mr-4 -mt-4"></div>
+                            <div class="flex justify-between items-center mb-3 relative z-10">
+                                <div>
+                                    <div class="font-black text-green-800 text-lg">Dr. [Nombre]</div>
+                                    <div class="text-green-600">Odontólogo</div>
+                                </div>
+                                <div class="text-4xl">🦷</div>
                             </div>
-                            <div class="space-y-1 text-gray-600">
+                            <div class="space-y-2 mt-4">
                                 <div class="h-2 bg-gray-200 rounded"></div>
                                 <div class="h-2 bg-gray-200 rounded w-3/4"></div>
                             </div>
+                            <div class="mt-6 border-2 border-green-200 rounded-lg p-3">
+                                <div class="h-2 bg-green-100 rounded mb-2"></div>
+                                <div class="h-2 bg-green-100 rounded mb-2"></div>
+                                <div class="h-2 bg-green-100 rounded w-1/2"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h4 class="font-bold text-gray-800 text-lg">1. Plantilla Dental</h4>
+                        <p class="text-sm text-gray-600">Diseño odontológico con ícono de diente</p>
+                        <button class="mt-3 w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 font-semibold btn-animate">Usar Plantilla →</button>
+                    </div>
+                </div>
+
+                <!-- Template 2: Clásica Minimalista -->
+                <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-gray-700" onclick="selectTemplate(2)">
+                    <div class="h-72 bg-gray-100 p-6 flex items-center justify-center">
+                        <div class="bg-white w-full h-full rounded shadow-lg p-4 text-xs border-t-4 border-gray-800">
+                            <div class="text-center border-b-2 border-gray-800 pb-3 mb-3">
+                                <div class="text-2xl mb-1">⚕️</div>
+                                <div class="font-black text-gray-900 text-lg">Dr. [Nombre]</div>
+                                <div class="text-gray-600 text-xs">Medicina General</div>
+                            </div>
+                            <div class="space-y-1 text-gray-500 text-xs">
+                                <div>RUT: XX.XXX.XXX-X</div>
+                                <div>Tel: +569 XXX XXX XXX</div>
+                            </div>
                             <div class="mt-4 space-y-2">
-                                <div class="h-2 bg-blue-100 rounded"></div>
-                                <div class="h-2 bg-blue-100 rounded"></div>
-                                <div class="h-2 bg-blue-100 rounded w-1/2"></div>
-                            </div>
-                            <div class="mt-8 w-20 h-20 rounded-full border-2 border-pink-200 mx-auto flex items-center justify-center text-3xl">👶</div>
-                        </div>
-                    </div>
-                    <div class="p-4">
-                        <h4 class="font-bold text-gray-800">Plantilla Pediátrica</h4>
-                        <p class="text-sm text-gray-600">Diseño tierno con corazones</p>
-                        <button class="mt-2 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">Usar Plantilla</button>
-                    </div>
-                </div>
-
-                <!-- Template 2 -->
-                <div class="template-card bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer transition-all" onclick="selectTemplate(2)">
-                    <div class="h-64 bg-gradient-to-br from-green-50 to-green-100 p-4 flex items-center justify-center">
-                        <div class="bg-white w-full h-full rounded shadow p-3 text-xs">
-                            <div class="border-b-2 border-green-600 pb-2 mb-2">
-                                <div class="font-bold text-green-800 text-lg">Dr. [Tu Nombre]</div>
-                                <div class="text-gray-600">Medicina General</div>
-                            </div>
-                            <div class="space-y-1">
                                 <div class="h-2 bg-gray-200 rounded"></div>
                                 <div class="h-2 bg-gray-200 rounded"></div>
-                            </div>
-                            <div class="mt-4 border-t border-gray-300 pt-2">
-                                <div class="h-2 bg-green-100 rounded mb-1"></div>
-                                <div class="h-2 bg-green-100 rounded mb-1"></div>
-                                <div class="h-2 bg-green-100 rounded w-2/3"></div>
+                                <div class="h-2 bg-gray-200 rounded w-2/3"></div>
                             </div>
                         </div>
                     </div>
                     <div class="p-4">
-                        <h4 class="font-bold text-gray-800">Plantilla Clásica</h4>
-                        <p class="text-sm text-gray-600">Diseño profesional minimalista</p>
-                        <button class="mt-2 w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700">Usar Plantilla</button>
+                        <h4 class="font-bold text-gray-800 text-lg">2. Clásica Minimalista</h4>
+                        <p class="text-sm text-gray-600">Diseño formal blanco y negro</p>
+                        <button class="mt-3 w-full bg-gray-700 text-white py-2 rounded-lg hover:bg-gray-800 font-semibold btn-animate">Usar Plantilla →</button>
                     </div>
                 </div>
 
-                <!-- Template 3 -->
-                <div class="template-card bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer transition-all" onclick="selectTemplate(3)">
-                    <div class="h-64 bg-gradient-to-br from-purple-50 to-purple-100 p-4 flex items-center justify-center">
-                        <div class="bg-white w-full h-full rounded shadow p-3 text-xs">
-                            <div class="bg-purple-600 text-white p-2 -mt-3 -ml-3 -mr-3 rounded-t">
-                                <div class="font-bold">Dr. [Tu Nombre]</div>
+                <!-- Template 3: Verde Moderna -->
+                <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-green-500" onclick="selectTemplate(3)">
+                    <div class="h-72 bg-gradient-to-br from-green-100 to-teal-100 p-6 flex items-center justify-center">
+                        <div class="bg-white w-full h-full rounded-xl shadow-lg p-4 text-xs relative">
+                            <div class="absolute top-0 left-0 w-full h-2 bg-green-500 rounded-t-xl"></div>
+                            <div class="flex items-center gap-2 mt-2 mb-3">
+                                <div class="text-3xl text-green-600">✚</div>
+                                <div>
+                                    <div class="font-black text-green-800">Dr. [Nombre]</div>
+                                    <div class="text-green-600 text-xs">Especialidad</div>
+                                </div>
+                            </div>
+                            <div class="bg-green-50 rounded-lg p-2 mb-3">
+                                <div class="h-2 bg-green-200 rounded mb-1"></div>
+                                <div class="h-2 bg-green-200 rounded"></div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="h-2 bg-gray-200 rounded"></div>
+                                <div class="h-2 bg-gray-200 rounded"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h4 class="font-bold text-gray-800 text-lg">3. Verde Moderna</h4>
+                        <p class="text-sm text-gray-600">Con cruces médicas y verde</p>
+                        <button class="mt-3 w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 font-semibold btn-animate">Usar Plantilla →</button>
+                    </div>
+                </div>
+
+                <!-- Template 4: Azul Profesional -->
+                <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-blue-600" onclick="selectTemplate(4)">
+                    <div class="h-72 bg-gradient-to-br from-blue-50 to-indigo-100 p-6 flex items-center justify-center">
+                        <div class="bg-white w-full h-full rounded-xl shadow-lg overflow-hidden">
+                            <div class="bg-blue-600 text-white p-3">
+                                <div class="font-black text-lg">Dr. [Nombre]</div>
                                 <div class="text-xs opacity-90">RUT: XX.XXX.XXX-X</div>
                             </div>
-                            <div class="mt-2 space-y-1">
-                                <div class="h-2 bg-purple-100 rounded"></div>
-                                <div class="h-2 bg-purple-100 rounded"></div>
-                            </div>
-                            <div class="mt-4 p-2 bg-purple-50 rounded">
-                                <div class="h-2 bg-purple-200 rounded mb-1"></div>
-                                <div class="h-2 bg-purple-200 rounded"></div>
+                            <div class="p-3 text-xs">
+                                <div class="flex items-center gap-2 mb-2 text-blue-600">
+                                    <span>⚕️</span>
+                                    <span class="font-semibold">Medicina General</span>
+                                </div>
+                                <div class="space-y-1">
+                                    <div class="h-2 bg-blue-100 rounded"></div>
+                                    <div class="h-2 bg-blue-100 rounded w-3/4"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="p-4">
-                        <h4 class="font-bold text-gray-800">Plantilla Moderna</h4>
-                        <p class="text-sm text-gray-600">Diseño contemporáneo con header</p>
-                        <button class="mt-2 w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700">Usar Plantilla</button>
+                        <h4 class="font-bold text-gray-800 text-lg">4. Azul Profesional</h4>
+                        <p class="text-sm text-gray-600">Header azul formal</p>
+                        <button class="mt-3 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 font-semibold btn-animate">Usar Plantilla →</button>
                     </div>
                 </div>
+
+                <!-- Template 5: Veterinaria -->
+                <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-purple-500" onclick="selectTemplate(5)">
+                    <div class="h-72 bg-gradient-to-br from-purple-50 to-pink-100 p-6 flex items-center justify-center">
+                        <div class="bg-white w-full h-full rounded-xl shadow-lg p-4 text-xs">
+                            <div class="flex justify-between items-center mb-3">
+                                <div class="font-black text-purple-800 text-lg">Dr. [Nombre]</div>
+                                <div class="text-3xl">🐾</div>
+                            </div>
+                            <div class="bg-purple-100 rounded-lg p-2 mb-3">
+                                <div class="text-purple-800 font-semibold text-xs">Veterinario</div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="h-2 bg-purple-100 rounded"></div>
+                                <div class="h-2 bg-purple-100 rounded"></div>
+                                <div class="h-2 bg-purple-100 rounded w-1/2"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h4 class="font-bold text-gray-800 text-lg">5. Veterinaria</h4>
+                        <p class="text-sm text-gray-600">Colores púrpura, mascotas</p>
+                        <button class="mt-3 w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 font-semibold btn-animate">Usar Plantilla →</button>
+                    </div>
+                </div>
+
+                <!-- Template 6: Barra Lateral -->
+                <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-red-500" onclick="selectTemplate(6)">
+                    <div class="h-72 bg-gray-100 p-6 flex items-center justify-center">
+                        <div class="bg-white w-full h-full rounded-xl shadow-lg flex overflow-hidden">
+                            <div class="w-16 bg-red-600 flex items-center justify-center">
+                                <div class="text-white text-2xl">⚕️</div>
+                            </div>
+                            <div class="flex-1 p-3">
+                                <div class="font-black text-red-800 mb-1">Dr. [Nombre]</div>
+                                <div class="text-xs text-gray-600 mb-2">Especialidad</div>
+                                <div class="space-y-1">
+                                    <div class="h-2 bg-gray-200 rounded"></div>
+                                    <div class="h-2 bg-gray-200 rounded w-3/4"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h4 class="font-bold text-gray-800 text-lg">6. Barra Lateral</h4>
+                        <p class="text-sm text-gray-600">Sidebar vertical de color</p>
+                        <button class="mt-3 w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 font-semibold btn-animate">Usar Plantilla →</button>
+                    </div>
+                </div>
+
+                <!-- Template 7: Moderna Formas -->
+                <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-pink-500" onclick="selectTemplate(7)">
+                    <div class="h-72 bg-gradient-to-br from-pink-50 to-rose-100 p-6 flex items-center justify-center">
+                        <div class="bg-white w-full h-full rounded-3xl shadow-lg p-4 text-xs relative overflow-hidden">
+                            <div class="absolute -top-8 -right-8 w-32 h-32 bg-pink-200 rounded-full opacity-50"></div>
+                            <div class="absolute -bottom-8 -left-8 w-24 h-24 bg-rose-200 rounded-full opacity-50"></div>
+                            <div class="relative z-10">
+                                <div class="font-black text-pink-800 text-lg mb-2">Dr. [Nombre]</div>
+                                <div class="bg-gradient-to-r from-pink-100 to-rose-100 rounded-2xl p-2 mb-3">
+                                    <div class="h-2 bg-pink-300 rounded mb-1"></div>
+                                    <div class="h-2 bg-pink-300 rounded w-2/3"></div>
+                                </div>
+                                <div class="space-y-1">
+                                    <div class="h-2 bg-gray-200 rounded"></div>
+                                    <div class="h-2 bg-gray-200 rounded"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h4 class="font-bold text-gray-800 text-lg">7. Moderna Formas</h4>
+                        <p class="text-sm text-gray-600">Formas orgánicas, colores pastel</p>
+                        <button class="mt-3 w-full bg-pink-500 text-white py-2 rounded-lg hover:bg-pink-600 font-semibold btn-animate">Usar Plantilla →</button>
+                    </div>
+                </div>
+
+                <!-- Template 8: Optometría -->
+                <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-cyan-500" onclick="selectTemplate(8)">
+                    <div class="h-72 bg-gradient-to-br from-cyan-50 to-blue-100 p-6 flex items-center justify-center">
+                        <div class="bg-white w-full h-full rounded-xl shadow-lg p-4 text-xs">
+                            <div class="flex items-center gap-2 mb-3 border-b-2 border-cyan-600 pb-2">
+                                <div class="text-2xl">👁️</div>
+                                <div>
+                                    <div class="font-black text-cyan-800">Dr. [Nombre]</div>
+                                    <div class="text-cyan-600 text-xs">Optometrista</div>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div class="border border-cyan-200 rounded p-1">
+                                    <div class="h-2 bg-cyan-100 rounded mb-1"></div>
+                                    <div class="h-2 bg-cyan-100 rounded"></div>
+                                </div>
+                                <div class="border border-cyan-200 rounded p-1">
+                                    <div class="h-2 bg-cyan-100 rounded mb-1"></div>
+                                    <div class="h-2 bg-cyan-100 rounded"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h4 class="font-bold text-gray-800 text-lg">8. Optometría</h4>
+                        <p class="text-sm text-gray-600">Tabla para graduación visual</p>
+                        <button class="mt-3 w-full bg-cyan-600 text-white py-2 rounded-lg hover:bg-cyan-700 font-semibold btn-animate">Usar Plantilla →</button>
+                    </div>
+                </div>
+
+                <!-- Template 9: Header Colorido -->
+                <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-yellow-500" onclick="selectTemplate(9)">
+                    <div class="h-72 bg-gradient-to-br from-yellow-50 to-orange-100 p-6 flex items-center justify-center">
+                        <div class="bg-white w-full h-full rounded-xl shadow-lg overflow-hidden">
+                            <div class="h-16 bg-gradient-to-r from-yellow-400 via-pink-400 to-purple-400 p-3 flex items-center justify-between">
+                                <div class="text-white font-black">Dr. [Nombre]</div>
+                                <div class="text-white text-2xl">⚕️</div>
+                            </div>
+                            <div class="p-3 text-xs">
+                                <div class="space-y-2">
+                                    <div class="h-2 bg-gradient-to-r from-yellow-100 to-pink-100 rounded"></div>
+                                    <div class="h-2 bg-gradient-to-r from-pink-100 to-purple-100 rounded"></div>
+                                    <div class="h-2 bg-gradient-to-r from-purple-100 to-yellow-100 rounded w-3/4"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h4 class="font-bold text-gray-800 text-lg">9. Header Colorido</h4>
+                        <p class="text-sm text-gray-600">Múltiples colores pastel</p>
+                        <button class="mt-3 w-full bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-500 text-white py-2 rounded-lg hover:opacity-90 font-semibold btn-animate">Usar Plantilla →</button>
+                    </div>
+                </div>
+
             </div>
         </div>
     </section>
@@ -137,86 +314,106 @@
     <!-- Editor Section -->
     <section id="editor" class="py-12 bg-white hidden">
         <div class="container mx-auto px-4">
-            <h3 class="text-2xl font-bold text-center mb-8">✏️ Personaliza tu Receta</h3>
+            <div class="text-center mb-8">
+                <h3 class="text-3xl font-bold mb-2">✏️ Personaliza tu Receta</h3>
+                <p class="text-gray-600">Modifica todos los elementos a tu gusto</p>
+            </div>
             
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 <!-- Editor Controls -->
-                <div class="editor-panel rounded-xl p-6 space-y-4">
-                    <h4 class="font-bold text-lg text-gray-800">📝 Datos del Profesional</h4>
+                <div class="lg:col-span-4 editor-panel rounded-2xl p-6 shadow-xl space-y-4 max-h-[900px] overflow-y-auto">
+                    <h4 class="font-bold text-xl text-gray-800 border-b-2 border-gray-300 pb-2">📝 Datos del Profesional</h4>
                     
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Nombre Completo</label>
-                        <input type="text" id="doctorName" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Dr. Juan Pérez">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Nombre Completo *</label>
+                        <input type="text" id="doctorName" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" placeholder="Dr. Juan Pérez">
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Especialidad</label>
-                        <input type="text" id="specialty" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Medicina General">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Especialidad</label>
+                        <input type="text" id="specialty" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" placeholder="Medicina General">
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">RUT</label>
-                        <input type="text" id="rut" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="12.345.678-9">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">RUT</label>
+                        <input type="text" id="rut" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" placeholder="12.345.678-9">
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
-                        <input type="text" id="phone" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="+569 123 456 78">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Teléfono</label>
+                        <input type="text" id="phone" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" placeholder="+569 123 456 78">
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Dirección</label>
-                        <input type="text" id="address" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Av. Principal 123">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Dirección / Email</label>
+                        <input type="text" id="address" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" placeholder="Av. Principal 123">
                     </div>
 
-                    <h4 class="font-bold text-lg text-gray-800 pt-4">🎨 Personalización</h4>
+                    <h4 class="font-bold text-xl text-gray-800 border-b-2 border-gray-300 pb-2 pt-4">🎨 Personalización</h4>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Color Principal</label>
-                        <input type="color" id="primaryColor" class="color-picker w-full h-10 cursor-pointer" value="#667eea">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Color Principal</label>
+                        <div class="flex gap-2">
+                            <input type="color" id="primaryColor" class="color-picker w-16 h-12 cursor-pointer rounded-lg border-2 border-gray-300" value="#667eea">
+                            <div class="flex-1 grid grid-cols-5 gap-1">
+                                <button onclick="setColor('#10b981')" class="h-8 bg-green-500 rounded hover:scale-110 transition"></button>
+                                <button onclick="setColor('#3b82f6')" class="h-8 bg-blue-500 rounded hover:scale-110 transition"></button>
+                                <button onclick="setColor('#8b5cf6')" class="h-8 bg-purple-500 rounded hover:scale-110 transition"></button>
+                                <button onclick="setColor('#ec4899')" class="h-8 bg-pink-500 rounded hover:scale-110 transition"></button>
+                                <button onclick="setColor('#f59e0b')" class="h-8 bg-yellow-500 rounded hover:scale-110 transition"></button>
+                            </div>
+                        </div>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de Papel</label>
-                        <select id="paperType" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
-                            <option value="simple">Simple (1 cara)</option>
-                            <option value="duplicado">Duplicado (2 caras)</option>
-                            <option value="triplicado">Triplicado (3 caras)</option>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Tipo de Papel</label>
+                        <select id="paperType" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                            <option value="simple">Simple (1 cara) - $9.990</option>
+                            <option value="duplicado">Duplicado (2 caras) - $14.990</option>
+                            <option value="triplicado">Triplicado (3 caras) - $19.990</option>
                         </select>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Cantidad de Talonarios</label>
-                        <input type="number" id="quantity" min="1" value="1" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Cantidad de Talonarios</label>
+                        <input type="number" id="quantity" min="1" value="1" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
                     </div>
 
-                    <div class="pt-4 border-t">
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="font-bold">Total Estimado:</span>
-                            <span class="text-2xl font-bold text-blue-600" id="totalPrice">$9.990</span>
+                    <div class="pt-4 border-t-2 border-gray-300">
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="font-bold text-lg">Total Estimado:</span>
+                            <span class="text-3xl font-black text-blue-600" id="totalPrice">$9.990</span>
                         </div>
-                        <p class="text-xs text-gray-600">* Precio base por talonario de 100 hojas</p>
+                        <p class="text-xs text-gray-600">* Precio por talonario de 100 hojas tamaño carta</p>
                     </div>
 
-                    <button onclick="orderRecipe()" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg transition">
-                        📱 Pedir por WhatsApp
+                    <button onclick="orderRecipe()" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-4 rounded-xl text-lg shadow-lg hover:shadow-xl transition-all btn-animate flex items-center justify-center gap-2">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                        Pedir por WhatsApp
+                    </button>
+                    
+                    <button onclick="resetEditor()" class="w-full bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 rounded-lg transition btn-animate">
+                        🔄 Reiniciar Formulario
                     </button>
                 </div>
 
                 <!-- Preview -->
-                <div class="lg:col-span-2">
-                    <div class="preview-canvas rounded-xl border-2 border-gray-300 p-8 min-h-[600px] flex items-center justify-center">
-                        <div id="recipePreview" class="bg-white w-full max-w-md shadow-2xl p-6 transition-all" style="min-height: 700px;">
-                            <!-- Dynamic content will be rendered here -->
-                            <div class="text-center text-gray-400">Selecciona una plantilla para comenzar</div>
+                <div class="lg:col-span-8">
+                    <div class="preview-canvas rounded-2xl border-4 border-gray-300 p-8 min-h-[700px] flex items-center justify-center bg-white shadow-inner">
+                        <div id="recipePreview" class="bg-white w-full max-w-lg shadow-2xl transition-all animate-fade" style="min-height: 800px;">
+                            <div class="text-center text-gray-400 py-20">
+                                <div class="text-6xl mb-4">🎨</div>
+                                <p class="text-lg font-semibold">Selecciona una plantilla para comenzar</p>
+                                <p class="text-sm mt-2">Haz clic en cualquiera de las 9 plantillas de arriba</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="mt-4 flex gap-2 justify-center">
-                        <button onclick="downloadPreview()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-                            📥 Descargar Vista Previa
+                    <div class="mt-4 flex gap-3 justify-center">
+                        <button onclick="downloadPreview()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition btn-animate shadow-lg">
+                            📥 Descargar Vista Previa (PDF)
                         </button>
-                        <button onclick="resetEditor()" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">
-                            🔄 Reiniciar
+                        <button onclick="document.getElementById('editor').scrollIntoView({behavior: 'smooth'})" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold transition btn-animate">
+                            ⬆️ Volver al Editor
                         </button>
                     </div>
                 </div>
@@ -225,146 +422,415 @@
     </section>
 
     <!-- Features -->
-    <section class="py-12 bg-gradient-to-r from-blue-50 to-purple-50">
+    <section class="py-16 bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50">
         <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
-                <div class="bg-white p-6 rounded-xl shadow">
-                    <div class="text-4xl mb-2">🎨</div>
-                    <h4 class="font-bold">Diseño Personalizado</h4>
-                    <p class="text-sm text-gray-600">Colores, logos y textos a tu gusto</p>
+            <h3 class="text-3xl font-bold text-center mb-12">¿Por qué elegirnos?</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-2xl shadow-lg text-center hover:shadow-xl transition">
+                    <div class="text-5xl mb-3">🎨</div>
+                    <h4 class="font-bold text-lg mb-2">9 Diseños Profesionales</h4>
+                    <p class="text-gray-600 text-sm">Plantillas para todas las especialidades médicas</p>
                 </div>
-                <div class="bg-white p-6 rounded-xl shadow">
-                    <div class="text-4xl mb-2">⚡</div>
-                    <h4 class="font-bold">Entrega Rápida</h4>
-                    <p class="text-sm text-gray-600">24-48 horas en Puerto Montt</p>
+                <div class="bg-white p-6 rounded-2xl shadow-lg text-center hover:shadow-xl transition">
+                    <div class="text-5xl mb-3">⚡</div>
+                    <h4 class="font-bold text-lg mb-2">Entrega Rápida</h4>
+                    <p class="text-gray-600 text-sm">24-48 horas en Puerto Montt</p>
                 </div>
-                <div class="bg-white p-6 rounded-xl shadow">
-                    <div class="text-4xl mb-2">💰</div>
-                    <h4 class="font-bold">Mejor Precio</h4>
-                    <p class="text-sm text-gray-600">Desde $9.990 el talonario</p>
+                <div class="bg-white p-6 rounded-2xl shadow-lg text-center hover:shadow-xl transition">
+                    <div class="text-5xl mb-3">💰</div>
+                    <h4 class="font-bold text-lg mb-2">Mejor Precio</h4>
+                    <p class="text-gray-600 text-sm">Desde $9.990 el talonario</p>
                 </div>
-                <div class="bg-white p-6 rounded-xl shadow">
-                    <div class="text-4xl mb-2">✅</div>
-                    <h4 class="font-bold">Calidad Garantizada</h4>
-                    <p class="text-sm text-gray-600">Papel de primera calidad</p>
+                <div class="bg-white p-6 rounded-2xl shadow-lg text-center hover:shadow-xl transition">
+                    <div class="text-5xl mb-3">✅</div>
+                    <h4 class="font-bold text-lg mb-2">Calidad Premium</h4>
+                    <p class="text-gray-600 text-sm">Papel de primera calidad, impresión nítida</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-8">
-        <div class="container mx-auto px-4 text-center">
-            <p class="mb-2">🏥 Librería Central - Puerto Montt</p>
-            <p class="text-sm text-gray-400">Calle Urmeneta #300, Galería Caracol Local 15</p>
-            <p class="text-sm text-gray-400">📱 +569 78 47 2489 | 📧 fta.tecno@gmail.com</p>
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+                <div>
+                    <h4 class="text-2xl font-bold mb-4">🏥 Librería Central</h4>
+                    <p class="text-gray-400 text-sm mb-2">Expertos en recetas médicas y formularios personalizados desde 2010.</p>
+                    <p class="text-gray-400 text-sm">Calidad y profesionalismo garantizado.</p>
+                </div>
+                <div>
+                    <h4 class="text-xl font-bold mb-4">📍 Ubicación</h4>
+                    <p class="text-gray-400 text-sm">Calle Urmeneta #300</p>
+                    <p class="text-gray-400 text-sm">Galería Caracol, Local 15</p>
+                    <p class="text-gray-400 text-sm">Puerto Montt, Chile</p>
+                </div>
+                <div>
+                    <h4 class="text-xl font-bold mb-4">📞 Contacto</h4>
+                    <p class="text-gray-400 text-sm">📱 WhatsApp: +569 78 47 2489</p>
+                    <p class="text-gray-400 text-sm">📧 Email: fta.tecno@gmail.com</p>
+                    <p class="text-gray-400 text-sm">🕐 Lun-Vie: 9:00 - 19:00 hrs</p>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-6 text-center text-sm text-gray-500">
+                <p>© 2024 Librería Central - Puerto Montt. Todos los derechos reservados.</p>
+            </div>
         </div>
     </footer>
 
     <script>
-        let currentTemplate = 1;
+        let currentTemplate = null;
         const prices = { simple: 9990, duplicado: 14990, triplicado: 19990 };
 
         const templates = {
             1: {
-                name: 'Pediátrica',
-                color: '#ec4899',
+                name: 'Dental',
+                color: '#10b981',
                 render: (data) => `
-                    <div class="bg-white p-6 rounded shadow-lg" style="min-height: 700px; border-top: 4px solid ${data.color || '#ec4899'}">
-                        <div class="flex justify-between items-center mb-6">
+                    <div class="bg-white p-8 rounded-xl shadow-2xl" style="min-height: 800px; border-top: 6px solid ${data.color}; position: relative; overflow: hidden;">
+                        <div style="position: absolute; top: -40px; right: -40px; width: 120px; height: 120px; background: ${data.color}20; border-radius: 50%;"></div>
+                        <div class="flex justify-between items-center mb-8 relative z-10">
                             <div>
-                                <h2 class="text-2xl font-bold" style="color: ${data.color || '#ec4899'}">Dr. ${data.doctorName || '[Tu Nombre]'}</h2>
-                                <p class="text-gray-600">${data.specialty || 'Médico Cirujano'}</p>
-                                <p class="text-sm text-gray-500">RUT: ${data.rut || 'XX.XXX.XXX-X'}</p>
+                                <h2 class="text-3xl font-black mb-1" style="color: ${data.color}">Dr. ${data.doctorName || '[Tu Nombre]'}</h2>
+                                <p class="text-lg font-semibold" style="color: ${data.color}80">${data.specialty || 'Odontólogo'}</p>
+                                <p class="text-sm text-gray-500 mt-1">RUT: ${data.rut || 'XX.XXX.XXX-X'}</p>
                             </div>
-                            <div class="w-16 h-16 rounded-full bg-pink-100 flex items-center justify-center text-3xl border-2" style="border-color: ${data.color || '#ec4899'}">👶</div>
+                            <div class="text-6xl">🦷</div>
                         </div>
-                        <div class="space-y-3 text-sm text-gray-600 mb-6">
-                            <p>📞 ${data.phone || '+569 XXX XXX XXX'}</p>
-                            <p>📍 ${data.address || 'Dirección del consultorio'}</p>
+                        <div class="space-y-2 text-sm text-gray-600 mb-8 bg-gray-50 p-4 rounded-lg">
+                            <p><span class="font-semibold">📞</span> ${data.phone || '+569 XXX XXX XXX'}</p>
+                            <p><span class="font-semibold">📧</span> ${data.address || 'email@consulta.cl'}</p>
                         </div>
-                        <div class="border-t-2 pt-4" style="border-color: ${data.color || '#ec4899'}20">
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Nombre del paciente:</label>
-                                    <div class="border-b border-gray-300 h-6"></div>
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Edad:</label>
-                                    <div class="border-b border-gray-300 h-6 w-32"></div>
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Diagnóstico / Receta:</label>
-                                    <div class="border border-gray-300 rounded h-32 p-2"></div>
-                                </div>
+                        <div class="border-4 rounded-xl p-6 mb-8" style="border-color: ${data.color}30">
+                            <div class="mb-4">
+                                <label class="block text-xs font-bold uppercase mb-2" style="color: ${data.color}">Paciente:</label>
+                                <div class="border-b-2 border-gray-300 h-8"></div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-xs font-bold uppercase mb-2" style="color: ${data.color}">Edad:</label>
+                                <div class="border-b-2 border-gray-300 h-8 w-32"></div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase mb-2" style="color: ${data.color}">Receta / Tratamiento:</label>
+                                <div class="border-2 rounded-lg p-3 h-48" style="border-color: ${data.color}30; background: ${data.color}08"></div>
                             </div>
                         </div>
-                        <div class="mt-8 flex justify-between items-end">
-                            <div class="text-xs text-gray-400">Fecha: ___/___/______</div>
-                            <div class="border-t border-gray-400 w-48 text-center text-xs text-gray-500 pt-1">Firma Médico</div>
+                        <div class="flex justify-between items-end mt-12">
+                            <div class="text-sm text-gray-400">Fecha: ___/___/______</div>
+                            <div class="border-t-2 border-gray-400 w-48 text-center text-xs text-gray-500 pt-2">Firma Médico</div>
                         </div>
                     </div>
                 `
             },
             2: {
-                name: 'Clásica',
-                color: '#10b981',
+                name: 'Clásica Minimalista',
+                color: '#1f2937',
                 render: (data) => `
-                    <div class="bg-white p-6 rounded shadow-lg" style="min-height: 700px; border: 2px solid ${data.color || '#10b981'}">
-                        <div class="border-b-2 pb-4 mb-4 text-center" style="border-color: ${data.color || '#10b981'}">
-                            <h2 class="text-3xl font-bold mb-1" style="color: ${data.color || '#10b981'}">Dr. ${data.doctorName || '[Tu Nombre]'}</h2>
-                            <p class="text-lg" style="color: ${data.color || '#10b981'}">${data.specialty || 'Medicina General'}</p>
-                            <p class="text-sm text-gray-600">RUT: ${data.rut || 'XX.XXX.XXX-X'}</p>
+                    <div class="bg-white p-8 rounded shadow-2xl border-t-8 border-gray-800" style="min-height: 800px">
+                        <div class="text-center border-b-4 border-gray-800 pb-6 mb-6">
+                            <div class="text-4xl mb-2">⚕️</div>
+                            <h2 class="text-3xl font-black mb-1 text-gray-900">Dr. ${data.doctorName || '[Tu Nombre]'}</h2>
+                            <p class="text-lg text-gray-600">${data.specialty || 'Medicina General'}</p>
+                            <p class="text-sm text-gray-500 mt-2">RUT: ${data.rut || 'XX.XXX.XXX-X'}</p>
                         </div>
-                        <div class="grid grid-cols-2 gap-4 text-sm text-gray-600 mb-6">
+                        <div class="grid grid-cols-2 gap-4 text-sm text-gray-600 mb-8 bg-gray-50 p-4 rounded">
                             <div>📞 ${data.phone || '+569 XXX XXX XXX'}</div>
-                            <div>📍 ${data.address || 'Dirección'}</div>
+                            <div>📍 ${data.address || 'Dirección del consultorio'}</div>
                         </div>
                         <div class="space-y-6">
                             <div>
-                                <label class="block text-xs font-bold uppercase text-gray-500 mb-2">Paciente:</label>
-                                <div class="border-b-2 border-gray-300 h-8"></div>
+                                <label class="block text-xs font-bold uppercase text-gray-500 mb-2">Nombre del Paciente:</label>
+                                <div class="border-b-2 border-gray-300 h-10"></div>
                             </div>
                             <div>
                                 <label class="block text-xs font-bold uppercase text-gray-500 mb-2">Receta Médica:</label>
-                                <div class="border-2 border-gray-200 rounded h-48 p-3"></div>
+                                <div class="border-2 border-gray-200 rounded-lg h-64 p-4 bg-gray-50"></div>
                             </div>
                         </div>
-                        <div class="mt-12 flex justify-between">
-                            <div class="text-sm">Fecha: ___/___/______</div>
-                            <div class="border-t-2 border-gray-400 w-40 text-center text-xs pt-1">Firma</div>
+                        <div class="mt-16 flex justify-between items-center">
+                            <div class="text-sm text-gray-500">Fecha: ___/___/______</div>
+                            <div class="border-t-2 border-gray-600 w-48 text-center text-xs text-gray-500 pt-2">Firma y Timbre</div>
                         </div>
                     </div>
                 `
             },
             3: {
-                name: 'Moderna',
-                color: '#8b5cf6',
+                name: 'Verde Moderna',
+                color: '#10b981',
                 render: (data) => `
-                    <div class="bg-white rounded shadow-lg overflow-hidden" style="min-height: 700px">
-                        <div class="p-4 text-white" style="background: linear-gradient(135deg, ${data.color || '#8b5cf6'} 0%, ${(data.color || '#8b5cf6') + '80'} 100%)">
-                            <h2 class="text-2xl font-bold">Dr. ${data.doctorName || '[Tu Nombre]'}</h2>
-                            <p class="text-sm opacity-90">${data.specialty || 'Especialidad Médica'}</p>
-                            <p class="text-xs opacity-75">RUT: ${data.rut || 'XX.XXX.XXX-X'}</p>
+                    <div class="bg-white p-6 rounded-2xl shadow-2xl" style="min-height: 800px; position: relative;">
+                        <div style="position: absolute; top: 0; left: 0; right: 0; height: 8px; background: linear-gradient(90deg, ${data.color}, ${data.color}80); border-radius: 8px 8px 0 0;"></div>
+                        <div class="flex items-center gap-3 mb-6 mt-2">
+                            <div class="text-5xl" style="color: ${data.color}">✚</div>
+                            <div class="flex-1">
+                                <h2 class="text-2xl font-black" style="color: ${data.color}">Dr. ${data.doctorName || '[Tu Nombre]'}</h2>
+                                <p class="text-base" style="color: ${data.color}90">${data.specialty || 'Especialidad Médica'}</p>
+                            </div>
+                        </div>
+                        <div class="rounded-xl p-4 mb-6 text-sm" style="background: ${data.color}10">
+                            <p class="mb-1"><span class="font-semibold">RUT:</span> ${data.rut || 'XX.XXX.XXX-X'}</p>
+                            <p class="mb-1"><span class="font-semibold">Teléfono:</span> ${data.phone || '+569 XXX XXX XXX'}</p>
+                            <p><span class="font-semibold">Dirección:</span> ${data.address || 'Consultorio'}</p>
+                        </div>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-bold uppercase mb-1" style="color: ${data.color}">Paciente:</label>
+                                <div class="border-2 rounded-lg p-2" style="border-color: ${data.color}30; background: ${data.color}05">
+                                    <div class="h-8 bg-white rounded"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase mb-1" style="color: ${data.color}">Diagnóstico / Receta:</label>
+                                <div class="border-2 rounded-lg p-3 h-56" style="border-color: ${data.color}30; background: ${data.color}05"></div>
+                            </div>
+                        </div>
+                        <div class="mt-8 flex justify-between items-center">
+                            <div class="text-xs text-gray-400">Fecha: ___/___/______</div>
+                            <div class="border-t-2 border-gray-400 w-40 text-center text-xs text-gray-500 pt-1">Firma</div>
+                        </div>
+                    </div>
+                `
+            },
+            4: {
+                name: 'Azul Profesional',
+                color: '#2563eb',
+                render: (data) => `
+                    <div class="bg-white rounded-2xl shadow-2xl overflow-hidden" style="min-height: 800px">
+                        <div class="p-6 text-white" style="background: linear-gradient(135deg, ${data.color} 0%, ${data.color}cc 100%)">
+                            <h2 class="text-3xl font-black mb-1">Dr. ${data.doctorName || '[Tu Nombre]'}</h2>
+                            <p class="text-lg opacity-95">${data.specialty || 'Medicina General'}</p>
+                            <p class="text-sm opacity-80 mt-1">RUT: ${data.rut || 'XX.XXX.XXX-X'}</p>
                         </div>
                         <div class="p-6">
-                            <div class="flex gap-4 text-xs text-gray-600 mb-6 bg-gray-50 p-3 rounded">
-                                <span>📞 ${data.phone || '+569 XXX XXX XXX'}</span>
-                                <span>📍 ${data.address || 'Dirección'}</span>
+                            <div class="grid grid-cols-2 gap-3 text-sm mb-6 bg-blue-50 p-3 rounded-lg">
+                                <div><span class="font-semibold">📞</span> ${data.phone || '+569 XXX XXX XXX'}</div>
+                                <div><span class="font-semibold">📍</span> ${data.address || 'Dirección'}</div>
                             </div>
                             <div class="space-y-4">
                                 <div>
-                                    <label class="block text-xs font-bold text-gray-500 mb-1">NOMBRE DEL PACIENTE</label>
-                                    <div class="bg-gray-50 h-8 rounded"></div>
+                                    <label class="block text-xs font-bold uppercase text-gray-500 mb-2">Paciente:</label>
+                                    <div class="bg-blue-50 border-2 border-blue-200 rounded-lg h-10"></div>
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-gray-500 mb-1">INDICACIONES MÉDICAS</label>
-                                    <div class="bg-gray-50 border-2 h-40 rounded p-2"></div>
+                                    <label class="block text-xs font-bold uppercase text-gray-500 mb-2">Indicaciones Médicas:</label>
+                                    <div class="bg-blue-50 border-2 border-blue-200 rounded-lg h-64 p-3"></div>
                                 </div>
                             </div>
                             <div class="mt-8 flex justify-between items-center">
+                                <div class="text-sm text-gray-500">Fecha: ___/___/______</div>
+                                <div class="border-t-2 border-gray-400 w-40 text-center text-xs text-gray-500 pt-1">Firma Médico</div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            5: {
+                name: 'Veterinaria',
+                color: '#8b5cf6',
+                render: (data) => `
+                    <div class="bg-white p-6 rounded-2xl shadow-2xl" style="min-height: 800px; background: linear-gradient(135deg, #faf5ff 0%, #fff 100%)">
+                        <div class="flex justify-between items-center mb-6">
+                            <div>
+                                <h2 class="text-3xl font-black mb-1" style="color: ${data.color}">Dr. ${data.doctorName || '[Tu Nombre]'}</h2>
+                                <p class="text-lg" style="color: ${data.color}90">${data.specialty || 'Médico Veterinario'}</p>
+                            </div>
+                            <div class="text-6xl">🐾</div>
+                        </div>
+                        <div class="rounded-xl p-4 mb-6" style="background: ${data.color}15">
+                            <p class="text-sm mb-1"><span class="font-semibold">RUT:</span> ${data.rut || 'XX.XXX.XXX-X'}</p>
+                            <p class="text-sm"><span class="font-semibold">Contacto:</span> ${data.phone || '+569 XXX XXX XXX'}</p>
+                        </div>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-bold uppercase mb-2" style="color: ${data.color}">Dueño:</label>
+                                <div class="border-2 rounded-lg p-2" style="border-color: ${data.color}30">
+                                    <div class="h-8"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase mb-2" style="color: ${data.color}">Paciente (Mascota):</label>
+                                <div class="border-2 rounded-lg p-2" style="border-color: ${data.color}30">
+                                    <div class="h-8"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase mb-2" style="color: ${data.color}">Receta / Tratamiento:</label>
+                                <div class="border-2 rounded-lg p-3 h-48" style="border-color: ${data.color}30; background: ${data.color}08"></div>
+                            </div>
+                        </div>
+                        <div class="mt-8 flex justify-between items-center">
+                            <div class="text-xs text-gray-400">Fecha: ___/___/______</div>
+                            <div class="border-t-2 border-gray-400 w-40 text-center text-xs text-gray-500 pt-1">Firma</div>
+                        </div>
+                    </div>
+                `
+            },
+            6: {
+                name: 'Barra Lateral',
+                color: '#dc2626',
+                render: (data) => `
+                    <div class="bg-white rounded-2xl shadow-2xl overflow-hidden flex" style="min-height: 800px">
+                        <div class="w-20 flex flex-col items-center justify-center text-white p-4" style="background: linear-gradient(180deg, ${data.color} 0%, ${data.color}cc 100%)">
+                            <div class="text-4xl mb-2">⚕️</div>
+                            <div class="text-xs text-center opacity-90">RECETA</div>
+                        </div>
+                        <div class="flex-1 p-6">
+                            <div class="border-b-2 pb-4 mb-4" style="border-color: ${data.color}">
+                                <h2 class="text-2xl font-black mb-1" style="color: ${data.color}">Dr. ${data.doctorName || '[Tu Nombre]'}</h2>
+                                <p class="text-base" style="color: ${data.color}90">${data.specialty || 'Especialidad'}</p>
+                            </div>
+                            <div class="text-sm text-gray-600 mb-6 space-y-1">
+                                <p>RUT: ${data.rut || 'XX.XXX.XXX-X'}</p>
+                                <p>Tel: ${data.phone || '+569 XXX XXX XXX'}</p>
+                                <p>${data.address || 'Dirección del consultorio'}</p>
+                            </div>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Paciente:</label>
+                                    <div class="bg-gray-50 border-l-4 rounded p-2" style="border-color: ${data.color}">
+                                        <div class="h-8"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Receta:</label>
+                                    <div class="bg-gray-50 border-l-4 rounded p-3 h-56" style="border-color: ${data.color}"></div>
+                                </div>
+                            </div>
+                            <div class="mt-8 flex justify-between">
                                 <div class="text-xs text-gray-400">Fecha: ___/___/______</div>
-                                <div class="w-32 border-t-2 border-gray-400 text-center text-xs text-gray-500 pt-1">Firma Médico</div>
+                                <div class="border-t-2 border-gray-400 w-32 text-center text-xs text-gray-500 pt-1">Firma</div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            7: {
+                name: 'Moderna Formas',
+                color: '#ec4899',
+                render: (data) => `
+                    <div class="bg-white p-6 rounded-3xl shadow-2xl relative overflow-hidden" style="min-height: 800px">
+                        <div style="position: absolute; top: -40px; right: -40px; width: 200px; height: 200px; background: ${data.color}20; border-radius: 50%;"></div>
+                        <div style="position: absolute; bottom: -30px; left: -30px; width: 150px; height: 150px; background: ${data.color}15; border-radius: 50%;"></div>
+                        <div class="relative z-10">
+                            <h2 class="text-3xl font-black mb-2" style="color: ${data.color}">Dr. ${data.doctorName || '[Tu Nombre]'}</h2>
+                            <p class="text-lg mb-4" style="color: ${data.color}90">${data.specialty || 'Especialidad Médica'}</p>
+                            
+                            <div class="rounded-3xl p-4 mb-6" style="background: linear-gradient(135deg, ${data.color}15 0%, ${data.color}08 100%)">
+                                <p class="text-sm mb-1"><span class="font-semibold">RUT:</span> ${data.rut || 'XX.XXX.XXX-X'}</p>
+                                <p class="text-sm"><span class="font-semibold">Contacto:</span> ${data.phone || '+569 XXX XXX XXX'}</p>
+                            </div>
+                            
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-bold uppercase mb-1" style="color: ${data.color}">Paciente:</label>
+                                    <div class="rounded-2xl p-3" style="background: linear-gradient(90deg, ${data.color}10, transparent)">
+                                        <div class="h-8 bg-white rounded-xl shadow-sm"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase mb-1" style="color: ${data.color}">Receta Médica:</label>
+                                    <div class="rounded-2xl p-4 h-56" style="background: linear-gradient(135deg, ${data.color}08, ${data.color}05); border: 2px dashed ${data.color}30"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-8 flex justify-between items-center">
+                                <div class="text-xs text-gray-400">Fecha: ___/___/______</div>
+                                <div class="border-t-2 border-gray-300 w-40 text-center text-xs text-gray-500 pt-1">Firma</div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            8: {
+                name: 'Optometría',
+                color: '#06b6d4',
+                render: (data) => `
+                    <div class="bg-white p-6 rounded-2xl shadow-2xl" style="min-height: 800px">
+                        <div class="flex items-center gap-3 mb-6 border-b-4 pb-4" style="border-color: ${data.color}">
+                            <div class="text-5xl">👁️</div>
+                            <div class="flex-1">
+                                <h2 class="text-2xl font-black" style="color: ${data.color}">Dr. ${data.doctorName || '[Tu Nombre]'}</h2>
+                                <p class="text-base" style="color: ${data.color}90">${data.specialty || 'Optometrista'}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="text-sm text-gray-600 mb-6 bg-cyan-50 p-3 rounded-lg">
+                            <p>RUT: ${data.rut || 'XX.XXX.XXX-X'} | Tel: ${data.phone || '+569 XXX XXX XXX'}</p>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-xs font-bold uppercase mb-2" style="color: ${data.color}">Paciente:</label>
+                            <div class="border-2 rounded-lg p-2" style="border-color: ${data.color}30">
+                                <div class="h-8"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div class="border-2 rounded-lg p-3" style="border-color: ${data.color}30; background: ${data.color}08">
+                                <div class="font-bold text-sm mb-2" style="color: ${data.color}">OJO DERECHO (OD)</div>
+                                <div class="space-y-2">
+                                    <div class="h-2 bg-cyan-100 rounded"></div>
+                                    <div class="h-2 bg-cyan-100 rounded"></div>
+                                    <div class="h-2 bg-cyan-100 rounded w-3/4"></div>
+                                </div>
+                            </div>
+                            <div class="border-2 rounded-lg p-3" style="border-color: ${data.color}30; background: ${data.color}08">
+                                <div class="font-bold text-sm mb-2" style="color: ${data.color}">OJO IZQUIERDO (OI)</div>
+                                <div class="space-y-2">
+                                    <div class="h-2 bg-cyan-100 rounded"></div>
+                                    <div class="h-2 bg-cyan-100 rounded"></div>
+                                    <div class="h-2 bg-cyan-100 rounded w-3/4"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-xs font-bold uppercase mb-2" style="color: ${data.color}">Observaciones:</label>
+                            <div class="border-2 rounded-lg p-3 h-32" style="border-color: ${data.color}30"></div>
+                        </div>
+                        
+                        <div class="mt-8 flex justify-between items-center">
+                            <div class="text-xs text-gray-400">Fecha: ___/___/______</div>
+                            <div class="border-t-2 border-gray-400 w-40 text-center text-xs text-gray-500 pt-1">Firma</div>
+                        </div>
+                    </div>
+                `
+            },
+            9: {
+                name: 'Header Colorido',
+                color: 'linear-gradient(90deg, #fbbf24, #ec4899, #8b5cf6)',
+                render: (data) => `
+                    <div class="bg-white rounded-2xl shadow-2xl overflow-hidden" style="min-height: 800px">
+                        <div class="h-20 p-6 flex items-center justify-between text-white" style="background: linear-gradient(90deg, #fbbf24 0%, #ec4899 50%, #8b5cf6 100%)">
+                            <div>
+                                <h2 class="text-3xl font-black mb-1">Dr. ${data.doctorName || '[Tu Nombre]'}</h2>
+                                <p class="text-sm opacity-95">${data.specialty || 'Especialidad Médica'}</p>
+                            </div>
+                            <div class="text-4xl">⚕️</div>
+                        </div>
+                        <div class="p-6">
+                            <div class="text-sm text-gray-600 mb-6 bg-gradient-to-r from-yellow-50 via-pink-50 to-purple-50 p-3 rounded-lg">
+                                <p className="mb-1"><span class="font-semibold">RUT:</span> ${data.rut || 'XX.XXX.XXX-X'}</p>
+                                <p className="mb-1"><span class="font-semibold">Teléfono:</span> ${data.phone || '+569 XXX XXX XXX'}</p>
+                                <p><span class="font-semibold">Dirección:</span> ${data.address || 'Consultorio'}</p>
+                            </div>
+                            
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Paciente:</label>
+                                    <div class="bg-gradient-to-r from-yellow-50 to-pink-50 border-2 rounded-lg p-2">
+                                        <div class="h-8 bg-white rounded shadow-sm"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Receta / Indicaciones:</label>
+                                    <div class="bg-gradient-to-br from-pink-50 to-purple-50 border-2 rounded-lg p-4 h-64"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-8 flex justify-between items-center">
+                                <div class="text-xs text-gray-400">Fecha: ___/___/______</div>
+                                <div class="border-t-2 border-gray-400 w-40 text-center text-xs text-gray-500 pt-1">Firma Médico</div>
                             </div>
                         </div>
                     </div>
@@ -376,10 +842,25 @@
             currentTemplate = num;
             document.getElementById('editor').classList.remove('hidden');
             document.getElementById('editor').scrollIntoView({ behavior: 'smooth' });
+            
+            // Set default color based on template
+            const templateColors = {
+                1: '#10b981', 2: '#1f2937', 3: '#10b981', 4: '#2563eb',
+                5: '#8b5cf6', 6: '#dc2626', 7: '#ec4899', 8: '#06b6d4', 9: '#fbbf24'
+            };
+            document.getElementById('primaryColor').value = templateColors[num];
+            
+            updatePreview();
+        }
+
+        function setColor(color) {
+            document.getElementById('primaryColor').value = color;
             updatePreview();
         }
 
         function updatePreview() {
+            if (!currentTemplate) return;
+            
             const data = {
                 doctorName: document.getElementById('doctorName').value,
                 specialty: document.getElementById('specialty').value,
@@ -402,6 +883,11 @@
         }
 
         function orderRecipe() {
+            if (!currentTemplate) {
+                alert('Por favor selecciona una plantilla primero');
+                return;
+            }
+            
             const data = {
                 name: document.getElementById('doctorName').value,
                 specialty: document.getElementById('specialty').value,
@@ -421,19 +907,19 @@
 
             const total = prices[data.paperType] * (parseInt(data.quantity) || 1);
             const message = ` *PEDIDO RECETA MÉDICA*%0A%0A` +
-                `👨‍️ Doctor: ${data.name}%0A` +
-                `📋 Especialidad: ${data.specialty}%0A` +
-                `🎨 Plantilla: ${data.template}%0A` +
-                `🎨 Color: ${data.color}%0A` +
-                `📄 Tipo: ${data.paperType}%0A` +
-                `🔢 Cantidad: ${data.quantity} talonario(s)%0A` +
-                `💰 Total: $${total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}`;
+                `👨‍⚕️ *Doctor:* ${data.name}%0A` +
+                `📋 *Especialidad:* ${data.specialty}%0A` +
+                `🎨 *Plantilla:* ${data.template}%0A` +
+                `🎨 *Color:* ${data.color}%0A` +
+                `📄 *Tipo:* ${data.paperType}%0A` +
+                `🔢 *Cantidad:* ${data.quantity} talonario(s)%0A` +
+                `💰 *Total:* $${total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}`;
 
             window.open(`https://wa.me/56978472489?text=${message}`, '_blank');
         }
 
         function downloadPreview() {
-            alert('Función de descarga disponible en la versión completa. Para hacer tu pedido, usa el botón "Pedir por WhatsApp"');
+            alert('📥 Función de descarga PDF\n\nPara obtener tu receta impresa:\n1. Completa todos los datos\n2. Haz clic en "Pedir por WhatsApp"\n3. Te contactaremos para confirmar el diseño\n\n¡Gracias por elegir Librería Central!');
         }
 
         function resetEditor() {
@@ -445,7 +931,15 @@
             document.getElementById('primaryColor').value = '#667eea';
             document.getElementById('paperType').value = 'simple';
             document.getElementById('quantity').value = '1';
-            updatePreview();
+            currentTemplate = null;
+            document.getElementById('recipePreview').innerHTML = `
+                <div class="text-center text-gray-400 py-20">
+                    <div class="text-6xl mb-4">🎨</div>
+                    <p class="text-lg font-semibold">Selecciona una plantilla para comenzar</p>
+                    <p class="text-sm mt-2">Haz clic en cualquiera de las 9 plantillas de arriba</p>
+                </div>
+            `;
+            calculatePrice();
         }
 
         // Add event listeners
