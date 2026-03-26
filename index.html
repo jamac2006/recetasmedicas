@@ -3,23 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Librería Central - Recetas Médicas Profesionales</title>
+    <title>Librería Central - Editor Avanzado de Recetas</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/interact.js/1.10.17/interact.min.js"></script>
     <style>
         body { font-family: 'Roboto', sans-serif; }
         .gradient-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
         .template-card { transition: all 0.3s ease; }
         .template-card:hover { transform: translateY(-8px); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
         .editor-panel { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); }
-        .preview-canvas { background-image: radial-gradient(#d1d5db 1px, transparent 1px); background-size: 24px 24px; }
+        .preview-canvas { 
+            background-image: 
+                linear-gradient(45deg, #e5e7eb 25%, transparent 25%), 
+                linear-gradient(-45deg, #e5e7eb 25%, transparent 25%), 
+                linear-gradient(45deg, transparent 75%, #e5e7eb 75%), 
+                linear-gradient(-45deg, transparent 75%, #e5e7eb 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
         .color-picker::-webkit-color-swatch-wrapper { padding: 0; }
         .color-picker::-webkit-color-swatch { border: none; border-radius: 6px; }
         .btn-animate:active { transform: scale(0.95); }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-fade { animation: fadeIn 0.5s ease; }
         
-        /* Sugestiones de títulos */
+        /* Elementos editables y arrastrables */
+        .draggable-element {
+            position: absolute;
+            cursor: move;
+            cursor: -webkit-grab;
+            cursor: grab;
+            border: 2px dashed transparent;
+            transition: border-color 0.2s;
+            padding: 8px;
+            min-width: 50px;
+            min-height: 30px;
+        }
+        .draggable-element:hover {
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.1);
+        }
+        .draggable-element.selected {
+            border-color: #8b5cf6;
+            background: rgba(139, 92, 246, 0.15);
+            cursor: -webkit-grabbing;
+            cursor: grabbing;
+        }
+        .draggable-element:active {
+            cursor: -webkit-grabbing;
+            cursor: grabbing;
+        }
+        
+        /* Controles de redimensionamiento */
+        .resize-handle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #8b5cf6;
+            border: 2px solid white;
+            border-radius: 50%;
+            display: none;
+        }
+        .draggable-element.selected .resize-handle {
+            display: block;
+        }
+        .resize-handle.se { bottom: -5px; right: -5px; cursor: se-resize; }
+        .resize-handle.sw { bottom: -5px; left: -5px; cursor: sw-resize; }
+        .resize-handle.ne { top: -5px; right: -5px; cursor: ne-resize; }
+        .resize-handle.nw { top: -5px; left: -5px; cursor: nw-resize; }
+        
+        /* Logo subido */
+        .uploaded-logo {
+            max-width: 150px;
+            max-height: 150px;
+            object-fit: contain;
+        }
+        
+        /* Panel de propiedades */
+        .property-panel {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        /* Input de rango personalizado */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+            margin-top: -6px;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #e5e7eb;
+            border-radius: 2px;
+        }
+        
         .title-suggestions { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
         .title-suggestion { 
             background: white; 
@@ -35,6 +123,19 @@
             color: white; 
             border-color: #667eea; 
         }
+        
+        /* Área de carga de archivos */
+        .upload-zone {
+            border: 3px dashed #cbd5e1;
+            transition: all 0.3s;
+        }
+        .upload-zone:hover, .upload-zone.dragover {
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.05);
+        }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade { animation: fadeIn 0.5s ease; }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -45,7 +146,7 @@
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <div class="mb-3 md:mb-0 text-center md:text-left">
                     <h1 class="text-3xl md:text-4xl font-black tracking-tight">🏥 Librería Central</h1>
-                    <p class="text-sm opacity-95 mt-1">Recetas Médicas Profesionales - Puerto Montt</p>
+                    <p class="text-sm opacity-95 mt-1">Editor Avanzado de Recetas - Puerto Montt</p>
                 </div>
                 <div class="text-sm text-center md:text-right bg-white/20 p-3 rounded-xl backdrop-blur-sm">
                     <p class="font-semibold">📍 Urmeneta #300, Galería Caracol Local 15</p>
@@ -57,19 +158,19 @@
     </header>
 
     <!-- Hero Section -->
-    <section class="py-16 bg-white">
+    <section class="py-12 bg-white">
         <div class="container mx-auto px-4 text-center">
             <h2 class="text-4xl md:text-5xl font-black text-gray-800 mb-4">
-                 Diseña tu Receta Médica <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">Profesional</span>
+                 Diseña tu Receta <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">100% Personalizable</span>
             </h2>
-            <p class="text-lg text-gray-600 max-w-3xl mx-auto mb-8">
-                Elige entre <strong>11 plantillas profesionales</strong>, personaliza colores y datos, 
-                y recibe tus recetas impresas en Puerto Montt.
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto mb-6">
+                Elige una plantilla, <strong>arrastra los elementos</strong>, cambia tamaños, sube tu logo y personaliza todo a tu gusto.
             </p>
             <div class="flex flex-wrap justify-center gap-4 text-sm">
-                <div class="bg-blue-100 text-blue-800 px-4 py-2 rounded-full">✅ 11 Diseños Profesionales</div>
-                <div class="bg-green-100 text-green-800 px-4 py-2 rounded-full">✅ Personalización Total</div>
-                <div class="bg-purple-100 text-purple-800 px-4 py-2 rounded-full">✅ Desde $9.990</div>
+                <div class="bg-blue-100 text-blue-800 px-4 py-2 rounded-full">🖱️ Arrastra y Suelta</div>
+                <div class="bg-green-100 text-green-800 px-4 py-2 rounded-full">📏 Redimensiona Texto</div>
+                <div class="bg-purple-100 text-purple-800 px-4 py-2 rounded-full">🖼️ Sube tu Logo</div>
+                <div class="bg-pink-100 text-pink-800 px-4 py-2 rounded-full">🎨 11 Plantillas</div>
             </div>
         </div>
     </section>
@@ -77,1064 +178,607 @@
     <!-- Templates Gallery -->
     <section class="py-12 bg-gray-100">
         <div class="container mx-auto px-4">
-            <h3 class="text-3xl font-bold text-center mb-4">🎨 Selecciona tu Plantilla</h3>
-            <p class="text-center text-gray-600 mb-12">11 diseños profesionales para elegir</p>
+            <h3 class="text-3xl font-bold text-center mb-4">🎨 Selecciona una Plantilla Base</h3>
+            <p class="text-center text-gray-600 mb-12">Luego podrás editar TODO: mover, redimensionar, cambiar colores</p>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                
-                <!-- Template 1: Dental -->
+                <!-- Template 1 -->
                 <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-green-400" onclick="selectTemplate(1)">
-                    <div class="h-72 bg-gradient-to-br from-green-50 to-emerald-100 p-6 flex items-center justify-center">
-                        <div class="bg-white w-full h-full rounded-xl shadow-lg p-4 text-xs relative overflow-hidden">
-                            <div class="absolute top-0 right-0 w-20 h-20 bg-green-100 rounded-bl-full -mr-4 -mt-4"></div>
-                            <div class="flex justify-between items-center mb-3 relative z-10">
-                                <div>
-                                    <div class="font-black text-green-800 text-lg">Dr. [Nombre]</div>
-                                    <div class="text-green-600">Odontólogo</div>
-                                </div>
-                                <div class="text-4xl">🦷</div>
-                            </div>
-                            <div class="space-y-2 mt-4">
-                                <div class="h-2 bg-gray-200 rounded"></div>
-                                <div class="h-2 bg-gray-200 rounded w-3/4"></div>
-                            </div>
-                            <div class="mt-6 border-2 border-green-200 rounded-lg p-3">
-                                <div class="h-2 bg-green-100 rounded mb-2"></div>
-                                <div class="h-2 bg-green-100 rounded mb-2"></div>
-                                <div class="h-2 bg-green-100 rounded w-1/2"></div>
-                            </div>
+                    <div class="h-64 bg-gradient-to-br from-green-50 to-emerald-100 p-4 flex items-center justify-center">
+                        <div class="text-center">
+                            <div class="text-5xl mb-2">🦷</div>
+                            <div class="font-bold text-green-800">Dental</div>
                         </div>
                     </div>
                     <div class="p-4">
-                        <h4 class="font-bold text-gray-800 text-lg">1. Plantilla Dental</h4>
-                        <p class="text-sm text-gray-600">Diseño odontológico con ícono de diente</p>
-                        <button class="mt-3 w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 font-semibold btn-animate">Usar Plantilla →</button>
+                        <h4 class="font-bold text-gray-800">1. Plantilla Dental</h4>
+                        <button class="mt-2 w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 font-semibold">Usar Plantilla</button>
                     </div>
                 </div>
 
-                <!-- Template 2: Clásica Minimalista -->
+                <!-- Template 2 -->
                 <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-gray-700" onclick="selectTemplate(2)">
-                    <div class="h-72 bg-gray-100 p-6 flex items-center justify-center">
-                        <div class="bg-white w-full h-full rounded shadow-lg p-4 text-xs border-t-4 border-gray-800">
-                            <div class="text-center border-b-2 border-gray-800 pb-3 mb-3">
-                                <div class="text-2xl mb-1">⚕️</div>
-                                <div class="font-black text-gray-900 text-lg">Dr. [Nombre]</div>
-                                <div class="text-gray-600 text-xs">Medicina General</div>
-                            </div>
-                            <div class="space-y-1 text-gray-500 text-xs">
-                                <div>RUT: XX.XXX.XXX-X</div>
-                                <div>Tel: +569 XXX XXX XXX</div>
-                            </div>
-                            <div class="mt-4 space-y-2">
-                                <div class="h-2 bg-gray-200 rounded"></div>
-                                <div class="h-2 bg-gray-200 rounded"></div>
-                                <div class="h-2 bg-gray-200 rounded w-2/3"></div>
-                            </div>
+                    <div class="h-64 bg-gray-100 p-4 flex items-center justify-center">
+                        <div class="text-center">
+                            <div class="text-5xl mb-2">⚕️</div>
+                            <div class="font-bold text-gray-800">Clásica</div>
                         </div>
                     </div>
                     <div class="p-4">
-                        <h4 class="font-bold text-gray-800 text-lg">2. Clásica Minimalista</h4>
-                        <p class="text-sm text-gray-600">Diseño formal blanco y negro</p>
-                        <button class="mt-3 w-full bg-gray-700 text-white py-2 rounded-lg hover:bg-gray-800 font-semibold btn-animate">Usar Plantilla →</button>
+                        <h4 class="font-bold text-gray-800">2. Clásica Minimalista</h4>
+                        <button class="mt-2 w-full bg-gray-700 text-white py-2 rounded-lg hover:bg-gray-800 font-semibold">Usar Plantilla</button>
                     </div>
                 </div>
 
-                <!-- Template 3: Verde Moderna -->
+                <!-- Template 3 -->
                 <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-green-500" onclick="selectTemplate(3)">
-                    <div class="h-72 bg-gradient-to-br from-green-100 to-teal-100 p-6 flex items-center justify-center">
-                        <div class="bg-white w-full h-full rounded-xl shadow-lg p-4 text-xs relative">
-                            <div class="absolute top-0 left-0 w-full h-2 bg-green-500 rounded-t-xl"></div>
-                            <div class="flex items-center gap-2 mt-2 mb-3">
-                                <div class="text-3xl text-green-600">✚</div>
-                                <div>
-                                    <div class="font-black text-green-800">Dr. [Nombre]</div>
-                                    <div class="text-green-600 text-xs">Especialidad</div>
-                                </div>
-                            </div>
-                            <div class="bg-green-50 rounded-lg p-2 mb-3">
-                                <div class="h-2 bg-green-200 rounded mb-1"></div>
-                                <div class="h-2 bg-green-200 rounded"></div>
-                            </div>
-                            <div class="space-y-2">
-                                <div class="h-2 bg-gray-200 rounded"></div>
-                                <div class="h-2 bg-gray-200 rounded"></div>
-                            </div>
+                    <div class="h-64 bg-gradient-to-br from-green-100 to-teal-100 p-4 flex items-center justify-center">
+                        <div class="text-center">
+                            <div class="text-5xl mb-2">✚</div>
+                            <div class="font-bold text-green-800">Verde</div>
                         </div>
                     </div>
                     <div class="p-4">
-                        <h4 class="font-bold text-gray-800 text-lg">3. Verde Moderna</h4>
-                        <p class="text-sm text-gray-600">Con cruces médicas y verde</p>
-                        <button class="mt-3 w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 font-semibold btn-animate">Usar Plantilla →</button>
+                        <h4 class="font-bold text-gray-800">3. Verde Moderna</h4>
+                        <button class="mt-2 w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 font-semibold">Usar Plantilla</button>
                     </div>
                 </div>
 
-                <!-- Template 4: Azul Profesional -->
+                <!-- Template 4 -->
                 <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-blue-600" onclick="selectTemplate(4)">
-                    <div class="h-72 bg-gradient-to-br from-blue-50 to-indigo-100 p-6 flex items-center justify-center">
-                        <div class="bg-white w-full h-full rounded-xl shadow-lg overflow-hidden">
-                            <div class="bg-blue-600 text-white p-3">
-                                <div class="font-black text-lg">Dr. [Nombre]</div>
-                                <div class="text-xs opacity-90">RUT: XX.XXX.XXX-X</div>
-                            </div>
-                            <div class="p-3 text-xs">
-                                <div class="flex items-center gap-2 mb-2 text-blue-600">
-                                    <span>⚕️</span>
-                                    <span class="font-semibold">Medicina General</span>
-                                </div>
-                                <div class="space-y-1">
-                                    <div class="h-2 bg-blue-100 rounded"></div>
-                                    <div class="h-2 bg-blue-100 rounded w-3/4"></div>
-                                </div>
-                            </div>
+                    <div class="h-64 bg-gradient-to-br from-blue-50 to-indigo-100 p-4 flex items-center justify-center">
+                        <div class="text-center">
+                            <div class="text-5xl mb-2">🏥</div>
+                            <div class="font-bold text-blue-800">Azul</div>
                         </div>
                     </div>
                     <div class="p-4">
-                        <h4 class="font-bold text-gray-800 text-lg">4. Azul Profesional</h4>
-                        <p class="text-sm text-gray-600">Header azul formal</p>
-                        <button class="mt-3 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 font-semibold btn-animate">Usar Plantilla →</button>
+                        <h4 class="font-bold text-gray-800">4. Azul Profesional</h4>
+                        <button class="mt-2 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 font-semibold">Usar Plantilla</button>
                     </div>
                 </div>
 
-                <!-- Template 5: Veterinaria -->
+                <!-- Template 5 -->
                 <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-purple-500" onclick="selectTemplate(5)">
-                    <div class="h-72 bg-gradient-to-br from-purple-50 to-pink-100 p-6 flex items-center justify-center">
-                        <div class="bg-white w-full h-full rounded-xl shadow-lg p-4 text-xs">
-                            <div class="flex justify-between items-center mb-3">
-                                <div class="font-black text-purple-800 text-lg">Dr. [Nombre]</div>
-                                <div class="text-3xl">🐾</div>
-                            </div>
-                            <div class="bg-purple-100 rounded-lg p-2 mb-3">
-                                <div class="text-purple-800 font-semibold text-xs">Veterinario</div>
-                            </div>
-                            <div class="space-y-2">
-                                <div class="h-2 bg-purple-100 rounded"></div>
-                                <div class="h-2 bg-purple-100 rounded"></div>
-                                <div class="h-2 bg-purple-100 rounded w-1/2"></div>
-                            </div>
+                    <div class="h-64 bg-gradient-to-br from-purple-50 to-pink-100 p-4 flex items-center justify-center">
+                        <div class="text-center">
+                            <div class="text-5xl mb-2">🐾</div>
+                            <div class="font-bold text-purple-800">Veterinaria</div>
                         </div>
                     </div>
                     <div class="p-4">
-                        <h4 class="font-bold text-gray-800 text-lg">5. Veterinaria</h4>
-                        <p class="text-sm text-gray-600">Colores púrpura, mascotas</p>
-                        <button class="mt-3 w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 font-semibold btn-animate">Usar Plantilla →</button>
+                        <h4 class="font-bold text-gray-800">5. Veterinaria</h4>
+                        <button class="mt-2 w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 font-semibold">Usar Plantilla</button>
                     </div>
                 </div>
 
-                <!-- Template 6: Barra Lateral -->
+                <!-- Template 6 -->
                 <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-red-500" onclick="selectTemplate(6)">
-                    <div class="h-72 bg-gray-100 p-6 flex items-center justify-center">
-                        <div class="bg-white w-full h-full rounded-xl shadow-lg flex overflow-hidden">
-                            <div class="w-16 bg-red-600 flex items-center justify-center">
-                                <div class="text-white text-2xl">⚕️</div>
-                            </div>
-                            <div class="flex-1 p-3">
-                                <div class="font-black text-red-800 mb-1">Dr. [Nombre]</div>
-                                <div class="text-xs text-gray-600 mb-2">Especialidad</div>
-                                <div class="space-y-1">
-                                    <div class="h-2 bg-gray-200 rounded"></div>
-                                    <div class="h-2 bg-gray-200 rounded w-3/4"></div>
-                                </div>
-                            </div>
+                    <div class="h-64 bg-gray-100 p-4 flex items-center justify-center">
+                        <div class="text-center">
+                            <div class="text-5xl mb-2">📋</div>
+                            <div class="font-bold text-red-800">Sidebar</div>
                         </div>
                     </div>
                     <div class="p-4">
-                        <h4 class="font-bold text-gray-800 text-lg">6. Barra Lateral</h4>
-                        <p class="text-sm text-gray-600">Sidebar vertical de color</p>
-                        <button class="mt-3 w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 font-semibold btn-animate">Usar Plantilla →</button>
+                        <h4 class="font-bold text-gray-800">6. Barra Lateral</h4>
+                        <button class="mt-2 w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 font-semibold">Usar Plantilla</button>
                     </div>
                 </div>
 
-                <!-- Template 7: Moderna Formas -->
+                <!-- Template 7 -->
                 <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-pink-500" onclick="selectTemplate(7)">
-                    <div class="h-72 bg-gradient-to-br from-pink-50 to-rose-100 p-6 flex items-center justify-center">
-                        <div class="bg-white w-full h-full rounded-3xl shadow-lg p-4 text-xs relative overflow-hidden">
-                            <div class="absolute -top-8 -right-8 w-32 h-32 bg-pink-200 rounded-full opacity-50"></div>
-                            <div class="absolute -bottom-8 -left-8 w-24 h-24 bg-rose-200 rounded-full opacity-50"></div>
-                            <div class="relative z-10">
-                                <div class="font-black text-pink-800 text-lg mb-2">Dr. [Nombre]</div>
-                                <div class="bg-gradient-to-r from-pink-100 to-rose-100 rounded-2xl p-2 mb-3">
-                                    <div class="h-2 bg-pink-300 rounded mb-1"></div>
-                                    <div class="h-2 bg-pink-300 rounded w-2/3"></div>
-                                </div>
-                                <div class="space-y-1">
-                                    <div class="h-2 bg-gray-200 rounded"></div>
-                                    <div class="h-2 bg-gray-200 rounded"></div>
-                                </div>
-                            </div>
+                    <div class="h-64 bg-gradient-to-br from-pink-50 to-rose-100 p-4 flex items-center justify-center">
+                        <div class="text-center">
+                            <div class="text-5xl mb-2">🎨</div>
+                            <div class="font-bold text-pink-800">Moderna</div>
                         </div>
                     </div>
                     <div class="p-4">
-                        <h4 class="font-bold text-gray-800 text-lg">7. Moderna Formas</h4>
-                        <p class="text-sm text-gray-600">Formas orgánicas, colores pastel</p>
-                        <button class="mt-3 w-full bg-pink-500 text-white py-2 rounded-lg hover:bg-pink-600 font-semibold btn-animate">Usar Plantilla →</button>
+                        <h4 class="font-bold text-gray-800">7. Formas Modernas</h4>
+                        <button class="mt-2 w-full bg-pink-500 text-white py-2 rounded-lg hover:bg-pink-600 font-semibold">Usar Plantilla</button>
                     </div>
                 </div>
 
-                <!-- Template 8: Optometría -->
+                <!-- Template 8 -->
                 <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-cyan-500" onclick="selectTemplate(8)">
-                    <div class="h-72 bg-gradient-to-br from-cyan-50 to-blue-100 p-6 flex items-center justify-center">
-                        <div class="bg-white w-full h-full rounded-xl shadow-lg p-4 text-xs">
-                            <div class="flex items-center gap-2 mb-3 border-b-2 border-cyan-600 pb-2">
-                                <div class="text-2xl">👁️</div>
-                                <div>
-                                    <div class="font-black text-cyan-800">Dr. [Nombre]</div>
-                                    <div class="text-cyan-600 text-xs">Optometrista</div>
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-2 gap-2">
-                                <div class="border border-cyan-200 rounded p-1">
-                                    <div class="h-2 bg-cyan-100 rounded mb-1"></div>
-                                    <div class="h-2 bg-cyan-100 rounded"></div>
-                                </div>
-                                <div class="border border-cyan-200 rounded p-1">
-                                    <div class="h-2 bg-cyan-100 rounded mb-1"></div>
-                                    <div class="h-2 bg-cyan-100 rounded"></div>
-                                </div>
-                            </div>
+                    <div class="h-64 bg-gradient-to-br from-cyan-50 to-blue-100 p-4 flex items-center justify-center">
+                        <div class="text-center">
+                            <div class="text-5xl mb-2">👁️</div>
+                            <div class="font-bold text-cyan-800">Optometría</div>
                         </div>
                     </div>
                     <div class="p-4">
-                        <h4 class="font-bold text-gray-800 text-lg">8. Optometría</h4>
-                        <p class="text-sm text-gray-600">Tabla para graduación visual</p>
-                        <button class="mt-3 w-full bg-cyan-600 text-white py-2 rounded-lg hover:bg-cyan-700 font-semibold btn-animate">Usar Plantilla →</button>
+                        <h4 class="font-bold text-gray-800">8. Optometría</h4>
+                        <button class="mt-2 w-full bg-cyan-600 text-white py-2 rounded-lg hover:bg-cyan-700 font-semibold">Usar Plantilla</button>
                     </div>
                 </div>
 
-                <!-- Template 9: Header Colorido -->
+                <!-- Template 9 -->
                 <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-yellow-500" onclick="selectTemplate(9)">
-                    <div class="h-72 bg-gradient-to-br from-yellow-50 to-orange-100 p-6 flex items-center justify-center">
-                        <div class="bg-white w-full h-full rounded-xl shadow-lg overflow-hidden">
-                            <div class="h-16 bg-gradient-to-r from-yellow-400 via-pink-400 to-purple-400 p-3 flex items-center justify-between">
-                                <div class="text-white font-black">Dr. [Nombre]</div>
-                                <div class="text-white text-2xl">⚕️</div>
-                            </div>
-                            <div class="p-3 text-xs">
-                                <div class="space-y-2">
-                                    <div class="h-2 bg-gradient-to-r from-yellow-100 to-pink-100 rounded"></div>
-                                    <div class="h-2 bg-gradient-to-r from-pink-100 to-purple-100 rounded"></div>
-                                    <div class="h-2 bg-gradient-to-r from-purple-100 to-yellow-100 rounded w-3/4"></div>
-                                </div>
-                            </div>
+                    <div class="h-64 bg-gradient-to-br from-yellow-50 to-orange-100 p-4 flex items-center justify-center">
+                        <div class="text-center">
+                            <div class="text-5xl mb-2">🌈</div>
+                            <div class="font-bold text-yellow-800">Colorida</div>
                         </div>
                     </div>
                     <div class="p-4">
-                        <h4 class="font-bold text-gray-800 text-lg">9. Header Colorido</h4>
-                        <p class="text-sm text-gray-600">Múltiples colores pastel</p>
-                        <button class="mt-3 w-full bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-500 text-white py-2 rounded-lg hover:opacity-90 font-semibold btn-animate">Usar Plantilla →</button>
+                        <h4 class="font-bold text-gray-800">9. Header Colorido</h4>
+                        <button class="mt-2 w-full bg-gradient-to-r from-yellow-400 to-pink-500 text-white py-2 rounded-lg hover:opacity-90 font-semibold">Usar Plantilla</button>
                     </div>
                 </div>
 
-                <!-- Template 10: Sidebar Vertical Edit.org -->
+                <!-- Template 10 -->
                 <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-teal-600" onclick="selectTemplate(10)">
-                    <div class="h-72 bg-gradient-to-br from-teal-50 to-blue-50 p-6 flex items-center justify-center">
-                        <div class="bg-white w-full h-full rounded-xl shadow-lg p-4 text-xs relative">
-                            <div class="absolute left-0 top-0 bottom-0 w-3 bg-teal-700 rounded-l-xl"></div>
-                            <div class="ml-4">
-                                <div class="flex items-center gap-2 mb-2">
-                                    <div class="text-2xl text-pink-700">⚕️</div>
-                                    <div>
-                                        <div class="font-black text-gray-900">Dr. [Nombre]</div>
-                                        <div class="text-gray-600 text-xs">Médico</div>
-                                    </div>
-                                </div>
-                                <div class="text-xs text-gray-500 mb-3">12234567<br>Departamento</div>
-                                <div class="space-y-1 mb-3">
-                                    <div class="h-2 bg-gray-200 rounded"></div>
-                                    <div class="h-2 bg-gray-200 rounded w-3/4"></div>
-                                    <div class="h-2 bg-gray-200 rounded w-1/2"></div>
-                                </div>
-                                <div class="text-xs font-semibold text-gray-700">Rp.</div>
-                            </div>
+                    <div class="h-64 bg-gradient-to-br from-teal-50 to-blue-50 p-4 flex items-center justify-center">
+                        <div class="text-center">
+                            <div class="text-5xl mb-2">☤</div>
+                            <div class="font-bold text-teal-800">Caduceo</div>
                         </div>
                     </div>
                     <div class="p-4">
-                        <h4 class="font-bold text-gray-800 text-lg">10. Sidebar Vertical</h4>
-                        <p class="text-sm text-gray-600">Barra lateral con caduceo</p>
-                        <button class="mt-3 w-full bg-teal-600 text-white py-2 rounded-lg hover:bg-teal-700 font-semibold btn-animate">Usar Plantilla →</button>
+                        <h4 class="font-bold text-gray-800">10. Sidebar Vertical</h4>
+                        <button class="mt-2 w-full bg-teal-600 text-white py-2 rounded-lg hover:bg-teal-700 font-semibold">Usar Plantilla</button>
                     </div>
                 </div>
 
-                <!-- Template 11: Header Derecho -->
+                <!-- Template 11 -->
                 <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-blue-500" onclick="selectTemplate(11)">
-                    <div class="h-72 bg-gradient-to-br from-blue-50 to-gray-50 p-6 flex items-center justify-center">
-                        <div class="bg-white w-full h-full rounded-xl shadow-lg p-4 text-xs">
-                            <div class="flex justify-between items-start mb-3">
-                                <div>
-                                    <div class="text-3xl text-blue-600 mb-2">⚕️</div>
-                                    <div class="font-black text-blue-800 text-lg">Dr. [Nombre]</div>
-                                    <div class="text-gray-600 text-xs">Doctor | 12234567</div>
-                                </div>
-                                <div class="w-8 bg-blue-400 h-16 rounded"></div>
-                            </div>
-                            <div class="grid grid-cols-2 gap-2 mt-4">
-                                <div class="h-2 bg-gray-200 rounded"></div>
-                                <div class="h-2 bg-gray-200 rounded"></div>
-                                <div class="h-2 bg-gray-200 rounded"></div>
-                                <div class="h-2 bg-gray-200 rounded"></div>
-                            </div>
+                    <div class="h-64 bg-gradient-to-br from-blue-50 to-gray-50 p-4 flex items-center justify-center">
+                        <div class="text-center">
+                            <div class="text-5xl mb-2">📄</div>
+                            <div class="font-bold text-blue-800">Header</div>
                         </div>
                     </div>
                     <div class="p-4">
-                        <h4 class="font-bold text-gray-800 text-lg">11. Header Derecho</h4>
-                        <p class="text-sm text-gray-600">Contacto en esquina superior</p>
-                        <button class="mt-3 w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 font-semibold btn-animate">Usar Plantilla →</button>
+                        <h4 class="font-bold text-gray-800">11. Header Derecho</h4>
+                        <button class="mt-2 w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 font-semibold">Usar Plantilla</button>
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
 
-    <!-- Editor Section -->
+    <!-- Advanced Editor Section -->
     <section id="editor" class="py-12 bg-white hidden">
         <div class="container mx-auto px-4">
-            <div class="text-center mb-8">
-                <h3 class="text-3xl font-bold mb-2">✏️ Personaliza tu Receta</h3>
-                <p class="text-gray-600">Modifica todos los elementos a tu gusto</p>
+            <div class="text-center mb-6">
+                <h3 class="text-3xl font-bold mb-2">✏️ Editor Avanzado - Arrastra, Redimensiona y Personaliza</h3>
+                <p class="text-gray-600">Haz clic en cualquier elemento para seleccionarlo y editarlo. Arrástralo para moverlo. Usa las esquinas para redimensionar.</p>
             </div>
             
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <!-- Editor Controls -->
-                <div class="lg:col-span-4 editor-panel rounded-2xl p-6 shadow-xl space-y-4 max-h-[900px] overflow-y-auto">
-                    <h4 class="font-bold text-xl text-gray-800 border-b-2 border-gray-300 pb-2">📝 Datos del Profesional</h4>
-                    
-                    <!-- NUEVO: Selector de Título/Profesión -->
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1">Título Profesional *</label>
-                        <input type="text" id="titlePrefix" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition font-medium" placeholder="Dr." value="Dr.">
-                        <div class="title-suggestions">
-                            <span class="title-suggestion" onclick="setTitle('Dr.')">Dr.</span>
-                            <span class="title-suggestion" onclick="setTitle('Dra.')">Dra.</span>
-                            <span class="title-suggestion" onclick="setTitle('Enf.')">Enf.</span>
-                            <span class="title-suggestion" onclick="setTitle('Kge.')">Kge.</span>
-                            <span class="title-suggestion" onclick="setTitle('Od.')">Od.</span>
-                            <span class="title-suggestion" onclick="setTitle('Mat.')">Mat.</span>
-                            <span class="title-suggestion" onclick="setTitle('Psic.')">Psic.</span>
-                            <span class="title-suggestion" onclick="setTitle('Fono.')">Fono.</span>
-                            <span class="title-suggestion" onclick="setTitle('Nut.')">Nut.</span>
-                            <span class="title-suggestion" onclick="setTitle('Tens.')">Tens.</span>
-                            <span class="title-suggestion" onclick="setTitle('Méd. Vet.')">Méd. Vet.</span>
-                            <span class="title-suggestion" onclick="setTitle('Lic.')">Lic.</span>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1">Nombre Completo *</label>
-                        <input type="text" id="doctorName" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" placeholder="Juan Pérez">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1">Especialidad</label>
-                        <input type="text" id="specialty" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" placeholder="Medicina General">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1">RUT / ID Profesional</label>
-                        <input type="text" id="rut" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" placeholder="12.345.678-9">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1">Teléfono</label>
-                        <input type="text" id="phone" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" placeholder="+569 123 456 78">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1">Dirección</label>
-                        <input type="text" id="address" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" placeholder="Av. Principal 123">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1">Email</label>
-                        <input type="email" id="email" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" placeholder="doctor@email.com">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1">Sitio Web</label>
-                        <input type="text" id="website" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" placeholder="www.consultorio.cl">
-                    </div>
-
-                    <h4 class="font-bold text-xl text-gray-800 border-b-2 border-gray-300 pb-2 pt-4">🎨 Personalización</h4>
-
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1">Color Principal</label>
-                        <div class="flex gap-2">
-                            <input type="color" id="primaryColor" class="color-picker w-16 h-12 cursor-pointer rounded-lg border-2 border-gray-300" value="#667eea">
-                            <div class="flex-1 grid grid-cols-5 gap-1">
-                                <button onclick="setColor('#10b981')" class="h-8 bg-green-500 rounded hover:scale-110 transition"></button>
-                                <button onclick="setColor('#3b82f6')" class="h-8 bg-blue-500 rounded hover:scale-110 transition"></button>
-                                <button onclick="setColor('#8b5cf6')" class="h-8 bg-purple-500 rounded hover:scale-110 transition"></button>
-                                <button onclick="setColor('#ec4899')" class="h-8 bg-pink-500 rounded hover:scale-110 transition"></button>
-                                <button onclick="setColor('#f59e0b')" class="h-8 bg-yellow-500 rounded hover:scale-110 transition"></button>
+                <!-- Left Panel - Controls -->
+                <div class="lg:col-span-3 space-y-4">
+                    <!-- Datos del Profesional -->
+                    <div class="editor-panel rounded-2xl p-4 shadow-lg">
+                        <h4 class="font-bold text-gray-800 mb-3 border-b pb-2">📝 Datos Básicos</h4>
+                        
+                        <div class="mb-3">
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Título</label>
+                            <input type="text" id="titlePrefix" class="w-full px-3 py-2 border-2 border-gray-300 rounded-lg text-sm" value="Dr." onchange="updateElementText()">
+                            <div class="title-suggestions mt-1">
+                                <span class="title-suggestion" onclick="setTitle('Dr.')">Dr.</span>
+                                <span class="title-suggestion" onclick="setTitle('Dra.')">Dra.</span>
+                                <span class="title-suggestion" onclick="setTitle('Méd. Vet.')">Vet.</span>
                             </div>
                         </div>
-                    </div>
 
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1">Tipo de Papel</label>
-                        <select id="paperType" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white">
-                            <option value="simple">Simple (1 cara) - $9.990</option>
-                            <option value="duplicado">Duplicado (2 caras) - $14.990</option>
-                            <option value="triplicado">Triplicado (3 caras) - $19.990</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1">Cantidad de Talonarios</label>
-                        <input type="number" id="quantity" min="1" value="1" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
-
-                    <div class="pt-4 border-t-2 border-gray-300">
-                        <div class="flex justify-between items-center mb-3">
-                            <span class="font-bold text-lg">Total Estimado:</span>
-                            <span class="text-3xl font-black text-blue-600" id="totalPrice">$9.990</span>
+                        <div class="mb-3">
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Nombre</label>
+                            <input type="text" id="doctorName" class="w-full px-3 py-2 border-2 border-gray-300 rounded-lg text-sm" placeholder="Tu Nombre" onchange="updateElementText()">
                         </div>
-                        <p class="text-xs text-gray-600">* Precio por talonario de 100 hojas tamaño carta</p>
+
+                        <div class="mb-3">
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Especialidad</label>
+                            <input type="text" id="specialty" class="w-full px-3 py-2 border-2 border-gray-300 rounded-lg text-sm" placeholder="Especialidad" onchange="updateElementText()">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Teléfono</label>
+                            <input type="text" id="phone" class="w-full px-3 py-2 border-2 border-gray-300 rounded-lg text-sm" onchange="updateElementText()">
+                        </div>
                     </div>
 
-                    <button onclick="orderRecipe()" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-4 rounded-xl text-lg shadow-lg hover:shadow-xl transition-all btn-animate flex items-center justify-center gap-2">
-                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-                        Pedir por WhatsApp
-                    </button>
-                    
-                    <button onclick="resetEditor()" class="w-full bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 rounded-lg transition btn-animate">
-                        🔄 Reiniciar Formulario
-                    </button>
+                    <!-- Propiedades del Elemento Seleccionado -->
+                    <div class="property-panel rounded-2xl p-4 shadow-lg" id="elementProperties" style="display: none;">
+                        <h4 class="font-bold text-gray-800 mb-3 border-b pb-2">🎨 Propiedades</h4>
+                        
+                        <div class="mb-3">
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Tamaño de Letra</label>
+                            <input type="range" id="fontSize" min="8" max="72" value="16" class="w-full" oninput="updateElementStyle()">
+                            <div class="text-xs text-gray-600 text-center mt-1"><span id="fontSizeValue">16</span>px</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Color del Texto</label>
+                            <input type="color" id="textColor" class="w-full h-10 cursor-pointer rounded" onchange="updateElementStyle()">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Alineación</label>
+                            <div class="flex gap-1">
+                                <button onclick="setTextAlign('left')" class="flex-1 py-1 bg-gray-200 rounded hover:bg-gray-300 text-xs">⬅️</button>
+                                <button onclick="setTextAlign('center')" class="flex-1 py-1 bg-gray-200 rounded hover:bg-gray-300 text-xs">⬆️⬇️</button>
+                                <button onclick="setTextAlign('right')" class="flex-1 py-1 bg-gray-200 rounded hover:bg-gray-300 text-xs">➡️</button>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Opacidad</label>
+                            <input type="range" id="opacity" min="0" max="100" value="100" class="w-full" oninput="updateElementStyle()">
+                        </div>
+
+                        <button onclick="deleteSelectedElement()" class="w-full bg-red-500 text-white py-2 rounded-lg text-sm hover:bg-red-600 mt-2">
+                            🗑️ Eliminar Elemento
+                        </button>
+                    </div>
+
+                    <!-- Subir Logo -->
+                    <div class="property-panel rounded-2xl p-4 shadow-lg">
+                        <h4 class="font-bold text-gray-800 mb-3 border-b pb-2">🖼️ Logo/Imagen</h4>
+                        
+                        <div class="upload-zone rounded-lg p-4 text-center cursor-pointer mb-3" onclick="document.getElementById('logoInput').click()" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
+                            <input type="file" id="logoInput" class="hidden" accept="image/*" onchange="handleLogoUpload(event)">
+                            <div class="text-3xl mb-2">📁</div>
+                            <p class="text-xs text-gray-600">Arrastra o haz clic para subir</p>
+                            <p class="text-xs text-gray-400 mt-1">PNG, JPG (máx. 2MB)</p>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Ancho del Logo</label>
+                            <input type="range" id="logoWidth" min="20" max="200" value="100" class="w-full" oninput="updateLogoSize()">
+                            <div class="text-xs text-gray-600 text-center"><span id="logoWidthValue">100</span>px</div>
+                        </div>
+                    </div>
+
+                    <!-- Pedido -->
+                    <div class="property-panel rounded-2xl p-4 shadow-lg bg-green-50">
+                        <h4 class="font-bold text-gray-800 mb-3 border-b pb-2">💰 Pedido</h4>
+                        
+                        <div class="mb-3">
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Tipo de Papel</label>
+                            <select id="paperType" class="w-full px-3 py-2 border-2 border-gray-300 rounded-lg text-sm" onchange="calculatePrice()">
+                                <option value="simple">Simple - $9.990</option>
+                                <option value="duplicado">Duplicado - $14.990</option>
+                                <option value="triplicado">Triplicado - $19.990</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Cantidad</label>
+                            <input type="number" id="quantity" min="1" value="1" class="w-full px-3 py-2 border-2 border-gray-300 rounded-lg text-sm" onchange="calculatePrice()">
+                        </div>
+
+                        <div class="text-center mb-3">
+                            <div class="text-xs text-gray-600">Total:</div>
+                            <div class="text-2xl font-black text-green-600" id="totalPrice">$9.990</div>
+                        </div>
+
+                        <button onclick="orderRecipe()" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg text-sm btn-animate flex items-center justify-center gap-2">
+                            <span>📱</span> Pedir por WhatsApp
+                        </button>
+                    </div>
                 </div>
 
-                <!-- Preview -->
-                <div class="lg:col-span-8">
-                    <div class="preview-canvas rounded-2xl border-4 border-gray-300 p-8 min-h-[700px] flex items-center justify-center bg-white shadow-inner">
-                        <div id="recipePreview" class="bg-white w-full max-w-lg shadow-2xl transition-all animate-fade" style="min-height: 800px;">
+                <!-- Center - Canvas -->
+                <div class="lg:col-span-9">
+                    <div class="preview-canvas rounded-2xl border-4 border-gray-300 p-8 min-h-[800px] flex items-center justify-center bg-white shadow-inner relative overflow-auto">
+                        <div id="recipeCanvas" class="bg-white w-full max-w-2xl shadow-2xl relative" style="min-height: 900px; position: relative;">
+                            <!-- Los elementos se generarán aquí -->
                             <div class="text-center text-gray-400 py-20">
                                 <div class="text-6xl mb-4">🎨</div>
                                 <p class="text-lg font-semibold">Selecciona una plantilla para comenzar</p>
-                                <p class="text-sm mt-2">Haz clic en cualquiera de las 11 plantillas de arriba</p>
+                                <p class="text-sm mt-2">Podrás arrastrar, redimensionar y editar cada elemento</p>
                             </div>
                         </div>
                     </div>
+                    
                     <div class="mt-4 flex gap-3 justify-center">
-                        <button onclick="downloadPreview()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition btn-animate shadow-lg">
-                            📥 Descargar Vista Previa (PDF)
+                        <button onclick="addElement('text')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition btn-animate">
+                            ➕ Agregar Texto
                         </button>
-                        <button onclick="document.getElementById('editor').scrollIntoView({behavior: 'smooth'})" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold transition btn-animate">
-                            ⬆️ Volver al Editor
+                        <button onclick="resetCanvas()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold transition btn-animate">
+                            🔄 Reiniciar
+                        </button>
+                        <button onclick="downloadPreview()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-semibold transition btn-animate">
+                            📥 Descargar PNG
                         </button>
                     </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Features -->
-    <section class="py-16 bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50">
-        <div class="container mx-auto px-4">
-            <h3 class="text-3xl font-bold text-center mb-12">¿Por qué elegirnos?</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="bg-white p-6 rounded-2xl shadow-lg text-center hover:shadow-xl transition">
-                    <div class="text-5xl mb-3">🎨</div>
-                    <h4 class="font-bold text-lg mb-2">11 Diseños Profesionales</h4>
-                    <p class="text-gray-600 text-sm">Plantillas para todas las especialidades médicas</p>
-                </div>
-                <div class="bg-white p-6 rounded-2xl shadow-lg text-center hover:shadow-xl transition">
-                    <div class="text-5xl mb-3">⚡</div>
-                    <h4 class="font-bold text-lg mb-2">Entrega Rápida</h4>
-                    <p class="text-gray-600 text-sm">24-48 horas en Puerto Montt</p>
-                </div>
-                <div class="bg-white p-6 rounded-2xl shadow-lg text-center hover:shadow-xl transition">
-                    <div class="text-5xl mb-3">💰</div>
-                    <h4 class="font-bold text-lg mb-2">Mejor Precio</h4>
-                    <p class="text-gray-600 text-sm">Desde $9.990 el talonario</p>
-                </div>
-                <div class="bg-white p-6 rounded-2xl shadow-lg text-center hover:shadow-xl transition">
-                    <div class="text-5xl mb-3">✅</div>
-                    <h4 class="font-bold text-lg mb-2">Calidad Premium</h4>
-                    <p class="text-gray-600 text-sm">Papel de primera calidad, impresión nítida</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-12">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
-                <div>
-                    <h4 class="text-2xl font-bold mb-4">🏥 Librería Central</h4>
-                    <p class="text-gray-400 text-sm mb-2">Expertos en recetas médicas y formularios personalizados desde 2010.</p>
-                    <p class="text-gray-400 text-sm">Calidad y profesionalismo garantizado.</p>
-                </div>
-                <div>
-                    <h4 class="text-xl font-bold mb-4">📍 Ubicación</h4>
-                    <p class="text-gray-400 text-sm">Calle Urmeneta #300</p>
-                    <p class="text-gray-400 text-sm">Galería Caracol, Local 15</p>
-                    <p class="text-gray-400 text-sm">Puerto Montt, Chile</p>
-                </div>
-                <div>
-                    <h4 class="text-xl font-bold mb-4">📞 Contacto</h4>
-                    <p class="text-gray-400 text-sm">📱 WhatsApp: +569 78 47 2489</p>
-                    <p class="text-gray-400 text-sm">📧 Email: fta.tecno@gmail.com</p>
-                    <p class="text-gray-400 text-sm">🕐 Lun-Vie: 9:00 - 19:00 hrs</p>
-                </div>
-            </div>
-            <div class="border-t border-gray-800 mt-8 pt-6 text-center text-sm text-gray-500">
-                <p>© 2024 Librería Central - Puerto Montt. Todos los derechos reservados.</p>
-            </div>
+    <footer class="bg-gray-900 text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p>🏥 Librería Central - Puerto Montt | 📱 +569 78 47 2489</p>
         </div>
     </footer>
 
     <script>
         let currentTemplate = null;
+        let selectedElement = null;
+        let elementCounter = 0;
         const prices = { simple: 9990, duplicado: 14990, triplicado: 19990 };
-
-        const templates = {
-            1: {
-                name: 'Dental',
-                color: '#10b981',
-                render: (data) => `
-                    <div class="bg-white p-8 rounded-xl shadow-2xl" style="min-height: 800px; border-top: 6px solid ${data.color}; position: relative; overflow: hidden;">
-                        <div style="position: absolute; top: -40px; right: -40px; width: 120px; height: 120px; background: ${data.color}20; border-radius: 50%;"></div>
-                        <div class="flex justify-between items-center mb-8 relative z-10">
-                            <div>
-                                <h2 class="text-3xl font-black mb-1" style="color: ${data.color}">${data.title || 'Dr.'} ${data.doctorName || '[Tu Nombre]'}</h2>
-                                <p class="text-lg font-semibold" style="color: ${data.color}80">${data.specialty || 'Odontólogo'}</p>
-                                <p class="text-sm text-gray-500 mt-1">RUT: ${data.rut || 'XX.XXX.XXX-X'}</p>
-                            </div>
-                            <div class="text-6xl">🦷</div>
-                        </div>
-                        <div class="space-y-2 text-sm text-gray-600 mb-8 bg-gray-50 p-4 rounded-lg">
-                            <p><span class="font-semibold">📞</span> ${data.phone || '+569 XXX XXX XXX'}</p>
-                            <p><span class="font-semibold">📧</span> ${data.address || 'email@consulta.cl'}</p>
-                        </div>
-                        <div class="border-4 rounded-xl p-6 mb-8" style="border-color: ${data.color}30">
-                            <div class="mb-4">
-                                <label class="block text-xs font-bold uppercase mb-2" style="color: ${data.color}">Paciente:</label>
-                                <div class="border-b-2 border-gray-300 h-8"></div>
-                            </div>
-                            <div class="mb-4">
-                                <label class="block text-xs font-bold uppercase mb-2" style="color: ${data.color}">Edad:</label>
-                                <div class="border-b-2 border-gray-300 h-8 w-32"></div>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase mb-2" style="color: ${data.color}">Receta / Tratamiento:</label>
-                                <div class="border-2 rounded-lg p-3 h-48" style="border-color: ${data.color}30; background: ${data.color}08"></div>
-                            </div>
-                        </div>
-                        <div class="flex justify-between items-end mt-12">
-                            <div class="text-sm text-gray-400">Fecha: ___/___/______</div>
-                            <div class="border-t-2 border-gray-400 w-48 text-center text-xs text-gray-500 pt-2">Firma Médico</div>
-                        </div>
-                    </div>
-                `
-            },
-            2: {
-                name: 'Clásica Minimalista',
-                color: '#1f2937',
-                render: (data) => `
-                    <div class="bg-white p-8 rounded shadow-2xl border-t-8 border-gray-800" style="min-height: 800px">
-                        <div class="text-center border-b-4 border-gray-800 pb-6 mb-6">
-                            <div class="text-4xl mb-2">⚕️</div>
-                            <h2 class="text-3xl font-black mb-1 text-gray-900">${data.title || 'Dr.'} ${data.doctorName || '[Tu Nombre]'}</h2>
-                            <p class="text-lg text-gray-600">${data.specialty || 'Medicina General'}</p>
-                            <p class="text-sm text-gray-500 mt-2">RUT: ${data.rut || 'XX.XXX.XXX-X'}</p>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4 text-sm text-gray-600 mb-8 bg-gray-50 p-4 rounded">
-                            <div>📞 ${data.phone || '+569 XXX XXX XXX'}</div>
-                            <div>📍 ${data.address || 'Dirección del consultorio'}</div>
-                        </div>
-                        <div class="space-y-6">
-                            <div>
-                                <label class="block text-xs font-bold uppercase text-gray-500 mb-2">Nombre del Paciente:</label>
-                                <div class="border-b-2 border-gray-300 h-10"></div>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase text-gray-500 mb-2">Receta Médica:</label>
-                                <div class="border-2 border-gray-200 rounded-lg h-64 p-4 bg-gray-50"></div>
-                            </div>
-                        </div>
-                        <div class="mt-16 flex justify-between items-center">
-                            <div class="text-sm text-gray-500">Fecha: ___/___/______</div>
-                            <div class="border-t-2 border-gray-600 w-48 text-center text-xs text-gray-500 pt-2">Firma y Timbre</div>
-                        </div>
-                    </div>
-                `
-            },
-            3: {
-                name: 'Verde Moderna',
-                color: '#10b981',
-                render: (data) => `
-                    <div class="bg-white p-6 rounded-2xl shadow-2xl" style="min-height: 800px; position: relative;">
-                        <div style="position: absolute; top: 0; left: 0; right: 0; height: 8px; background: linear-gradient(90deg, ${data.color}, ${data.color}80); border-radius: 8px 8px 0 0;"></div>
-                        <div class="flex items-center gap-3 mb-6 mt-2">
-                            <div class="text-5xl" style="color: ${data.color}">✚</div>
-                            <div class="flex-1">
-                                <h2 class="text-2xl font-black" style="color: ${data.color}">${data.title || 'Dr.'} ${data.doctorName || '[Tu Nombre]'}</h2>
-                                <p class="text-base" style="color: ${data.color}90">${data.specialty || 'Especialidad Médica'}</p>
-                            </div>
-                        </div>
-                        <div class="rounded-xl p-4 mb-6 text-sm" style="background: ${data.color}10">
-                            <p class="mb-1"><span class="font-semibold">RUT:</span> ${data.rut || 'XX.XXX.XXX-X'}</p>
-                            <p class="mb-1"><span class="font-semibold">Teléfono:</span> ${data.phone || '+569 XXX XXX XXX'}</p>
-                            <p><span class="font-semibold">Dirección:</span> ${data.address || 'Consultorio'}</p>
-                        </div>
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-xs font-bold uppercase mb-1" style="color: ${data.color}">Paciente:</label>
-                                <div class="border-2 rounded-lg p-2" style="border-color: ${data.color}30; background: ${data.color}05">
-                                    <div class="h-8 bg-white rounded"></div>
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase mb-1" style="color: ${data.color}">Diagnóstico / Receta:</label>
-                                <div class="border-2 rounded-lg p-3 h-56" style="border-color: ${data.color}30; background: ${data.color}05"></div>
-                            </div>
-                        </div>
-                        <div class="mt-8 flex justify-between items-center">
-                            <div class="text-xs text-gray-400">Fecha: ___/___/______</div>
-                            <div class="border-t-2 border-gray-400 w-40 text-center text-xs text-gray-500 pt-1">Firma</div>
-                        </div>
-                    </div>
-                `
-            },
-            4: {
-                name: 'Azul Profesional',
-                color: '#2563eb',
-                render: (data) => `
-                    <div class="bg-white rounded-2xl shadow-2xl overflow-hidden" style="min-height: 800px">
-                        <div class="p-6 text-white" style="background: linear-gradient(135deg, ${data.color} 0%, ${data.color}cc 100%)">
-                            <h2 class="text-3xl font-black mb-1">${data.title || 'Dr.'} ${data.doctorName || '[Tu Nombre]'}</h2>
-                            <p class="text-lg opacity-95">${data.specialty || 'Medicina General'}</p>
-                            <p class="text-sm opacity-80 mt-1">RUT: ${data.rut || 'XX.XXX.XXX-X'}</p>
-                        </div>
-                        <div class="p-6">
-                            <div class="grid grid-cols-2 gap-3 text-sm mb-6 bg-blue-50 p-3 rounded-lg">
-                                <div><span class="font-semibold">📞</span> ${data.phone || '+569 XXX XXX XXX'}</div>
-                                <div><span class="font-semibold">📍</span> ${data.address || 'Dirección'}</div>
-                            </div>
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="block text-xs font-bold uppercase text-gray-500 mb-2">Paciente:</label>
-                                    <div class="bg-blue-50 border-2 border-blue-200 rounded-lg h-10"></div>
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-bold uppercase text-gray-500 mb-2">Indicaciones Médicas:</label>
-                                    <div class="bg-blue-50 border-2 border-blue-200 rounded-lg h-64 p-3"></div>
-                                </div>
-                            </div>
-                            <div class="mt-8 flex justify-between items-center">
-                                <div class="text-sm text-gray-500">Fecha: ___/___/______</div>
-                                <div class="border-t-2 border-gray-400 w-40 text-center text-xs text-gray-500 pt-1">Firma Médico</div>
-                            </div>
-                        </div>
-                    </div>
-                `
-            },
-            5: {
-                name: 'Veterinaria',
-                color: '#8b5cf6',
-                render: (data) => `
-                    <div class="bg-white p-6 rounded-2xl shadow-2xl" style="min-height: 800px; background: linear-gradient(135deg, #faf5ff 0%, #fff 100%)">
-                        <div class="flex justify-between items-center mb-6">
-                            <div>
-                                <h2 class="text-3xl font-black mb-1" style="color: ${data.color}">${data.title || 'Dr.'} ${data.doctorName || '[Tu Nombre]'}</h2>
-                                <p class="text-lg" style="color: ${data.color}90">${data.specialty || 'Médico Veterinario'}</p>
-                            </div>
-                            <div class="text-6xl">🐾</div>
-                        </div>
-                        <div class="rounded-xl p-4 mb-6" style="background: ${data.color}15">
-                            <p class="text-sm mb-1"><span class="font-semibold">RUT:</span> ${data.rut || 'XX.XXX.XXX-X'}</p>
-                            <p class="text-sm"><span class="font-semibold">Contacto:</span> ${data.phone || '+569 XXX XXX XXX'}</p>
-                        </div>
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-xs font-bold uppercase mb-2" style="color: ${data.color}">Dueño:</label>
-                                <div class="border-2 rounded-lg p-2" style="border-color: ${data.color}30">
-                                    <div class="h-8"></div>
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase mb-2" style="color: ${data.color}">Paciente (Mascota):</label>
-                                <div class="border-2 rounded-lg p-2" style="border-color: ${data.color}30">
-                                    <div class="h-8"></div>
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase mb-2" style="color: ${data.color}">Receta / Tratamiento:</label>
-                                <div class="border-2 rounded-lg p-3 h-48" style="border-color: ${data.color}30; background: ${data.color}08"></div>
-                            </div>
-                        </div>
-                        <div class="mt-8 flex justify-between items-center">
-                            <div class="text-xs text-gray-400">Fecha: ___/___/______</div>
-                            <div class="border-t-2 border-gray-400 w-40 text-center text-xs text-gray-500 pt-1">Firma</div>
-                        </div>
-                    </div>
-                `
-            },
-            6: {
-                name: 'Barra Lateral',
-                color: '#dc2626',
-                render: (data) => `
-                    <div class="bg-white rounded-2xl shadow-2xl overflow-hidden flex" style="min-height: 800px">
-                        <div class="w-20 flex flex-col items-center justify-center text-white p-4" style="background: linear-gradient(180deg, ${data.color} 0%, ${data.color}cc 100%)">
-                            <div class="text-4xl mb-2">⚕️</div>
-                            <div class="text-xs text-center opacity-90">RECETA</div>
-                        </div>
-                        <div class="flex-1 p-6">
-                            <div class="border-b-2 pb-4 mb-4" style="border-color: ${data.color}">
-                                <h2 class="text-2xl font-black mb-1" style="color: ${data.color}">${data.title || 'Dr.'} ${data.doctorName || '[Tu Nombre]'}</h2>
-                                <p class="text-base" style="color: ${data.color}90">${data.specialty || 'Especialidad'}</p>
-                            </div>
-                            <div class="text-sm text-gray-600 mb-6 space-y-1">
-                                <p>RUT: ${data.rut || 'XX.XXX.XXX-X'}</p>
-                                <p>Tel: ${data.phone || '+569 XXX XXX XXX'}</p>
-                                <p>${data.address || 'Dirección del consultorio'}</p>
-                            </div>
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Paciente:</label>
-                                    <div class="bg-gray-50 border-l-4 rounded p-2" style="border-color: ${data.color}">
-                                        <div class="h-8"></div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Receta:</label>
-                                    <div class="bg-gray-50 border-l-4 rounded p-3 h-56" style="border-color: ${data.color}"></div>
-                                </div>
-                            </div>
-                            <div class="mt-8 flex justify-between">
-                                <div class="text-xs text-gray-400">Fecha: ___/___/______</div>
-                                <div class="border-t-2 border-gray-400 w-32 text-center text-xs text-gray-500 pt-1">Firma</div>
-                            </div>
-                        </div>
-                    </div>
-                `
-            },
-            7: {
-                name: 'Moderna Formas',
-                color: '#ec4899',
-                render: (data) => `
-                    <div class="bg-white p-6 rounded-3xl shadow-2xl relative overflow-hidden" style="min-height: 800px">
-                        <div style="position: absolute; top: -40px; right: -40px; width: 200px; height: 200px; background: ${data.color}20; border-radius: 50%;"></div>
-                        <div style="position: absolute; bottom: -30px; left: -30px; width: 150px; height: 150px; background: ${data.color}15; border-radius: 50%;"></div>
-                        <div class="relative z-10">
-                            <h2 class="text-3xl font-black mb-2" style="color: ${data.color}">${data.title || 'Dr.'} ${data.doctorName || '[Tu Nombre]'}</h2>
-                            <p class="text-lg mb-4" style="color: ${data.color}90">${data.specialty || 'Especialidad Médica'}</p>
-                            
-                            <div class="rounded-3xl p-4 mb-6" style="background: linear-gradient(135deg, ${data.color}15 0%, ${data.color}08 100%)">
-                                <p class="text-sm mb-1"><span class="font-semibold">RUT:</span> ${data.rut || 'XX.XXX.XXX-X'}</p>
-                                <p class="text-sm"><span class="font-semibold">Contacto:</span> ${data.phone || '+569 XXX XXX XXX'}</p>
-                            </div>
-                            
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="block text-xs font-bold uppercase mb-1" style="color: ${data.color}">Paciente:</label>
-                                    <div class="rounded-2xl p-3" style="background: linear-gradient(90deg, ${data.color}10, transparent)">
-                                        <div class="h-8 bg-white rounded-xl shadow-sm"></div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-bold uppercase mb-1" style="color: ${data.color}">Receta Médica:</label>
-                                    <div class="rounded-2xl p-4 h-56" style="background: linear-gradient(135deg, ${data.color}08, ${data.color}05); border: 2px dashed ${data.color}30"></div>
-                                </div>
-                            </div>
-                            
-                            <div class="mt-8 flex justify-between items-center">
-                                <div class="text-xs text-gray-400">Fecha: ___/___/______</div>
-                                <div class="border-t-2 border-gray-300 w-40 text-center text-xs text-gray-500 pt-1">Firma</div>
-                            </div>
-                        </div>
-                    </div>
-                `
-            },
-            8: {
-                name: 'Optometría',
-                color: '#06b6d4',
-                render: (data) => `
-                    <div class="bg-white p-6 rounded-2xl shadow-2xl" style="min-height: 800px">
-                        <div class="flex items-center gap-3 mb-6 border-b-4 pb-4" style="border-color: ${data.color}">
-                            <div class="text-5xl">👁️</div>
-                            <div class="flex-1">
-                                <h2 class="text-2xl font-black" style="color: ${data.color}">${data.title || 'Dr.'} ${data.doctorName || '[Tu Nombre]'}</h2>
-                                <p class="text-base" style="color: ${data.color}90">${data.specialty || 'Optometrista'}</p>
-                            </div>
-                        </div>
-                        
-                        <div class="text-sm text-gray-600 mb-6 bg-cyan-50 p-3 rounded-lg">
-                            <p>RUT: ${data.rut || 'XX.XXX.XXX-X'} | Tel: ${data.phone || '+569 XXX XXX XXX'}</p>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <label class="block text-xs font-bold uppercase mb-2" style="color: ${data.color}">Paciente:</label>
-                            <div class="border-2 rounded-lg p-2" style="border-color: ${data.color}30">
-                                <div class="h-8"></div>
-                            </div>
-                        </div>
-                        
-                        <div class="grid grid-cols-2 gap-4 mb-4">
-                            <div class="border-2 rounded-lg p-3" style="border-color: ${data.color}30; background: ${data.color}08">
-                                <div class="font-bold text-sm mb-2" style="color: ${data.color}">OJO DERECHO (OD)</div>
-                                <div class="space-y-2">
-                                    <div class="h-2 bg-cyan-100 rounded"></div>
-                                    <div class="h-2 bg-cyan-100 rounded"></div>
-                                    <div class="h-2 bg-cyan-100 rounded w-3/4"></div>
-                                </div>
-                            </div>
-                            <div class="border-2 rounded-lg p-3" style="border-color: ${data.color}30; background: ${data.color}08">
-                                <div class="font-bold text-sm mb-2" style="color: ${data.color}">OJO IZQUIERDO (OI)</div>
-                                <div class="space-y-2">
-                                    <div class="h-2 bg-cyan-100 rounded"></div>
-                                    <div class="h-2 bg-cyan-100 rounded"></div>
-                                    <div class="h-2 bg-cyan-100 rounded w-3/4"></div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <label class="block text-xs font-bold uppercase mb-2" style="color: ${data.color}">Observaciones:</label>
-                            <div class="border-2 rounded-lg p-3 h-32" style="border-color: ${data.color}30"></div>
-                        </div>
-                        
-                        <div class="mt-8 flex justify-between items-center">
-                            <div class="text-xs text-gray-400">Fecha: ___/___/______</div>
-                            <div class="border-t-2 border-gray-400 w-40 text-center text-xs text-gray-500 pt-1">Firma</div>
-                        </div>
-                    </div>
-                `
-            },
-            9: {
-                name: 'Header Colorido',
-                color: 'linear-gradient(90deg, #fbbf24, #ec4899, #8b5cf6)',
-                render: (data) => `
-                    <div class="bg-white rounded-2xl shadow-2xl overflow-hidden" style="min-height: 800px">
-                        <div class="h-20 p-6 flex items-center justify-between text-white" style="background: ${data.color}">
-                            <div>
-                                <h2 class="text-3xl font-black mb-1">${data.title || 'Dr.'} ${data.doctorName || '[Tu Nombre]'}</h2>
-                                <p class="text-sm opacity-95">${data.specialty || 'Especialidad Médica'}</p>
-                            </div>
-                            <div class="text-4xl">⚕️</div>
-                        </div>
-                        <div class="p-6">
-                            <div class="text-sm text-gray-600 mb-6 bg-gradient-to-r from-yellow-50 via-pink-50 to-purple-50 p-3 rounded-lg">
-                                <p><span class="font-semibold">RUT:</span> ${data.rut || 'XX.XXX.XXX-X'}</p>
-                                <p><span class="font-semibold">Teléfono:</span> ${data.phone || '+569 XXX XXX XXX'}</p>
-                                <p><span class="font-semibold">Dirección:</span> ${data.address || 'Consultorio'}</p>
-                            </div>
-                            
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Paciente:</label>
-                                    <div class="bg-gradient-to-r from-yellow-50 to-pink-50 border-2 rounded-lg p-2">
-                                        <div class="h-8 bg-white rounded shadow-sm"></div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Receta / Indicaciones:</label>
-                                    <div class="bg-gradient-to-br from-pink-50 to-purple-50 border-2 rounded-lg p-4 h-64"></div>
-                                </div>
-                            </div>
-                            
-                            <div class="mt-8 flex justify-between items-center">
-                                <div class="text-xs text-gray-400">Fecha: ___/___/______</div>
-                                <div class="border-t-2 border-gray-400 w-40 text-center text-xs text-gray-500 pt-1">Firma Médico</div>
-                            </div>
-                        </div>
-                    </div>
-                `
-            },
-            10: {
-                name: 'Sidebar Vertical Edit.org',
-                color: '#0f766e',
-                render: (data) => `
-                    <div class="bg-white p-8 rounded-2xl shadow-2xl relative" style="min-height: 800px">
-                        <!-- Sidebar vertical izquierdo -->
-                        <div class="absolute left-0 top-0 bottom-0 w-4 rounded-l-2xl" style="background: ${data.color}"></div>
-                        
-                        <div class="ml-6">
-                            <!-- Header con caduceo -->
-                            <div class="flex items-start gap-4 mb-8 border-b-2 border-gray-200 pb-4">
-                                <div class="text-5xl" style="color: #be185d">☤</div>
-                                <div class="flex-1">
-                                    <h2 class="text-3xl font-black mb-1 text-gray-900">${data.title || 'Dr.'} ${data.doctorName || '[Tu Nombre]'}</h2>
-                                    <p class="text-lg text-gray-700">${data.specialty || 'Médico'}</p>
-                                    <p class="text-sm text-gray-600">${data.rut || '12234567'}</p>
-                                    <p class="text-sm text-gray-600">${data.department || 'Departamento de Medicina'}</p>
-                                </div>
-                            </div>
-                            
-                            <!-- Campos del paciente -->
-                            <div class="space-y-4 mb-8">
-                                <div>
-                                    <label class="block text-sm font-semibold text-gray-700 mb-1">Nombre:</label>
-                                    <div class="border-b border-gray-400 h-6"></div>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-semibold text-gray-700 mb-1">Sexo:</label>
-                                    <div class="border-b border-gray-400 h-6 w-1/2"></div>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-semibold text-gray-700 mb-1">Edad:</label>
-                                    <div class="border-b border-gray-400 h-6 w-1/3"></div>
-                                </div>
-                            </div>
-                            
-                            <!-- Sección Rp. -->
-                            <div class="mb-8">
-                                <p class="text-2xl font-serif italic mb-4" style="color: ${data.color}">Rp.</p>
-                                <div class="border-2 border-dashed border-gray-300 rounded-lg h-64 p-4 bg-gray-50"></div>
-                            </div>
-                            
-                            <!-- Footer con fecha y firma -->
-                            <div class="mt-16 flex justify-between items-end">
-                                <div class="text-center w-48">
-                                    <div class="border-t border-gray-400 pt-2 text-sm text-gray-600 italic">Fecha</div>
-                                </div>
-                                <div class="text-center w-48">
-                                    <div class="border-t border-gray-400 pt-2 text-sm text-gray-600 italic">Firma</div>
-                                </div>
-                            </div>
-                            
-                            <!-- Información de contacto inferior -->
-                            <div class="mt-12 pt-6 border-t-2" style="border-color: ${data.color}20">
-                                <div class="flex items-center gap-2 text-sm text-gray-600 mb-2">
-                                    <span class="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs" style="background: #be185d">📍</span>
-                                    <span>${data.address || 'Calle de Miguel Servet, 17, 28012 Madrid'}</span>
-                                    <span class="mx-2">/</span>
-                                    <span>${data.phone || '622 333 333'}</span>
-                                </div>
-                                <div class="flex items-center gap-2 text-sm text-gray-600 mb-2">
-                                    <span class="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs" style="background: #be185d">✉</span>
-                                    <span>${data.email || 'nombre@edit.org'}</span>
-                                </div>
-                                <div class="flex items-center gap-2 text-sm text-gray-600">
-                                    <span class="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs" style="background: #be185d">🌐</span>
-                                    <span>${data.website || 'www.edit.org'}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `
-            },
-            11: {
-                name: 'Header Derecho Edit.org',
-                color: '#64748b',
-                render: (data) => `
-                    <div class="bg-white p-8 rounded-2xl shadow-2xl relative" style="min-height: 800px">
-                        <!-- Header superior -->
-                        <div class="flex justify-between items-start mb-8">
-                            <!-- Logo y datos del doctor -->
-                            <div class="flex-1">
-                                <div class="text-6xl mb-4" style="color: ${data.color}">☤</div>
-                                <h2 class="text-4xl font-black mb-2" style="color: ${data.color}">${data.title || 'Dr.'} ${data.doctorName || '[Tu Nombre]'}</h2>
-                                <p class="text-base text-gray-600 mb-1">${data.title || 'Doctor'} | ${data.rut || '12234567'}</p>
-                                <p class="text-base text-gray-600">${data.department || 'Departamento de Medicina'}</p>
-                            </div>
-                            
-                            <!-- Sidebar derecho con contacto -->
-                            <div class="w-12 rounded-r-lg ml-6 flex flex-col items-center py-2 gap-3" style="background: ${data.color}">
-                                <div class="text-white text-xs">📍</div>
-                                <div class="text-white text-xs">📞</div>
-                                <div class="text-white text-xs">🌐</div>
-                                <div class="text-white text-xs">✉</div>
-                            </div>
-                        </div>
-                        
-                        <!-- Información de contacto superior derecha -->
-                        <div class="absolute top-8 right-16 text-right text-sm text-gray-600 space-y-1">
-                            <p>${data.address || 'Calle Amalarico, 7, 28019 Madrid'}</p>
-                            <p>${data.phone || '91 222 22 22'}</p>
-                            <p>${data.website || 'www.edit.org'}</p>
-                            <p>${data.email || 'name@edit.org'}</p>
-                        </div>
-                        
-                        <!-- Campos del paciente en 2 columnas -->
-                        <div class="grid grid-cols-2 gap-6 mb-8">
-                            <div>
-                                <label class="block text-sm font-bold text-gray-800 mb-1">Name:</label>
-                                <div class="border-b border-dashed border-gray-400 h-6"></div>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-bold text-gray-800 mb-1">Edad:</label>
-                                <div class="border-b border-dashed border-gray-400 h-6"></div>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-bold text-gray-800 mb-1">Sexo:</label>
-                                <div class="border-b border-dashed border-gray-400 h-6"></div>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-bold text-gray-800 mb-1">Fecha:</label>
-                                <div class="border-b border-dashed border-gray-400 h-6"></div>
-                            </div>
-                        </div>
-                        
-                        <!-- Área de receta grande -->
-                        <div class="border-2 border-dashed border-gray-300 rounded-lg h-96 mb-8 bg-gradient-to-br from-blue-50 to-transparent"></div>
-                        
-                        <!-- Watermark sutil -->
-                        <div class="absolute bottom-32 left-1/2 transform -translate-x-1/2 opacity-5 pointer-events-none">
-                            <div class="text-9xl" style="color: ${data.color}">☤</div>
-                        </div>
-                        
-                        <!-- Espacio para logo -->
-                        <div class="absolute bottom-8 right-8 border-2 border-dashed border-gray-300 w-20 h-20 flex items-center justify-center text-xs text-gray-400 text-center p-2">
-                            TU LOGO
-                        </div>
-                    </div>
-                `
-            }
-        };
 
         function selectTemplate(num) {
             currentTemplate = num;
             document.getElementById('editor').classList.remove('hidden');
             document.getElementById('editor').scrollIntoView({ behavior: 'smooth' });
+            initTemplate(num);
+        }
+
+        function initTemplate(num) {
+            const canvas = document.getElementById('recipeCanvas');
+            canvas.innerHTML = '';
             
-            const templateColors = {
-                1: '#10b981', 2: '#1f2937', 3: '#10b981', 4: '#2563eb',
-                5: '#8b5cf6', 6: '#dc2626', 7: '#ec4899', 8: '#06b6d4', 
-                9: '#fbbf24', 10: '#0f766e', 11: '#64748b'
-            };
-            document.getElementById('primaryColor').value = templateColors[num];
+            // Crear elementos base según la plantilla
+            const elements = getTemplateElements(num);
+            elements.forEach(el => createElementOnCanvas(el));
             
-            // Set default title based on template
-            if(num === 5) {
-                document.getElementById('titlePrefix').value = 'Méd. Vet.';
-            } else if(num === 1) {
-                document.getElementById('titlePrefix').value = 'Od.';
-            } else {
-                document.getElementById('titlePrefix').value = 'Dr.';
+            calculatePrice();
+        }
+
+        function getTemplateElements(num) {
+            const baseElements = [
+                { type: 'text', content: 'Dr. [Tu Nombre]', x: 50, y: 50, fontSize: 32, color: '#1f2937', fontWeight: 'bold', width: 400, id: 'title' },
+                { type: 'text', content: 'Especialidad', x: 50, y: 90, fontSize: 16, color: '#6b7280', width: 300, id: 'specialty' },
+                { type: 'text', content: '📞 +569 XXX XXX XXX', x: 50, y: 120, fontSize: 14, color: '#6b7280', width: 250, id: 'phone' },
+                { type: 'text', content: 'Nombre:', x: 50, y: 200, fontSize: 14, color: '#374151', width: 100, id: 'label1' },
+                { type: 'line', x: 150, y: 205, width: 400, height: 2, color: '#9ca3af', id: 'line1' },
+                { type: 'text', content: 'Fecha:', x: 50, y: 750, fontSize: 12, color: '#6b7280', width: 80, id: 'date' },
+                { type: 'text', content: 'Firma:', x: 400, y: 750, fontSize: 12, color: '#6b7280', width: 80, id: 'signature' },
+            ];
+            
+            return baseElements;
+        }
+
+        function createElementOnCanvas(config) {
+            const canvas = document.getElementById('recipeCanvas');
+            const el = document.createElement('div');
+            
+            if (config.type === 'text') {
+                el.className = 'draggable-element';
+                el.contentEditable = true;
+                el.innerText = config.content;
+                el.style.left = config.x + 'px';
+                el.style.top = config.y + 'px';
+                el.style.fontSize = config.fontSize + 'px';
+                el.style.color = config.color;
+                el.style.fontWeight = config.fontWeight || 'normal';
+                el.style.width = config.width + 'px';
+                el.style.position = 'absolute';
+                el.id = 'el-' + (config.id || elementCounter++);
+                
+                // Resize handles
+                el.innerHTML += '<div class="resize-handle se"></div>';
+                el.innerHTML += '<div class="resize-handle sw"></div>';
+                el.innerHTML += '<div class="resize-handle ne"></div>';
+                el.innerHTML += '<div class="resize-handle nw"></div>';
+                
+            } else if (config.type === 'line') {
+                el.className = 'draggable-element';
+                el.style.left = config.x + 'px';
+                el.style.top = config.y + 'px';
+                el.style.width = config.width + 'px';
+                el.style.height = config.height + 'px';
+                el.style.backgroundColor = config.color;
+                el.style.position = 'absolute';
+                el.id = 'el-' + (config.id || elementCounter++);
+            } else if (config.type === 'image') {
+                el.className = 'draggable-element';
+                el.style.left = config.x + 'px';
+                el.style.top = config.y + 'px';
+                el.style.width = config.width + 'px';
+                el.style.position = 'absolute';
+                el.innerHTML = `<img src="${config.src}" class="uploaded-logo" style="width: 100%;">`;
+                el.id = 'el-' + (config.id || elementCounter++);
             }
             
-            updatePreview();
+            // Event listeners
+            el.addEventListener('click', function(e) {
+                e.stopPropagation();
+                selectElement(el);
+            });
+            
+            el.addEventListener('blur', function() {
+                if (el.id === 'title') updateDataFromElement(el, 'titlePrefix', 'doctorName');
+                if (el.id === 'specialty') document.getElementById('specialty').value = el.innerText;
+                if (el.id === 'phone') document.getElementById('phone').value = el.innerText;
+            }, true);
+            
+            canvas.appendChild(el);
+            
+            // Make draggable
+            makeDraggable(el);
+        }
+
+        function makeDraggable(element) {
+            interact(element).draggable({
+                listeners: {
+                    move: function(event) {
+                        const target = event.target;
+                        const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+                        const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+                        
+                        target.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
+                        target.setAttribute('data-x', x);
+                        target.setAttribute('data-y', y);
+                    }
+                },
+                modifiers: [
+                    interact.modifiers.restrictRect({
+                        restriction: 'parent',
+                        endOnly: true
+                    })
+                ]
+            });
+            
+            // Make resizable
+            interact(element).resizable({
+                edges: { left: true, right: true, bottom: true, top: false },
+                listeners: {
+                    move: function(event) {
+                        const target = event.target;
+                        let width = parseFloat(target.getAttribute('data-width')) || target.offsetWidth;
+                        width += event.deltaRect.left;
+                        
+                        target.style.width = width + 'px';
+                        target.setAttribute('data-width', width);
+                        
+                        // Update font size based on width for text elements
+                        if (target.contentEditable) {
+                            const newFontSize = Math.max(8, Math.min(72, width / 10));
+                            target.style.fontSize = newFontSize + 'px';
+                            document.getElementById('fontSize').value = newFontSize;
+                            document.getElementById('fontSizeValue').textContent = Math.round(newFontSize);
+                        }
+                    }
+                }
+            });
+        }
+
+        function selectElement(el) {
+            // Deselect previous
+            if (selectedElement) {
+                selectedElement.classList.remove('selected');
+            }
+            
+            selectedElement = el;
+            el.classList.add('selected');
+            
+            // Show properties panel
+            document.getElementById('elementProperties').style.display = 'block';
+            
+            // Update property values
+            if (el.contentEditable) {
+                document.getElementById('fontSize').value = parseInt(el.style.fontSize) || 16;
+                document.getElementById('fontSizeValue').textContent = parseInt(el.style.fontSize) || 16;
+                document.getElementById('textColor').value = rgbToHex(el.style.color) || '#000000';
+            }
+        }
+
+        function updateElementText() {
+            const title = document.getElementById('titlePrefix').value;
+            const name = document.getElementById('doctorName').value;
+            const specialty = document.getElementById('specialty').value;
+            const phone = document.getElementById('phone').value;
+            
+            const titleEl = document.getElementById('el-title');
+            const specEl = document.getElementById('el-specialty');
+            const phoneEl = document.getElementById('el-phone');
+            
+            if (titleEl) titleEl.innerText = title + ' ' + name;
+            if (specEl) specEl.innerText = specialty;
+            if (phoneEl) phoneEl.innerText = phone;
+        }
+
+        function updateElementStyle() {
+            if (!selectedElement) return;
+            
+            const fontSize = document.getElementById('fontSize').value;
+            const color = document.getElementById('textColor').value;
+            const opacity = document.getElementById('opacity').value / 100;
+            
+            selectedElement.style.fontSize = fontSize + 'px';
+            selectedElement.style.color = color;
+            selectedElement.style.opacity = opacity;
+            
+            document.getElementById('fontSizeValue').textContent = fontSize;
+        }
+
+        function setTextAlign(align) {
+            if (!selectedElement) return;
+            selectedElement.style.textAlign = align;
+        }
+
+        function deleteSelectedElement() {
+            if (!selectedElement) return;
+            selectedElement.remove();
+            selectedElement = null;
+            document.getElementById('elementProperties').style.display = 'none';
+        }
+
+        function handleLogoUpload(event) {
+            const file = event.target.files[0];
+            if (file) processLogo(file);
+        }
+
+        function handleDrop(event) {
+            event.preventDefault();
+            event.currentTarget.classList.remove('dragover');
+            const file = event.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                processLogo(file);
+            }
+        }
+
+        function handleDragOver(event) {
+            event.preventDefault();
+            event.currentTarget.classList.add('dragover');
+        }
+
+        function handleDragLeave(event) {
+            event.currentTarget.classList.remove('dragover');
+        }
+
+        function processLogo(file) {
+            if (file.size > 2 * 1024 * 1024) {
+                alert('El archivo es muy grande. Máximo 2MB.');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                createElementOnCanvas({
+                    type: 'image',
+                    src: e.target.result,
+                    x: 50,
+                    y: 50,
+                    width: 100
+                });
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function updateLogoSize() {
+            const width = document.getElementById('logoWidth').value;
+            document.getElementById('logoWidthValue').textContent = width;
+            
+            const images = document.querySelectorAll('.uploaded-logo');
+            images.forEach(img => {
+                img.style.width = width + 'px';
+            });
+        }
+
+        function addElement(type) {
+            if (type === 'text') {
+                createElementOnCanvas({
+                    type: 'text',
+                    content: 'Nuevo Texto',
+                    x: 100 + (elementCounter * 20),
+                    y: 100 + (elementCounter * 20),
+                    fontSize: 16,
+                    color: '#000000',
+                    width: 200
+                });
+            }
+        }
+
+        function updateDataFromElement(el, inputId1, inputId2) {
+            const text = el.innerText;
+            const parts = text.split(' ');
+            if (parts.length > 0) {
+                document.getElementById(inputId1).value = parts[0];
+                document.getElementById(inputId2).value = parts.slice(1).join(' ');
+            }
         }
 
         function setTitle(title) {
             document.getElementById('titlePrefix').value = title;
-            updatePreview();
-        }
-
-        function setColor(color) {
-            document.getElementById('primaryColor').value = color;
-            updatePreview();
-        }
-
-        function updatePreview() {
-            if (!currentTemplate) return;
-            
-            const data = {
-                title: document.getElementById('titlePrefix').value,
-                doctorName: document.getElementById('doctorName').value,
-                specialty: document.getElementById('specialty').value,
-                rut: document.getElementById('rut').value,
-                phone: document.getElementById('phone').value,
-                address: document.getElementById('address').value,
-                email: document.getElementById('email').value,
-                website: document.getElementById('website').value,
-                department: document.getElementById('specialty').value,
-                color: document.getElementById('primaryColor').value
-            };
-            
-            const template = templates[currentTemplate];
-            document.getElementById('recipePreview').innerHTML = template.render(data);
-            calculatePrice();
+            updateElementText();
         }
 
         function calculatePrice() {
@@ -1145,75 +789,45 @@
         }
 
         function orderRecipe() {
-            if (!currentTemplate) {
-                alert('Por favor selecciona una plantilla primero');
-                return;
-            }
+            const total = document.getElementById('totalPrice').textContent;
+            const message = ` *PEDIDO RECETA PERSONALIZADA*%0A%0A` +
+                `🎨 *Plantilla:* ${currentTemplate}%0A` +
+                `📄 *Tipo:* ${document.getElementById('paperType').value}%0A` +
+                `🔢 *Cantidad:* ${document.getElementById('quantity').value}%0A` +
+                `💰 *Total:* ${total}%0A%0A` +
+                `✅ Diseño 100% personalizado con editor avanzado`;
             
-            const data = {
-                title: document.getElementById('titlePrefix').value,
-                name: document.getElementById('doctorName').value,
-                specialty: document.getElementById('specialty').value,
-                rut: document.getElementById('rut').value,
-                phone: document.getElementById('phone').value,
-                address: document.getElementById('address').value,
-                email: document.getElementById('email').value,
-                website: document.getElementById('website').value,
-                color: document.getElementById('primaryColor').value,
-                paperType: document.getElementById('paperType').value,
-                quantity: document.getElementById('quantity').value,
-                template: templates[currentTemplate].name
-            };
-
-            if (!data.name) {
-                alert('Por favor ingresa al menos el nombre del profesional');
-                return;
-            }
-
-            const total = prices[data.paperType] * (parseInt(data.quantity) || 1);
-            const message = ` *PEDIDO RECETA MÉDICA*%0A%0A` +
-                `👨‍️ *Título:* ${data.title}%0A` +
-                `👤 *Nombre:* ${data.name}%0A` +
-                `📋 *Especialidad:* ${data.specialty}%0A` +
-                `🎨 *Plantilla:* ${data.template}%0A` +
-                `🎨 *Color:* ${data.color}%0A` +
-                `📄 *Tipo:* ${data.paperType}%0A` +
-                `🔢 *Cantidad:* ${data.quantity} talonario(s)%0A` +
-                `💰 *Total:* $${total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}`;
-
             window.open(`https://wa.me/56978472489?text=${message}`, '_blank');
         }
 
+        function resetCanvas() {
+            if (confirm('¿Reiniciar el diseño?')) {
+                initTemplate(currentTemplate);
+            }
+        }
+
         function downloadPreview() {
-            alert('📥 Función de descarga PDF\n\nPara obtener tu receta impresa:\n1. Completa todos los datos\n2. Haz clic en "Pedir por WhatsApp"\n3. Te contactaremos para confirmar el diseño\n\n¡Gracias por elegir Librería Central!');
+            alert('Para descargar: Haz una captura de pantalla (Shift+Cmd+4 en Mac o Win+Shift+S en Windows) del área de la receta.');
         }
 
-        function resetEditor() {
-            document.getElementById('titlePrefix').value = 'Dr.';
-            document.getElementById('doctorName').value = '';
-            document.getElementById('specialty').value = '';
-            document.getElementById('rut').value = '';
-            document.getElementById('phone').value = '';
-            document.getElementById('address').value = '';
-            document.getElementById('email').value = '';
-            document.getElementById('website').value = '';
-            document.getElementById('primaryColor').value = '#667eea';
-            document.getElementById('paperType').value = 'simple';
-            document.getElementById('quantity').value = '1';
-            currentTemplate = null;
-            document.getElementById('recipePreview').innerHTML = `
-                <div class="text-center text-gray-400 py-20">
-                    <div class="text-6xl mb-4">🎨</div>
-                    <p class="text-lg font-semibold">Selecciona una plantilla para comenzar</p>
-                    <p class="text-sm mt-2">Haz clic en cualquiera de las 11 plantillas de arriba</p>
-                </div>
-            `;
-            calculatePrice();
+        function rgbToHex(rgb) {
+            if (!rgb || rgb.indexOf('rgb') !== 0) return rgb;
+            const values = rgb.match(/\d+/g);
+            return '#' + values.map(x => {
+                const hex = parseInt(x).toString(16);
+                return hex.length === 1 ? '0' + hex : hex;
+            }).join('');
         }
 
-        // Add event listeners for real-time preview
-        ['titlePrefix', 'doctorName', 'specialty', 'rut', 'phone', 'address', 'email', 'website', 'primaryColor', 'paperType', 'quantity'].forEach(id => {
-            document.getElementById(id).addEventListener('input', updatePreview);
+        // Click outside to deselect
+        document.addEventListener('click', function(e) {
+            if (e.target.id === 'recipeCanvas' || e.target.closest('.preview-canvas')) {
+                if (selectedElement) {
+                    selectedElement.classList.remove('selected');
+                    selectedElement = null;
+                    document.getElementById('elementProperties').style.display = 'none';
+                }
+            }
         });
     </script>
 </body>
