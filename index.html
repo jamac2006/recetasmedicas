@@ -26,7 +26,6 @@
         .color-picker::-webkit-color-swatch { border: none; border-radius: 6px; }
         .btn-animate:active { transform: scale(0.95); }
         
-        /* Elementos editables y arrastrables */
         .draggable-element {
             position: absolute;
             cursor: move;
@@ -48,12 +47,6 @@
             cursor: -webkit-grabbing;
             cursor: grabbing;
         }
-        .draggable-element:active {
-            cursor: -webkit-grabbing;
-            cursor: grabbing;
-        }
-        
-        /* Controles de redimensionamiento */
         .resize-handle {
             position: absolute;
             width: 10px;
@@ -62,30 +55,20 @@
             border: 2px solid white;
             border-radius: 50%;
             display: none;
+            z-index: 10;
         }
-        .draggable-element.selected .resize-handle {
-            display: block;
-        }
+        .draggable-element.selected .resize-handle { display: block; }
         .resize-handle.se { bottom: -5px; right: -5px; cursor: se-resize; }
         .resize-handle.sw { bottom: -5px; left: -5px; cursor: sw-resize; }
         .resize-handle.ne { top: -5px; right: -5px; cursor: ne-resize; }
         .resize-handle.nw { top: -5px; left: -5px; cursor: nw-resize; }
         
-        /* Logo subido */
-        .uploaded-logo {
-            max-width: 150px;
-            max-height: 150px;
-            object-fit: contain;
-        }
-        
-        /* Panel de propiedades */
+        .uploaded-logo { max-width: 150px; max-height: 150px; object-fit: contain; }
         .property-panel {
             background: white;
             border-radius: 12px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-        
-        /* Input de rango personalizado */
         input[type=range] {
             -webkit-appearance: none;
             width: 100%;
@@ -107,7 +90,6 @@
             background: #e5e7eb;
             border-radius: 2px;
         }
-        
         .title-suggestions { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
         .title-suggestion { 
             background: white; 
@@ -123,8 +105,6 @@
             color: white; 
             border-color: #667eea; 
         }
-        
-        /* Área de carga de archivos */
         .upload-zone {
             border: 3px dashed #cbd5e1;
             transition: all 0.3s;
@@ -133,7 +113,6 @@
             border-color: #3b82f6;
             background: rgba(59, 130, 246, 0.05);
         }
-        
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fade { animation: fadeIn 0.5s ease; }
     </style>
@@ -151,7 +130,6 @@
                 <div class="text-sm text-center md:text-right bg-white/20 p-3 rounded-xl backdrop-blur-sm">
                     <p class="font-semibold">📍 Urmeneta #300, Galería Caracol Local 15</p>
                     <p>📱 +569 78 47 2489</p>
-                    <p>📧 fta.tecno@gmail.com</p>
                 </div>
             </div>
         </div>
@@ -164,11 +142,11 @@
                  Diseña tu Receta <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">100% Personalizable</span>
             </h2>
             <p class="text-lg text-gray-600 max-w-3xl mx-auto mb-6">
-                Elige una plantilla, <strong>arrastra los elementos</strong>, cambia tamaños, sube tu logo y personaliza todo a tu gusto.
+                Elige una plantilla, <strong>arrastra los elementos</strong>, cambia tamaños, sube tu logo y personaliza todo.
             </p>
             <div class="flex flex-wrap justify-center gap-4 text-sm">
                 <div class="bg-blue-100 text-blue-800 px-4 py-2 rounded-full">🖱️ Arrastra y Suelta</div>
-                <div class="bg-green-100 text-green-800 px-4 py-2 rounded-full">📏 Redimensiona Texto</div>
+                <div class="bg-green-100 text-green-800 px-4 py-2 rounded-full">📏 Redimensiona</div>
                 <div class="bg-purple-100 text-purple-800 px-4 py-2 rounded-full">🖼️ Sube tu Logo</div>
                 <div class="bg-pink-100 text-pink-800 px-4 py-2 rounded-full">🎨 11 Plantillas</div>
             </div>
@@ -182,158 +160,71 @@
             <p class="text-center text-gray-600 mb-12">Luego podrás editar TODO: mover, redimensionar, cambiar colores</p>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Template 1 -->
                 <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-green-400" onclick="selectTemplate(1)">
                     <div class="h-64 bg-gradient-to-br from-green-50 to-emerald-100 p-4 flex items-center justify-center">
-                        <div class="text-center">
-                            <div class="text-5xl mb-2">🦷</div>
-                            <div class="font-bold text-green-800">Dental</div>
-                        </div>
+                        <div class="text-center"><div class="text-5xl mb-2">🦷</div><div class="font-bold text-green-800">Dental</div></div>
                     </div>
-                    <div class="p-4">
-                        <h4 class="font-bold text-gray-800">1. Plantilla Dental</h4>
-                        <button class="mt-2 w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 font-semibold">Usar Plantilla</button>
-                    </div>
+                    <div class="p-4"><h4 class="font-bold text-gray-800">1. Plantilla Dental</h4><button class="mt-2 w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 font-semibold">Usar Plantilla</button></div>
                 </div>
-
-                <!-- Template 2 -->
                 <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-gray-700" onclick="selectTemplate(2)">
                     <div class="h-64 bg-gray-100 p-4 flex items-center justify-center">
-                        <div class="text-center">
-                            <div class="text-5xl mb-2">⚕️</div>
-                            <div class="font-bold text-gray-800">Clásica</div>
-                        </div>
+                        <div class="text-center"><div class="text-5xl mb-2">⚕️</div><div class="font-bold text-gray-800">Clásica</div></div>
                     </div>
-                    <div class="p-4">
-                        <h4 class="font-bold text-gray-800">2. Clásica Minimalista</h4>
-                        <button class="mt-2 w-full bg-gray-700 text-white py-2 rounded-lg hover:bg-gray-800 font-semibold">Usar Plantilla</button>
-                    </div>
+                    <div class="p-4"><h4 class="font-bold text-gray-800">2. Clásica Minimalista</h4><button class="mt-2 w-full bg-gray-700 text-white py-2 rounded-lg hover:bg-gray-800 font-semibold">Usar Plantilla</button></div>
                 </div>
-
-                <!-- Template 3 -->
                 <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-green-500" onclick="selectTemplate(3)">
                     <div class="h-64 bg-gradient-to-br from-green-100 to-teal-100 p-4 flex items-center justify-center">
-                        <div class="text-center">
-                            <div class="text-5xl mb-2">✚</div>
-                            <div class="font-bold text-green-800">Verde</div>
-                        </div>
+                        <div class="text-center"><div class="text-5xl mb-2">✚</div><div class="font-bold text-green-800">Verde</div></div>
                     </div>
-                    <div class="p-4">
-                        <h4 class="font-bold text-gray-800">3. Verde Moderna</h4>
-                        <button class="mt-2 w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 font-semibold">Usar Plantilla</button>
-                    </div>
+                    <div class="p-4"><h4 class="font-bold text-gray-800">3. Verde Moderna</h4><button class="mt-2 w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 font-semibold">Usar Plantilla</button></div>
                 </div>
-
-                <!-- Template 4 -->
                 <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-blue-600" onclick="selectTemplate(4)">
                     <div class="h-64 bg-gradient-to-br from-blue-50 to-indigo-100 p-4 flex items-center justify-center">
-                        <div class="text-center">
-                            <div class="text-5xl mb-2">🏥</div>
-                            <div class="font-bold text-blue-800">Azul</div>
-                        </div>
+                        <div class="text-center"><div class="text-5xl mb-2">🏥</div><div class="font-bold text-blue-800">Azul</div></div>
                     </div>
-                    <div class="p-4">
-                        <h4 class="font-bold text-gray-800">4. Azul Profesional</h4>
-                        <button class="mt-2 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 font-semibold">Usar Plantilla</button>
-                    </div>
+                    <div class="p-4"><h4 class="font-bold text-gray-800">4. Azul Profesional</h4><button class="mt-2 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 font-semibold">Usar Plantilla</button></div>
                 </div>
-
-                <!-- Template 5 -->
                 <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-purple-500" onclick="selectTemplate(5)">
                     <div class="h-64 bg-gradient-to-br from-purple-50 to-pink-100 p-4 flex items-center justify-center">
-                        <div class="text-center">
-                            <div class="text-5xl mb-2">🐾</div>
-                            <div class="font-bold text-purple-800">Veterinaria</div>
-                        </div>
+                        <div class="text-center"><div class="text-5xl mb-2">🐾</div><div class="font-bold text-purple-800">Veterinaria</div></div>
                     </div>
-                    <div class="p-4">
-                        <h4 class="font-bold text-gray-800">5. Veterinaria</h4>
-                        <button class="mt-2 w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 font-semibold">Usar Plantilla</button>
-                    </div>
+                    <div class="p-4"><h4 class="font-bold text-gray-800">5. Veterinaria</h4><button class="mt-2 w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 font-semibold">Usar Plantilla</button></div>
                 </div>
-
-                <!-- Template 6 -->
                 <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-red-500" onclick="selectTemplate(6)">
                     <div class="h-64 bg-gray-100 p-4 flex items-center justify-center">
-                        <div class="text-center">
-                            <div class="text-5xl mb-2">📋</div>
-                            <div class="font-bold text-red-800">Sidebar</div>
-                        </div>
+                        <div class="text-center"><div class="text-5xl mb-2">📋</div><div class="font-bold text-red-800">Sidebar</div></div>
                     </div>
-                    <div class="p-4">
-                        <h4 class="font-bold text-gray-800">6. Barra Lateral</h4>
-                        <button class="mt-2 w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 font-semibold">Usar Plantilla</button>
-                    </div>
+                    <div class="p-4"><h4 class="font-bold text-gray-800">6. Barra Lateral</h4><button class="mt-2 w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 font-semibold">Usar Plantilla</button></div>
                 </div>
-
-                <!-- Template 7 -->
                 <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-pink-500" onclick="selectTemplate(7)">
                     <div class="h-64 bg-gradient-to-br from-pink-50 to-rose-100 p-4 flex items-center justify-center">
-                        <div class="text-center">
-                            <div class="text-5xl mb-2">🎨</div>
-                            <div class="font-bold text-pink-800">Moderna</div>
-                        </div>
+                        <div class="text-center"><div class="text-5xl mb-2">🎨</div><div class="font-bold text-pink-800">Moderna</div></div>
                     </div>
-                    <div class="p-4">
-                        <h4 class="font-bold text-gray-800">7. Formas Modernas</h4>
-                        <button class="mt-2 w-full bg-pink-500 text-white py-2 rounded-lg hover:bg-pink-600 font-semibold">Usar Plantilla</button>
-                    </div>
+                    <div class="p-4"><h4 class="font-bold text-gray-800">7. Formas Modernas</h4><button class="mt-2 w-full bg-pink-500 text-white py-2 rounded-lg hover:bg-pink-600 font-semibold">Usar Plantilla</button></div>
                 </div>
-
-                <!-- Template 8 -->
                 <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-cyan-500" onclick="selectTemplate(8)">
                     <div class="h-64 bg-gradient-to-br from-cyan-50 to-blue-100 p-4 flex items-center justify-center">
-                        <div class="text-center">
-                            <div class="text-5xl mb-2">👁️</div>
-                            <div class="font-bold text-cyan-800">Optometría</div>
-                        </div>
+                        <div class="text-center"><div class="text-5xl mb-2">👁️</div><div class="font-bold text-cyan-800">Optometría</div></div>
                     </div>
-                    <div class="p-4">
-                        <h4 class="font-bold text-gray-800">8. Optometría</h4>
-                        <button class="mt-2 w-full bg-cyan-600 text-white py-2 rounded-lg hover:bg-cyan-700 font-semibold">Usar Plantilla</button>
-                    </div>
+                    <div class="p-4"><h4 class="font-bold text-gray-800">8. Optometría</h4><button class="mt-2 w-full bg-cyan-600 text-white py-2 rounded-lg hover:bg-cyan-700 font-semibold">Usar Plantilla</button></div>
                 </div>
-
-                <!-- Template 9 -->
                 <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-yellow-500" onclick="selectTemplate(9)">
                     <div class="h-64 bg-gradient-to-br from-yellow-50 to-orange-100 p-4 flex items-center justify-center">
-                        <div class="text-center">
-                            <div class="text-5xl mb-2">🌈</div>
-                            <div class="font-bold text-yellow-800">Colorida</div>
-                        </div>
+                        <div class="text-center"><div class="text-5xl mb-2">🌈</div><div class="font-bold text-yellow-800">Colorida</div></div>
                     </div>
-                    <div class="p-4">
-                        <h4 class="font-bold text-gray-800">9. Header Colorido</h4>
-                        <button class="mt-2 w-full bg-gradient-to-r from-yellow-400 to-pink-500 text-white py-2 rounded-lg hover:opacity-90 font-semibold">Usar Plantilla</button>
-                    </div>
+                    <div class="p-4"><h4 class="font-bold text-gray-800">9. Header Colorido</h4><button class="mt-2 w-full bg-gradient-to-r from-yellow-400 to-pink-500 text-white py-2 rounded-lg hover:opacity-90 font-semibold">Usar Plantilla</button></div>
                 </div>
-
-                <!-- Template 10 -->
                 <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-teal-600" onclick="selectTemplate(10)">
                     <div class="h-64 bg-gradient-to-br from-teal-50 to-blue-50 p-4 flex items-center justify-center">
-                        <div class="text-center">
-                            <div class="text-5xl mb-2">☤</div>
-                            <div class="font-bold text-teal-800">Caduceo</div>
-                        </div>
+                        <div class="text-center"><div class="text-5xl mb-2">☤</div><div class="font-bold text-teal-800">Caduceo</div></div>
                     </div>
-                    <div class="p-4">
-                        <h4 class="font-bold text-gray-800">10. Sidebar Vertical</h4>
-                        <button class="mt-2 w-full bg-teal-600 text-white py-2 rounded-lg hover:bg-teal-700 font-semibold">Usar Plantilla</button>
-                    </div>
+                    <div class="p-4"><h4 class="font-bold text-gray-800">10. Sidebar Vertical</h4><button class="mt-2 w-full bg-teal-600 text-white py-2 rounded-lg hover:bg-teal-700 font-semibold">Usar Plantilla</button></div>
                 </div>
-
-                <!-- Template 11 -->
                 <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-blue-500" onclick="selectTemplate(11)">
                     <div class="h-64 bg-gradient-to-br from-blue-50 to-gray-50 p-4 flex items-center justify-center">
-                        <div class="text-center">
-                            <div class="text-5xl mb-2">📄</div>
-                            <div class="font-bold text-blue-800">Header</div>
-                        </div>
+                        <div class="text-center"><div class="text-5xl mb-2">📄</div><div class="font-bold text-blue-800">Header</div></div>
                     </div>
-                    <div class="p-4">
-                        <h4 class="font-bold text-gray-800">11. Header Derecho</h4>
-                        <button class="mt-2 w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 font-semibold">Usar Plantilla</button>
-                    </div>
+                    <div class="p-4"><h4 class="font-bold text-gray-800">11. Header Derecho</h4><button class="mt-2 w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 font-semibold">Usar Plantilla</button></div>
                 </div>
             </div>
         </div>
@@ -344,16 +235,14 @@
         <div class="container mx-auto px-4">
             <div class="text-center mb-6">
                 <h3 class="text-3xl font-bold mb-2">✏️ Editor Avanzado - Arrastra, Redimensiona y Personaliza</h3>
-                <p class="text-gray-600">Haz clic en cualquier elemento para seleccionarlo y editarlo. Arrástralo para moverlo. Usa las esquinas para redimensionar.</p>
+                <p class="text-gray-600">Haz clic en cualquier elemento para seleccionarlo. Arrástralo para moverlo. Usa las esquinas para redimensionar.</p>
             </div>
             
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <!-- Left Panel - Controls -->
+                <!-- Left Panel -->
                 <div class="lg:col-span-3 space-y-4">
-                    <!-- Datos del Profesional -->
                     <div class="editor-panel rounded-2xl p-4 shadow-lg">
                         <h4 class="font-bold text-gray-800 mb-3 border-b pb-2">📝 Datos Básicos</h4>
-                        
                         <div class="mb-3">
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Título</label>
                             <input type="text" id="titlePrefix" class="w-full px-3 py-2 border-2 border-gray-300 rounded-lg text-sm" value="Dr." onchange="updateElementText()">
@@ -363,38 +252,35 @@
                                 <span class="title-suggestion" onclick="setTitle('Méd. Vet.')">Vet.</span>
                             </div>
                         </div>
-
                         <div class="mb-3">
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Nombre</label>
                             <input type="text" id="doctorName" class="w-full px-3 py-2 border-2 border-gray-300 rounded-lg text-sm" placeholder="Tu Nombre" onchange="updateElementText()">
                         </div>
-
                         <div class="mb-3">
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Especialidad</label>
                             <input type="text" id="specialty" class="w-full px-3 py-2 border-2 border-gray-300 rounded-lg text-sm" placeholder="Especialidad" onchange="updateElementText()">
                         </div>
-
                         <div class="mb-3">
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Teléfono</label>
                             <input type="text" id="phone" class="w-full px-3 py-2 border-2 border-gray-300 rounded-lg text-sm" onchange="updateElementText()">
                         </div>
+                        <div class="mb-3">
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Color Principal</label>
+                            <input type="color" id="primaryColor" class="w-full h-10 cursor-pointer rounded" onchange="updateTemplateColors()">
+                        </div>
                     </div>
 
-                    <!-- Propiedades del Elemento Seleccionado -->
                     <div class="property-panel rounded-2xl p-4 shadow-lg" id="elementProperties" style="display: none;">
                         <h4 class="font-bold text-gray-800 mb-3 border-b pb-2">🎨 Propiedades</h4>
-                        
                         <div class="mb-3">
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Tamaño de Letra</label>
                             <input type="range" id="fontSize" min="8" max="72" value="16" class="w-full" oninput="updateElementStyle()">
                             <div class="text-xs text-gray-600 text-center mt-1"><span id="fontSizeValue">16</span>px</div>
                         </div>
-
                         <div class="mb-3">
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Color del Texto</label>
                             <input type="color" id="textColor" class="w-full h-10 cursor-pointer rounded" onchange="updateElementStyle()">
                         </div>
-
                         <div class="mb-3">
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Alineación</label>
                             <div class="flex gap-1">
@@ -403,28 +289,20 @@
                                 <button onclick="setTextAlign('right')" class="flex-1 py-1 bg-gray-200 rounded hover:bg-gray-300 text-xs">➡️</button>
                             </div>
                         </div>
-
                         <div class="mb-3">
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Opacidad</label>
                             <input type="range" id="opacity" min="0" max="100" value="100" class="w-full" oninput="updateElementStyle()">
                         </div>
-
-                        <button onclick="deleteSelectedElement()" class="w-full bg-red-500 text-white py-2 rounded-lg text-sm hover:bg-red-600 mt-2">
-                            🗑️ Eliminar Elemento
-                        </button>
+                        <button onclick="deleteSelectedElement()" class="w-full bg-red-500 text-white py-2 rounded-lg text-sm hover:bg-red-600 mt-2">🗑️ Eliminar</button>
                     </div>
 
-                    <!-- Subir Logo -->
                     <div class="property-panel rounded-2xl p-4 shadow-lg">
                         <h4 class="font-bold text-gray-800 mb-3 border-b pb-2">🖼️ Logo/Imagen</h4>
-                        
                         <div class="upload-zone rounded-lg p-4 text-center cursor-pointer mb-3" onclick="document.getElementById('logoInput').click()" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
                             <input type="file" id="logoInput" class="hidden" accept="image/*" onchange="handleLogoUpload(event)">
                             <div class="text-3xl mb-2">📁</div>
                             <p class="text-xs text-gray-600">Arrastra o haz clic para subir</p>
-                            <p class="text-xs text-gray-400 mt-1">PNG, JPG (máx. 2MB)</p>
                         </div>
-
                         <div class="mb-3">
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Ancho del Logo</label>
                             <input type="range" id="logoWidth" min="20" max="200" value="100" class="w-full" oninput="updateLogoSize()">
@@ -432,10 +310,8 @@
                         </div>
                     </div>
 
-                    <!-- Pedido -->
                     <div class="property-panel rounded-2xl p-4 shadow-lg bg-green-50">
                         <h4 class="font-bold text-gray-800 mb-3 border-b pb-2">💰 Pedido</h4>
-                        
                         <div class="mb-3">
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Tipo de Papel</label>
                             <select id="paperType" class="w-full px-3 py-2 border-2 border-gray-300 rounded-lg text-sm" onchange="calculatePrice()">
@@ -444,20 +320,15 @@
                                 <option value="triplicado">Triplicado - $19.990</option>
                             </select>
                         </div>
-
                         <div class="mb-3">
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Cantidad</label>
                             <input type="number" id="quantity" min="1" value="1" class="w-full px-3 py-2 border-2 border-gray-300 rounded-lg text-sm" onchange="calculatePrice()">
                         </div>
-
                         <div class="text-center mb-3">
                             <div class="text-xs text-gray-600">Total:</div>
                             <div class="text-2xl font-black text-green-600" id="totalPrice">$9.990</div>
                         </div>
-
-                        <button onclick="orderRecipe()" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg text-sm btn-animate flex items-center justify-center gap-2">
-                            <span>📱</span> Pedir por WhatsApp
-                        </button>
+                        <button onclick="orderRecipe()" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg text-sm btn-animate">📱 Pedir por WhatsApp</button>
                     </div>
                 </div>
 
@@ -465,46 +336,47 @@
                 <div class="lg:col-span-9">
                     <div class="preview-canvas rounded-2xl border-4 border-gray-300 p-8 min-h-[800px] flex items-center justify-center bg-white shadow-inner relative overflow-auto">
                         <div id="recipeCanvas" class="bg-white w-full max-w-2xl shadow-2xl relative" style="min-height: 900px; position: relative;">
-                            <!-- Los elementos se generarán aquí -->
                             <div class="text-center text-gray-400 py-20">
                                 <div class="text-6xl mb-4">🎨</div>
                                 <p class="text-lg font-semibold">Selecciona una plantilla para comenzar</p>
-                                <p class="text-sm mt-2">Podrás arrastrar, redimensionar y editar cada elemento</p>
                             </div>
                         </div>
                     </div>
-                    
                     <div class="mt-4 flex gap-3 justify-center">
-                        <button onclick="addElement('text')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition btn-animate">
-                            ➕ Agregar Texto
-                        </button>
-                        <button onclick="resetCanvas()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold transition btn-animate">
-                            🔄 Reiniciar
-                        </button>
-                        <button onclick="downloadPreview()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-semibold transition btn-animate">
-                            📥 Descargar PNG
-                        </button>
+                        <button onclick="addElement('text')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition btn-animate">➕ Agregar Texto</button>
+                        <button onclick="resetCanvas()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold transition btn-animate">🔄 Reiniciar</button>
+                        <button onclick="downloadPreview()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-semibold transition btn-animate">📥 Descargar</button>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-8">
-        <div class="container mx-auto px-4 text-center">
-            <p>🏥 Librería Central - Puerto Montt | 📱 +569 78 47 2489</p>
-        </div>
-    </footer>
-
     <script>
         let currentTemplate = null;
         let selectedElement = null;
         let elementCounter = 0;
+        let currentPrimaryColor = '#10b981';
         const prices = { simple: 9990, duplicado: 14990, triplicado: 19990 };
+
+        const templateConfigs = {
+            1: { name: 'Dental', color: '#10b981', icon: '🦷' },
+            2: { name: 'Clásica', color: '#1f2937', icon: '⚕️' },
+            3: { name: 'Verde', color: '#10b981', icon: '✚' },
+            4: { name: 'Azul', color: '#2563eb', icon: '🏥' },
+            5: { name: 'Veterinaria', color: '#8b5cf6', icon: '🐾' },
+            6: { name: 'Sidebar', color: '#dc2626', icon: '📋' },
+            7: { name: 'Moderna', color: '#ec4899', icon: '🎨' },
+            8: { name: 'Optometría', color: '#06b6d4', icon: '👁️' },
+            9: { name: 'Colorida', color: '#fbbf24', icon: '🌈' },
+            10: { name: 'Caduceo', color: '#0f766e', icon: '☤' },
+            11: { name: 'Header', color: '#64748b', icon: '📄' }
+        };
 
         function selectTemplate(num) {
             currentTemplate = num;
+            currentPrimaryColor = templateConfigs[num].color;
+            document.getElementById('primaryColor').value = currentPrimaryColor;
             document.getElementById('editor').classList.remove('hidden');
             document.getElementById('editor').scrollIntoView({ behavior: 'smooth' });
             initTemplate(num);
@@ -513,26 +385,243 @@
         function initTemplate(num) {
             const canvas = document.getElementById('recipeCanvas');
             canvas.innerHTML = '';
+            elementCounter = 0;
             
-            // Crear elementos base según la plantilla
             const elements = getTemplateElements(num);
-            elements.forEach(el => createElementOnCanvas(el));
+            elements.forEach(el => {
+                if (el.type === 'shape') {
+                    createShapeOnCanvas(el);
+                } else {
+                    createElementOnCanvas(el);
+                }
+            });
             
             calculatePrice();
         }
 
         function getTemplateElements(num) {
-            const baseElements = [
-                { type: 'text', content: 'Dr. [Tu Nombre]', x: 50, y: 50, fontSize: 32, color: '#1f2937', fontWeight: 'bold', width: 400, id: 'title' },
-                { type: 'text', content: 'Especialidad', x: 50, y: 90, fontSize: 16, color: '#6b7280', width: 300, id: 'specialty' },
-                { type: 'text', content: '📞 +569 XXX XXX XXX', x: 50, y: 120, fontSize: 14, color: '#6b7280', width: 250, id: 'phone' },
-                { type: 'text', content: 'Nombre:', x: 50, y: 200, fontSize: 14, color: '#374151', width: 100, id: 'label1' },
-                { type: 'line', x: 150, y: 205, width: 400, height: 2, color: '#9ca3af', id: 'line1' },
-                { type: 'text', content: 'Fecha:', x: 50, y: 750, fontSize: 12, color: '#6b7280', width: 80, id: 'date' },
-                { type: 'text', content: 'Firma:', x: 400, y: 750, fontSize: 12, color: '#6b7280', width: 80, id: 'signature' },
-            ];
+            const color = currentPrimaryColor;
             
-            return baseElements;
+            switch(num) {
+                case 1: // Dental
+                    return [
+                        { type: 'shape', shape: 'circle', x: 500, y: 30, width: 100, height: 100, color: color + '20', borderRadius: '50%' },
+                        { type: 'text', content: '🦷', x: 520, y: 55, fontSize: 50, color: color, width: 60, textAlign: 'center' },
+                        { type: 'line', x: 50, y: 40, width: 400, height: 4, color: color },
+                        { type: 'text', content: 'Dr. [Tu Nombre]', x: 50, y: 60, fontSize: 32, color: color, fontWeight: 'bold', width: 400, id: 'title' },
+                        { type: 'text', content: 'Odontólogo', x: 50, y: 100, fontSize: 18, color: color + 'cc', width: 300, id: 'specialty' },
+                        { type: 'text', content: '📞 +569 XXX XXX XXX', x: 50, y: 130, fontSize: 14, color: '#6b7280', width: 250, id: 'phone' },
+                        { type: 'text', content: 'Paciente:', x: 50, y: 200, fontSize: 14, color: '#374151', width: 100 },
+                        { type: 'line', x: 150, y: 205, width: 400, height: 2, color: '#9ca3af' },
+                        { type: 'text', content: 'Edad:', x: 50, y: 250, fontSize: 14, color: '#374151', width: 60 },
+                        { type: 'line', x: 120, y: 255, width: 150, height: 2, color: '#9ca3af' },
+                        { type: 'text', content: 'Tratamiento:', x: 50, y: 310, fontSize: 16, color: color, fontWeight: 'bold', width: 150 },
+                        { type: 'shape', shape: 'rect', x: 50, y: 340, width: 500, height: 300, color: color + '10', borderRadius: '12px' },
+                        { type: 'text', content: 'Fecha: ___/___/______', x: 50, y: 750, fontSize: 12, color: '#6b7280', width: 150 },
+                        { type: 'text', content: 'Firma:', x: 450, y: 750, fontSize: 12, color: '#6b7280', width: 80 },
+                    ];
+                    
+                case 2: // Clásica Minimalista
+                    return [
+                        { type: 'line', x: 50, y: 30, width: 500, height: 6, color: '#1f2937' },
+                        { type: 'text', content: '⚕️', x: 260, y: 50, fontSize: 50, color: '#1f2937', width: 60, textAlign: 'center' },
+                        { type: 'text', content: 'Dr. [Tu Nombre]', x: 50, y: 120, fontSize: 36, color: '#1f2937', fontWeight: 'bold', width: 500, textAlign: 'center', id: 'title' },
+                        { type: 'text', content: 'Medicina General', x: 50, y: 165, fontSize: 18, color: '#6b7280', width: 500, textAlign: 'center', id: 'specialty' },
+                        { type: 'line', x: 50, y: 195, width: 500, height: 3, color: '#1f2937' },
+                        { type: 'text', content: 'RUT: XX.XXX.XXX-X | Tel: +569 XXX XXX XXX', x: 50, y: 215, fontSize: 13, color: '#6b7280', width: 500, textAlign: 'center', id: 'phone' },
+                        { type: 'text', content: 'Nombre del Paciente:', x: 50, y: 270, fontSize: 14, color: '#374151', width: 180 },
+                        { type: 'line', x: 240, y: 275, width: 310, height: 2, color: '#9ca3af' },
+                        { type: 'text', content: 'Receta Médica:', x: 50, y: 320, fontSize: 16, color: '#374151', fontWeight: 'bold', width: 150 },
+                        { type: 'shape', shape: 'rect', x: 50, y: 350, width: 500, height: 350, color: '#f3f4f6', borderRadius: '8px' },
+                        { type: 'text', content: 'Fecha: ___/___/______', x: 50, y: 750, fontSize: 12, color: '#6b7280', width: 150 },
+                        { type: 'text', content: 'Firma y Timbre:', x: 400, y: 750, fontSize: 12, color: '#6b7280', width: 120 },
+                    ];
+                    
+                case 3: // Verde Moderna
+                    return [
+                        { type: 'shape', shape: 'rect', x: 0, y: 0, width: 600, height: 8, color: color, borderRadius: '8px 8px 0 0' },
+                        { type: 'text', content: '✚', x: 50, y: 30, fontSize: 50, color: color, width: 60 },
+                        { type: 'text', content: 'Dr. [Tu Nombre]', x: 120, y: 50, fontSize: 28, color: color, fontWeight: 'bold', width: 400, id: 'title' },
+                        { type: 'text', content: 'Especialidad Médica', x: 120, y: 85, fontSize: 16, color: color + 'cc', width: 300, id: 'specialty' },
+                        { type: 'shape', shape: 'rect', x: 50, y: 120, width: 500, height: 80, color: color + '15', borderRadius: '12px' },
+                        { type: 'text', content: '📞 +569 XXX XXX XXX', x: 70, y: 140, fontSize: 14, color: '#374151', width: 300, id: 'phone' },
+                        { type: 'text', content: '📍 Dirección del consultorio', x: 70, y: 170, fontSize: 14, color: '#374151', width: 300 },
+                        { type: 'text', content: 'Paciente:', x: 50, y: 230, fontSize: 14, color: color, fontWeight: 'bold', width: 100 },
+                        { type: 'shape', shape: 'rect', x: 50, y: 255, width: 500, height: 40, color: color + '08', borderRadius: '8px' },
+                        { type: 'text', content: 'Diagnóstico / Receta:', x: 50, y: 320, fontSize: 14, color: color, fontWeight: 'bold', width: 200 },
+                        { type: 'shape', shape: 'rect', x: 50, y: 350, width: 500, height: 350, color: color + '08', borderRadius: '8px', border: '2px dashed ' + color + '30' },
+                        { type: 'text', content: 'Fecha: ___/___/______', x: 50, y: 750, fontSize: 12, color: '#6b7280', width: 150 },
+                        { type: 'text', content: 'Firma:', x: 450, y: 750, fontSize: 12, color: '#6b7280', width: 80 },
+                    ];
+                    
+                case 4: // Azul Profesional
+                    return [
+                        { type: 'shape', shape: 'rect', x: 0, y: 0, width: 600, height: 120, color: color, borderRadius: '0 0 20px 20px' },
+                        { type: 'text', content: 'Dr. [Tu Nombre]', x: 50, y: 40, fontSize: 36, color: '#ffffff', fontWeight: 'bold', width: 500, id: 'title' },
+                        { type: 'text', content: 'Medicina General', x: 50, y: 85, fontSize: 20, color: '#ffffff', width: 400, id: 'specialty' },
+                        { type: 'text', content: 'RUT: XX.XXX.XXX-X', x: 50, y: 110, fontSize: 14, color: '#ffffff', width: 300 },
+                        { type: 'shape', shape: 'rect', x: 50, y: 140, width: 500, height: 60, color: color + '10', borderRadius: '12px' },
+                        { type: 'text', content: '📞 +569 XXX XXX XXX', x: 70, y: 155, fontSize: 14, color: '#374151', width: 250, id: 'phone' },
+                        { type: 'text', content: '📍 Dirección', x: 320, y: 155, fontSize: 14, color: '#374151', width: 200 },
+                        { type: 'text', content: 'Paciente:', x: 50, y: 230, fontSize: 14, color: color, fontWeight: 'bold', width: 100 },
+                        { type: 'shape', shape: 'rect', x: 50, y: 255, width: 500, height: 40, color: color + '10', borderRadius: '8px' },
+                        { type: 'text', content: 'Indicaciones Médicas:', x: 50, y: 320, fontSize: 16, color: color, fontWeight: 'bold', width: 220 },
+                        { type: 'shape', shape: 'rect', x: 50, y: 350, width: 500, height: 350, color: color + '10', borderRadius: '8px' },
+                        { type: 'text', content: 'Fecha: ___/___/______', x: 50, y: 750, fontSize: 12, color: '#6b7280', width: 150 },
+                        { type: 'text', content: 'Firma Médico:', x: 400, y: 750, fontSize: 12, color: '#6b7280', width: 120 },
+                    ];
+                    
+                case 5: // Veterinaria
+                    return [
+                        { type: 'shape', shape: 'rect', x: 0, y: 0, width: 600, height: 600, color: color + '05' },
+                        { type: 'text', content: '🐾', x: 500, y: 40, fontSize: 60, color: color, width: 70 },
+                        { type: 'text', content: 'Dr. [Tu Nombre]', x: 50, y: 60, fontSize: 32, color: color, fontWeight: 'bold', width: 400, id: 'title' },
+                        { type: 'text', content: 'Médico Veterinario', x: 50, y: 100, fontSize: 18, color: color + 'cc', width: 300, id: 'specialty' },
+                        { type: 'shape', shape: 'rect', x: 50, y: 130, width: 300, height: 60, color: color + '20', borderRadius: '12px' },
+                        { type: 'text', content: 'RUT: XX.XXX.XXX-X', x: 70, y: 150, fontSize: 13, color: '#374151', width: 250 },
+                        { type: 'text', content: '📞 +569 XXX XXX XXX', x: 70, y: 175, fontSize: 13, color: '#374151', width: 250, id: 'phone' },
+                        { type: 'text', content: 'Dueño:', x: 50, y: 220, fontSize: 14, color: color, fontWeight: 'bold', width: 80 },
+                        { type: 'shape', shape: 'rect', x: 50, y: 245, width: 500, height: 35, color: color + '15', borderRadius: '8px' },
+                        { type: 'text', content: 'Paciente (Mascota):', x: 50, y: 300, fontSize: 14, color: color, fontWeight: 'bold', width: 180 },
+                        { type: 'shape', shape: 'rect', x: 50, y: 325, width: 500, height: 35, color: color + '15', borderRadius: '8px' },
+                        { type: 'text', content: 'Receta / Tratamiento:', x: 50, y: 380, fontSize: 16, color: color, fontWeight: 'bold', width: 220 },
+                        { type: 'shape', shape: 'rect', x: 50, y: 410, width: 500, height: 250, color: color + '10', borderRadius: '12px' },
+                        { type: 'text', content: 'Fecha: ___/___/______', x: 50, y: 750, fontSize: 12, color: '#6b7280', width: 150 },
+                        { type: 'text', content: 'Firma:', x: 450, y: 750, fontSize: 12, color: '#6b7280', width: 80 },
+                    ];
+                    
+                case 6: // Barra Lateral
+                    return [
+                        { type: 'shape', shape: 'rect', x: 0, y: 0, width: 70, height: 900, color: color },
+                        { type: 'text', content: '⚕️', x: 20, y: 30, fontSize: 40, color: '#ffffff', width: 40, textAlign: 'center' },
+                        { type: 'text', content: 'RECETA', x: 15, y: 80, fontSize: 12, color: '#ffffff', width: 50, textAlign: 'center' },
+                        { type: 'line', x: 80, y: 50, width: 3, height: 60, color: color },
+                        { type: 'text', content: 'Dr. [Tu Nombre]', x: 100, y: 50, fontSize: 28, color: color, fontWeight: 'bold', width: 400, id: 'title' },
+                        { type: 'text', content: 'Especialidad', x: 100, y: 85, fontSize: 16, color: color + 'cc', width: 300, id: 'specialty' },
+                        { type: 'text', content: 'RUT: XX.XXX.XXX-X', x: 100, y: 115, fontSize: 13, color: '#6b7280', width: 250 },
+                        { type: 'text', content: '📞 +569 XXX XXX XXX', x: 100, y: 140, fontSize: 13, color: '#6b7280', width: 250, id: 'phone' },
+                        { type: 'text', content: '📍 Dirección del consultorio', x: 100, y: 165, fontSize: 13, color: '#6b7280', width: 300 },
+                        { type: 'text', content: 'Paciente:', x: 100, y: 220, fontSize: 14, color: '#374151', width: 100 },
+                        { type: 'shape', shape: 'rect', x: 100, y: 245, width: 450, height: 40, color: color + '10', borderRadius: '8px' },
+                        { type: 'text', content: 'Receta:', x: 100, y: 310, fontSize: 14, color: '#374151', width: 80 },
+                        { type: 'shape', shape: 'rect', x: 100, y: 335, width: 450, height: 400, color: color + '08', borderRadius: '8px' },
+                        { type: 'text', content: 'Fecha: ___/___/______', x: 100, y: 780, fontSize: 12, color: '#6b7280', width: 150 },
+                        { type: 'text', content: 'Firma:', x: 450, y: 780, fontSize: 12, color: '#6b7280', width: 80 },
+                    ];
+                    
+                case 7: // Moderna Formas
+                    return [
+                        { type: 'shape', shape: 'circle', x: 450, y: -30, width: 180, height: 180, color: color + '20', borderRadius: '50%' },
+                        { type: 'shape', shape: 'circle', x: -20, y: 650, width: 140, height: 140, color: color + '15', borderRadius: '50%' },
+                        { type: 'text', content: 'Dr. [Tu Nombre]', x: 50, y: 50, fontSize: 32, color: color, fontWeight: 'bold', width: 450, id: 'title' },
+                        { type: 'text', content: 'Especialidad Médica', x: 50, y: 95, fontSize: 18, color: color + 'cc', width: 350, id: 'specialty' },
+                        { type: 'shape', shape: 'rect', x: 50, y: 130, width: 500, height: 70, color: color + '15', borderRadius: '20px' },
+                        { type: 'text', content: '📞 +569 XXX XXX XXX', x: 70, y: 155, fontSize: 14, color: '#374151', width: 300, id: 'phone' },
+                        { type: 'text', content: '📍 Dirección', x: 70, y: 180, fontSize: 14, color: '#374151', width: 250 },
+                        { type: 'text', content: 'Paciente:', x: 50, y: 230, fontSize: 14, color: color, fontWeight: 'bold', width: 100 },
+                        { type: 'shape', shape: 'rect', x: 50, y: 255, width: 500, height: 40, color: color + '10', borderRadius: '16px' },
+                        { type: 'text', content: 'Receta Médica:', x: 50, y: 320, fontSize: 16, color: color, fontWeight: 'bold', width: 180 },
+                        { type: 'shape', shape: 'rect', x: 50, y: 350, width: 500, height: 350, color: color + '08', borderRadius: '20px', border: '2px dashed ' + color + '30' },
+                        { type: 'text', content: 'Fecha: ___/___/______', x: 50, y: 750, fontSize: 12, color: '#6b7280', width: 150 },
+                        { type: 'text', content: 'Firma:', x: 450, y: 750, fontSize: 12, color: '#6b7280', width: 80 },
+                    ];
+                    
+                case 8: // Optometría
+                    return [
+                        { type: 'text', content: '👁️', x: 50, y: 40, fontSize: 50, color: color, width: 60 },
+                        { type: 'text', content: 'Dr. [Tu Nombre]', x: 120, y: 50, fontSize: 28, color: color, fontWeight: 'bold', width: 400, id: 'title' },
+                        { type: 'text', content: 'Optometrista', x: 120, y: 85, fontSize: 16, color: color + 'cc', width: 250, id: 'specialty' },
+                        { type: 'line', x: 50, y: 110, width: 500, height: 4, color: color },
+                        { type: 'shape', shape: 'rect', x: 50, y: 125, width: 500, height: 50, color: color + '10', borderRadius: '8px' },
+                        { type: 'text', content: 'RUT: XX.XXX.XXX-X | Tel: +569 XXX XXX XXX', x: 70, y: 150, fontSize: 13, color: '#374151', width: 450, id: 'phone' },
+                        { type: 'text', content: 'Paciente:', x: 50, y: 200, fontSize: 14, color: color, fontWeight: 'bold', width: 100 },
+                        { type: 'shape', shape: 'rect', x: 50, y: 225, width: 500, height: 35, color: color + '10', borderRadius: '8px' },
+                        { type: 'text', content: 'OJO DERECHO (OD)', x: 50, y: 285, fontSize: 14, color: color, fontWeight: 'bold', width: 180 },
+                        { type: 'shape', shape: 'rect', x: 50, y: 310, width: 240, height: 120, color: color + '10', borderRadius: '8px' },
+                        { type: 'text', content: 'OJO IZQUIERDO (OI)', x: 310, y: 285, fontSize: 14, color: color, fontWeight: 'bold', width: 180 },
+                        { type: 'shape', shape: 'rect', x: 310, y: 310, width: 240, height: 120, color: color + '10', borderRadius: '8px' },
+                        { type: 'text', content: 'Observaciones:', x: 50, y: 455, fontSize: 14, color: color, fontWeight: 'bold', width: 150 },
+                        { type: 'shape', shape: 'rect', x: 50, y: 480, width: 500, height: 200, color: color + '10', borderRadius: '8px' },
+                        { type: 'text', content: 'Fecha: ___/___/______', x: 50, y: 750, fontSize: 12, color: '#6b7280', width: 150 },
+                        { type: 'text', content: 'Firma:', x: 450, y: 750, fontSize: 12, color: '#6b7280', width: 80 },
+                    ];
+                    
+                case 9: // Header Colorido
+                    return [
+                        { type: 'shape', shape: 'rect', x: 0, y: 0, width: 600, height: 90, color: 'linear-gradient(90deg, #fbbf24, #ec4899, #8b5cf6)' },
+                        { type: 'text', content: 'Dr. [Tu Nombre]', x: 50, y: 25, fontSize: 32, color: '#ffffff', fontWeight: 'bold', width: 400, id: 'title' },
+                        { type: 'text', content: 'Especialidad Médica', x: 50, y: 60, fontSize: 16, color: '#ffffff', width: 350, id: 'specialty' },
+                        { type: 'text', content: '⚕️', x: 520, y: 25, fontSize: 50, color: '#ffffff', width: 60 },
+                        { type: 'shape', shape: 'rect', x: 50, y: 105, width: 500, height: 70, color: color + '10', borderRadius: '12px' },
+                        { type: 'text', content: '📞 +569 XXX XXX XXX', x: 70, y: 125, fontSize: 14, color: '#374151', width: 300, id: 'phone' },
+                        { type: 'text', content: '📍 Dirección del consultorio', x: 70, y: 155, fontSize: 14, color: '#374151', width: 300 },
+                        { type: 'text', content: 'Paciente:', x: 50, y: 200, fontSize: 14, color: '#374151', width: 100 },
+                        { type: 'shape', shape: 'rect', x: 50, y: 225, width: 500, height: 40, color: color + '10', borderRadius: '8px' },
+                        { type: 'text', content: 'Receta / Indicaciones:', x: 50, y: 290, fontSize: 16, color: '#374151', fontWeight: 'bold', width: 220 },
+                        { type: 'shape', shape: 'rect', x: 50, y: 320, width: 500, height: 380, color: color + '08', borderRadius: '12px' },
+                        { type: 'text', content: 'Fecha: ___/___/______', x: 50, y: 750, fontSize: 12, color: '#6b7280', width: 150 },
+                        { type: 'text', content: 'Firma Médico:', x: 400, y: 750, fontSize: 12, color: '#6b7280', width: 120 },
+                    ];
+                    
+                case 10: // Caduceo Sidebar
+                    return [
+                        { type: 'shape', shape: 'rect', x: 0, y: 0, width: 12, height: 900, color: color },
+                        { type: 'text', content: '☤', x: 40, y: 40, fontSize: 50, color: '#be185d', width: 60 },
+                        { type: 'text', content: 'Dr. [Tu Nombre]', x: 110, y: 50, fontSize: 32, color: '#111827', fontWeight: 'bold', width: 450, id: 'title' },
+                        { type: 'text', content: 'Médico', x: 110, y: 90, fontSize: 18, color: '#374151', width: 300, id: 'specialty' },
+                        { type: 'text', content: '12234567', x: 110, y: 115, fontSize: 14, color: '#6b7280', width: 200 },
+                        { type: 'text', content: 'Departamento de Medicina', x: 110, y: 140, fontSize: 14, color: '#6b7280', width: 300 },
+                        { type: 'line', x: 110, y: 170, width: 450, height: 2, color: '#e5e7eb' },
+                        { type: 'text', content: 'Nombre:', x: 110, y: 210, fontSize: 14, color: '#374151', width: 90 },
+                        { type: 'line', x: 210, y: 215, width: 350, height: 1, color: '#9ca3af' },
+                        { type: 'text', content: 'Sexo:', x: 110, y: 250, fontSize: 14, color: '#374151', width: 60 },
+                        { type: 'line', x: 180, y: 255, width: 200, height: 1, color: '#9ca3af' },
+                        { type: 'text', content: 'Edad:', x: 110, y: 290, fontSize: 14, color: '#374151', width: 60 },
+                        { type: 'line', x: 180, y: 295, width: 150, height: 1, color: '#9ca3af' },
+                        { type: 'text', content: 'Rp.', x: 110, y: 350, fontSize: 24, color: color, fontWeight: 'italic', width: 60 },
+                        { type: 'shape', shape: 'rect', x: 110, y: 390, width: 450, height: 300, color: color + '08', borderRadius: '8px', border: '2px dashed ' + color + '30' },
+                        { type: 'text', content: 'Fecha', x: 350, y: 750, fontSize: 14, color: '#6b7280', width: 80, textAlign: 'center' },
+                        { type: 'line', x: 350, y: 745, width: 80, height: 1, color: '#9ca3af' },
+                        { type: 'text', content: 'Firma', x: 500, y: 750, fontSize: 14, color: '#6b7280', width: 80, textAlign: 'center' },
+                        { type: 'line', x: 500, y: 745, width: 80, height: 1, color: '#9ca3af' },
+                        { type: 'line', x: 110, y: 790, width: 450, height: 1, color: color + '30' },
+                        { type: 'text', content: '📍 Calle de Miguel Servet, 17, 28012 Madrid / 622 333 333', x: 130, y: 810, fontSize: 12, color: '#6b7280', width: 450, id: 'phone' },
+                        { type: 'text', content: '✉ nombre@edit.org', x: 130, y: 835, fontSize: 12, color: '#6b7280', width: 250 },
+                        { type: 'text', content: '🌐 www.edit.org', x: 130, y: 860, fontSize: 12, color: '#6b7280', width: 200 },
+                    ];
+                    
+                case 11: // Header Derecho
+                    return [
+                        { type: 'text', content: '☤', x: 50, y: 40, fontSize: 60, color: color, width: 70 },
+                        { type: 'text', content: 'Dr. Agustín Rodríguez Lorca', x: 130, y: 50, fontSize: 32, color: color, fontWeight: 'bold', width: 450, id: 'title' },
+                        { type: 'text', content: 'Doctor | 12234567', x: 130, y: 90, fontSize: 14, color: '#374151', width: 250 },
+                        { type: 'text', content: 'Departamento de Medicina', x: 130, y: 115, fontSize: 14, color: '#374151', width: 300, id: 'specialty' },
+                        { type: 'shape', shape: 'rect', x: 560, y: 0, width: 40, height: 900, color: color },
+                        { type: 'text', content: '📍', x: 570, y: 30, fontSize: 18, color: '#ffffff', width: 20, textAlign: 'center' },
+                        { type: 'text', content: '📞', x: 570, y: 60, fontSize: 18, color: '#ffffff', width: 20, textAlign: 'center' },
+                        { type: 'text', content: '🌐', x: 570, y: 90, fontSize: 18, color: '#ffffff', width: 20, textAlign: 'center' },
+                        { type: 'text', content: '✉', x: 570, y: 120, fontSize: 18, color: '#ffffff', width: 20, textAlign: 'center' },
+                        { type: 'text', content: 'Calle Amalarico, 7, 28019 Madrid', x: 250, y: 20, fontSize: 13, color: '#374151', width: 300, textAlign: 'right' },
+                        { type: 'text', content: '91 222 22 22', x: 250, y: 45, fontSize: 13, color: '#374151', width: 300, textAlign: 'right', id: 'phone' },
+                        { type: 'text', content: 'www.edit.org', x: 250, y: 70, fontSize: 13, color: '#374151', width: 300, textAlign: 'right' },
+                        { type: 'text', content: 'name@edit.org', x: 250, y: 95, fontSize: 13, color: '#374151', width: 300, textAlign: 'right' },
+                        { type: 'text', content: 'Name:', x: 50, y: 170, fontSize: 14, color: '#374151', fontWeight: 'bold', width: 70 },
+                        { type: 'line', x: 130, y: 175, width: 300, height: 1, color: '#9ca3af', border: 'dashed' },
+                        { type: 'text', content: 'Edad:', x: 450, y: 170, fontSize: 14, color: '#374151', fontWeight: 'bold', width: 60 },
+                        { type: 'line', x: 520, y: 175, width: 80, height: 1, color: '#9ca3af', border: 'dashed' },
+                        { type: 'text', content: 'Sexo:', x: 50, y: 205, fontSize: 14, color: '#374151', fontWeight: 'bold', width: 60 },
+                        { type: 'line', x: 130, y: 210, width: 300, height: 1, color: '#9ca3af', border: 'dashed' },
+                        { type: 'text', content: 'Fecha:', x: 450, y: 205, fontSize: 14, color: '#374151', fontWeight: 'bold', width: 60 },
+                        { type: 'line', x: 520, y: 210, width: 80, height: 1, color: '#9ca3af', border: 'dashed' },
+                        { type: 'shape', shape: 'rect', x: 50, y: 250, width: 500, height: 550, color: color + '05', borderRadius: '8px' },
+                        { type: 'text', content: '☤', x: 250, y: 650, fontSize: 150, color: color, width: 100, textAlign: 'center', opacity: '0.05' },
+                        { type: 'shape', shape: 'rect', x: 520, y: 820, width: 60, height: 60, color: 'transparent', border: '2px dashed #9ca3af', borderRadius: '4px' },
+                        { type: 'text', content: 'TU LOGO', x: 525, y: 840, fontSize: 10, color: '#9ca3af', width: 50, textAlign: 'center' },
+                    ];
+                    
+                default:
+                    return [];
+            }
         }
 
         function createElementOnCanvas(config) {
@@ -550,13 +639,9 @@
                 el.style.fontWeight = config.fontWeight || 'normal';
                 el.style.width = config.width + 'px';
                 el.style.position = 'absolute';
+                el.style.textAlign = config.textAlign || 'left';
                 el.id = 'el-' + (config.id || elementCounter++);
-                
-                // Resize handles
-                el.innerHTML += '<div class="resize-handle se"></div>';
-                el.innerHTML += '<div class="resize-handle sw"></div>';
-                el.innerHTML += '<div class="resize-handle ne"></div>';
-                el.innerHTML += '<div class="resize-handle nw"></div>';
+                el.innerHTML += '<div class="resize-handle se"></div><div class="resize-handle sw"></div><div class="resize-handle ne"></div><div class="resize-handle nw"></div>';
                 
             } else if (config.type === 'line') {
                 el.className = 'draggable-element';
@@ -567,31 +652,51 @@
                 el.style.backgroundColor = config.color;
                 el.style.position = 'absolute';
                 el.id = 'el-' + (config.id || elementCounter++);
-            } else if (config.type === 'image') {
-                el.className = 'draggable-element';
-                el.style.left = config.x + 'px';
-                el.style.top = config.y + 'px';
-                el.style.width = config.width + 'px';
-                el.style.position = 'absolute';
-                el.innerHTML = `<img src="${config.src}" class="uploaded-logo" style="width: 100%;">`;
-                el.id = 'el-' + (config.id || elementCounter++);
+                if (config.border === 'dashed') {
+                    el.style.borderTop = '2px dashed ' + config.color;
+                    el.style.backgroundColor = 'transparent';
+                    el.style.height = '2px';
+                }
             }
             
-            // Event listeners
             el.addEventListener('click', function(e) {
                 e.stopPropagation();
                 selectElement(el);
             });
             
             el.addEventListener('blur', function() {
-                if (el.id === 'title') updateDataFromElement(el, 'titlePrefix', 'doctorName');
-                if (el.id === 'specialty') document.getElementById('specialty').value = el.innerText;
-                if (el.id === 'phone') document.getElementById('phone').value = el.innerText;
+                if (el.id === 'el-title') updateDataFromElement(el, 'titlePrefix', 'doctorName');
+                if (el.id === 'el-specialty') document.getElementById('specialty').value = el.innerText;
+                if (el.id === 'el-phone') document.getElementById('phone').value = el.innerText;
             }, true);
             
             canvas.appendChild(el);
+            makeDraggable(el);
+        }
+
+        function createShapeOnCanvas(config) {
+            const canvas = document.getElementById('recipeCanvas');
+            const el = document.createElement('div');
             
-            // Make draggable
+            el.className = 'draggable-element';
+            el.style.left = config.x + 'px';
+            el.style.top = config.y + 'px';
+            el.style.width = config.width + 'px';
+            el.style.height = config.height + 'px';
+            el.style.position = 'absolute';
+            el.style.borderRadius = config.borderRadius || '0';
+            el.style.backgroundColor = config.color;
+            if (config.border) {
+                el.style.border = config.border;
+            }
+            el.id = 'el-shape-' + elementCounter++;
+            
+            el.addEventListener('click', function(e) {
+                e.stopPropagation();
+                selectElement(el);
+            });
+            
+            canvas.appendChild(el);
             makeDraggable(el);
         }
 
@@ -602,7 +707,6 @@
                         const target = event.target;
                         const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
                         const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-                        
                         target.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
                         target.setAttribute('data-x', x);
                         target.setAttribute('data-y', y);
@@ -616,7 +720,6 @@
                 ]
             });
             
-            // Make resizable
             interact(element).resizable({
                 edges: { left: true, right: true, bottom: true, top: false },
                 listeners: {
@@ -624,11 +727,9 @@
                         const target = event.target;
                         let width = parseFloat(target.getAttribute('data-width')) || target.offsetWidth;
                         width += event.deltaRect.left;
-                        
                         target.style.width = width + 'px';
                         target.setAttribute('data-width', width);
                         
-                        // Update font size based on width for text elements
                         if (target.contentEditable) {
                             const newFontSize = Math.max(8, Math.min(72, width / 10));
                             target.style.fontSize = newFontSize + 'px';
@@ -641,18 +742,11 @@
         }
 
         function selectElement(el) {
-            // Deselect previous
-            if (selectedElement) {
-                selectedElement.classList.remove('selected');
-            }
-            
+            if (selectedElement) selectedElement.classList.remove('selected');
             selectedElement = el;
             el.classList.add('selected');
-            
-            // Show properties panel
             document.getElementById('elementProperties').style.display = 'block';
             
-            // Update property values
             if (el.contentEditable) {
                 document.getElementById('fontSize').value = parseInt(el.style.fontSize) || 16;
                 document.getElementById('fontSizeValue').textContent = parseInt(el.style.fontSize) || 16;
@@ -675,9 +769,20 @@
             if (phoneEl) phoneEl.innerText = phone;
         }
 
+        function updateTemplateColors() {
+            currentPrimaryColor = document.getElementById('primaryColor').value;
+            // Actualizar colores de elementos clave
+            const canvas = document.getElementById('recipeCanvas');
+            const elements = canvas.querySelectorAll('.draggable-element');
+            elements.forEach(el => {
+                if (el.id === 'el-title' || el.id.includes('title')) {
+                    el.style.color = currentPrimaryColor;
+                }
+            });
+        }
+
         function updateElementStyle() {
             if (!selectedElement) return;
-            
             const fontSize = document.getElementById('fontSize').value;
             const color = document.getElementById('textColor').value;
             const opacity = document.getElementById('opacity').value / 100;
@@ -685,7 +790,6 @@
             selectedElement.style.fontSize = fontSize + 'px';
             selectedElement.style.color = color;
             selectedElement.style.opacity = opacity;
-            
             document.getElementById('fontSizeValue').textContent = fontSize;
         }
 
@@ -710,9 +814,7 @@
             event.preventDefault();
             event.currentTarget.classList.remove('dragover');
             const file = event.dataTransfer.files[0];
-            if (file && file.type.startsWith('image/')) {
-                processLogo(file);
-            }
+            if (file && file.type.startsWith('image/')) processLogo(file);
         }
 
         function handleDragOver(event) {
@@ -729,16 +831,23 @@
                 alert('El archivo es muy grande. Máximo 2MB.');
                 return;
             }
-            
             const reader = new FileReader();
             reader.onload = function(e) {
-                createElementOnCanvas({
-                    type: 'image',
-                    src: e.target.result,
-                    x: 50,
-                    y: 50,
-                    width: 100
+                const canvas = document.getElementById('recipeCanvas');
+                const el = document.createElement('div');
+                el.className = 'draggable-element';
+                el.style.left = '50px';
+                el.style.top = '50px';
+                el.style.width = '100px';
+                el.style.position = 'absolute';
+                el.innerHTML = '<img src="' + e.target.result + '" class="uploaded-logo" style="width: 100%;">';
+                el.id = 'el-logo-' + elementCounter++;
+                el.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    selectElement(el);
                 });
+                canvas.appendChild(el);
+                makeDraggable(el);
             };
             reader.readAsDataURL(file);
         }
@@ -746,11 +855,8 @@
         function updateLogoSize() {
             const width = document.getElementById('logoWidth').value;
             document.getElementById('logoWidthValue').textContent = width;
-            
             const images = document.querySelectorAll('.uploaded-logo');
-            images.forEach(img => {
-                img.style.width = width + 'px';
-            });
+            images.forEach(img => img.style.width = width + 'px');
         }
 
         function addElement(type) {
@@ -791,12 +897,11 @@
         function orderRecipe() {
             const total = document.getElementById('totalPrice').textContent;
             const message = ` *PEDIDO RECETA PERSONALIZADA*%0A%0A` +
-                `🎨 *Plantilla:* ${currentTemplate}%0A` +
+                `🎨 *Plantilla:* ${currentTemplate} - ${templateConfigs[currentTemplate].name}%0A` +
                 `📄 *Tipo:* ${document.getElementById('paperType').value}%0A` +
                 `🔢 *Cantidad:* ${document.getElementById('quantity').value}%0A` +
                 `💰 *Total:* ${total}%0A%0A` +
                 `✅ Diseño 100% personalizado con editor avanzado`;
-            
             window.open(`https://wa.me/56978472489?text=${message}`, '_blank');
         }
 
@@ -819,7 +924,6 @@
             }).join('');
         }
 
-        // Click outside to deselect
         document.addEventListener('click', function(e) {
             if (e.target.id === 'recipeCanvas' || e.target.closest('.preview-canvas')) {
                 if (selectedElement) {
