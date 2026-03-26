@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Librería Central - Recetas Médicas Personalizadas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Roboto', sans-serif; }
+        .gradient-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .template-card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
+        .editor-panel { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); }
+        .preview-canvas { background-image: radial-gradient(#ddd 1px, transparent 1px); background-size: 20px 20px; }
+        .color-picker::-webkit-color-swatch-wrapper { padding: 0; }
+        .color-picker::-webkit-color-swatch { border: none; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Header -->
+    <header class="gradient-header text-white shadow-xl sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-3 md:mb-0">
+                    <h1 class="text-3xl font-bold">🏥 Librería Central</h1>
+                    <p class="text-sm opacity-90">Recetas Médicas Personalizadas - Puerto Montt</p>
+                </div>
+                <div class="text-sm bg-white/20 p-3 rounded-lg">
+                    <p>📍 Urmeneta #300, Galería Caracol Local 15</p>
+                    <p>📱 +569 78 47 2489</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="py-12 bg-white">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-4xl font-bold text-gray-800 mb-4">
+                📋 Diseña tu Receta Médica Profesional
+            </h2>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                Elige entre nuestras plantillas profesionales, personaliza con tus datos 
+                y recibe tus recetas impresas en Puerto Montt.
+            </p>
+        </div>
+    </section>
+
+    <!-- Templates Gallery -->
+    <section class="py-12 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <h3 class="text-2xl font-bold text-center mb-8">🎨 Selecciona una Plantilla</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <!-- Template 1 -->
+                <div class="template-card bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer transition-all" onclick="selectTemplate(1)">
+                    <div class="h-64 bg-gradient-to-br from-blue-50 to-blue-100 p-4 flex items-center justify-center">
+                        <div class="bg-white w-full h-full rounded shadow p-3 text-xs">
+                            <div class="flex justify-between items-center mb-2">
+                                <div class="font-bold text-blue-800">Dr. [Tu Nombre]</div>
+                                <div class="w-10 h-10 rounded-full bg-pink-200 flex items-center justify-center">💜</div>
+                            </div>
+                            <div class="space-y-1 text-gray-600">
+                                <div class="h-2 bg-gray-200 rounded"></div>
+                                <div class="h-2 bg-gray-200 rounded w-3/4"></div>
+                            </div>
+                            <div class="mt-4 space-y-2">
+                                <div class="h-2 bg-blue-100 rounded"></div>
+                                <div class="h-2 bg-blue-100 rounded"></div>
+                                <div class="h-2 bg-blue-100 rounded w-1/2"></div>
+                            </div>
+                            <div class="mt-8 w-20 h-20 rounded-full border-2 border-pink-200 mx-auto flex items-center justify-center text-3xl">👶</div>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h4 class="font-bold text-gray-800">Plantilla Pediátrica</h4>
+                        <p class="text-sm text-gray-600">Diseño tierno con corazones</p>
+                        <button class="mt-2 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">Usar Plantilla</button>
+                    </div>
+                </div>
+
+                <!-- Template 2 -->
+                <div class="template-card bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer transition-all" onclick="selectTemplate(2)">
+                    <div class="h-64 bg-gradient-to-br from-green-50 to-green-100 p-4 flex items-center justify-center">
+                        <div class="bg-white w-full h-full rounded shadow p-3 text-xs">
+                            <div class="border-b-2 border-green-600 pb-2 mb-2">
+                                <div class="font-bold text-green-800 text-lg">Dr. [Tu Nombre]</div>
+                                <div class="text-gray-600">Medicina General</div>
+                            </div>
+                            <div class="space-y-1">
+                                <div class="h-2 bg-gray-200 rounded"></div>
+                                <div class="h-2 bg-gray-200 rounded"></div>
+                            </div>
+                            <div class="mt-4 border-t border-gray-300 pt-2">
+                                <div class="h-2 bg-green-100 rounded mb-1"></div>
+                                <div class="h-2 bg-green-100 rounded mb-1"></div>
+                                <div class="h-2 bg-green-100 rounded w-2/3"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h4 class="font-bold text-gray-800">Plantilla Clásica</h4>
+                        <p class="text-sm text-gray-600">Diseño profesional minimalista</p>
+                        <button class="mt-2 w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700">Usar Plantilla</button>
+                    </div>
+                </div>
+
+                <!-- Template 3 -->
+                <div class="template-card bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer transition-all" onclick="selectTemplate(3)">
+                    <div class="h-64 bg-gradient-to-br from-purple-50 to-purple-100 p-4 flex items-center justify-center">
+                        <div class="bg-white w-full h-full rounded shadow p-3 text-xs">
+                            <div class="bg-purple-600 text-white p-2 -mt-3 -ml-3 -mr-3 rounded-t">
+                                <div class="font-bold">Dr. [Tu Nombre]</div>
+                                <div class="text-xs opacity-90">RUT: XX.XXX.XXX-X</div>
+                            </div>
+                            <div class="mt-2 space-y-1">
+                                <div class="h-2 bg-purple-100 rounded"></div>
+                                <div class="h-2 bg-purple-100 rounded"></div>
+                            </div>
+                            <div class="mt-4 p-2 bg-purple-50 rounded">
+                                <div class="h-2 bg-purple-200 rounded mb-1"></div>
+                                <div class="h-2 bg-purple-200 rounded"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h4 class="font-bold text-gray-800">Plantilla Moderna</h4>
+                        <p class="text-sm text-gray-600">Diseño contemporáneo con header</p>
+                        <button class="mt-2 w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700">Usar Plantilla</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Editor Section -->
+    <section id="editor" class="py-12 bg-white hidden">
+        <div class="container mx-auto px-4">
+            <h3 class="text-2xl font-bold text-center mb-8">✏️ Personaliza tu Receta</h3>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Editor Controls -->
+                <div class="editor-panel rounded-xl p-6 space-y-4">
+                    <h4 class="font-bold text-lg text-gray-800">📝 Datos del Profesional</h4>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nombre Completo</label>
+                        <input type="text" id="doctorName" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Dr. Juan Pérez">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Especialidad</label>
+                        <input type="text" id="specialty" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Medicina General">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">RUT</label>
+                        <input type="text" id="rut" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="12.345.678-9">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
+                        <input type="text" id="phone" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="+569 123 456 78">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Dirección</label>
+                        <input type="text" id="address" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Av. Principal 123">
+                    </div>
+
+                    <h4 class="font-bold text-lg text-gray-800 pt-4">🎨 Personalización</h4>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Color Principal</label>
+                        <input type="color" id="primaryColor" class="color-picker w-full h-10 cursor-pointer" value="#667eea">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de Papel</label>
+                        <select id="paperType" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                            <option value="simple">Simple (1 cara)</option>
+                            <option value="duplicado">Duplicado (2 caras)</option>
+                            <option value="triplicado">Triplicado (3 caras)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Cantidad de Talonarios</label>
+                        <input type="number" id="quantity" min="1" value="1" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                    </div>
+
+                    <div class="pt-4 border-t">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-bold">Total Estimado:</span>
+                            <span class="text-2xl font-bold text-blue-600" id="totalPrice">$9.990</span>
+                        </div>
+                        <p class="text-xs text-gray-600">* Precio base por talonario de 100 hojas</p>
+                    </div>
+
+                    <button onclick="orderRecipe()" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg transition">
+                        📱 Pedir por WhatsApp
+                    </button>
+                </div>
+
+                <!-- Preview -->
+                <div class="lg:col-span-2">
+                    <div class="preview-canvas rounded-xl border-2 border-gray-300 p-8 min-h-[600px] flex items-center justify-center">
+                        <div id="recipePreview" class="bg-white w-full max-w-md shadow-2xl p-6 transition-all" style="min-height: 700px;">
+                            <!-- Dynamic content will be rendered here -->
+                            <div class="text-center text-gray-400">Selecciona una plantilla para comenzar</div>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex gap-2 justify-center">
+                        <button onclick="downloadPreview()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                            📥 Descargar Vista Previa
+                        </button>
+                        <button onclick="resetEditor()" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">
+                            🔄 Reiniciar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="py-12 bg-gradient-to-r from-blue-50 to-purple-50">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
+                <div class="bg-white p-6 rounded-xl shadow">
+                    <div class="text-4xl mb-2">🎨</div>
+                    <h4 class="font-bold">Diseño Personalizado</h4>
+                    <p class="text-sm text-gray-600">Colores, logos y textos a tu gusto</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow">
+                    <div class="text-4xl mb-2">⚡</div>
+                    <h4 class="font-bold">Entrega Rápida</h4>
+                    <p class="text-sm text-gray-600">24-48 horas en Puerto Montt</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow">
+                    <div class="text-4xl mb-2">💰</div>
+                    <h4 class="font-bold">Mejor Precio</h4>
+                    <p class="text-sm text-gray-600">Desde $9.990 el talonario</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow">
+                    <div class="text-4xl mb-2">✅</div>
+                    <h4 class="font-bold">Calidad Garantizada</h4>
+                    <p class="text-sm text-gray-600">Papel de primera calidad</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="mb-2">🏥 Librería Central - Puerto Montt</p>
+            <p class="text-sm text-gray-400">Calle Urmeneta #300, Galería Caracol Local 15</p>
+            <p class="text-sm text-gray-400">📱 +569 78 47 2489 | 📧 fta.tecno@gmail.com</p>
+        </div>
+    </footer>
+
+    <script>
+        let currentTemplate = 1;
+        const prices = { simple: 9990, duplicado: 14990, triplicado: 19990 };
+
+        const templates = {
+            1: {
+                name: 'Pediátrica',
+                color: '#ec4899',
+                render: (data) => `
+                    <div class="bg-white p-6 rounded shadow-lg" style="min-height: 700px; border-top: 4px solid ${data.color || '#ec4899'}">
+                        <div class="flex justify-between items-center mb-6">
+                            <div>
+                                <h2 class="text-2xl font-bold" style="color: ${data.color || '#ec4899'}">Dr. ${data.doctorName || '[Tu Nombre]'}</h2>
+                                <p class="text-gray-600">${data.specialty || 'Médico Cirujano'}</p>
+                                <p class="text-sm text-gray-500">RUT: ${data.rut || 'XX.XXX.XXX-X'}</p>
+                            </div>
+                            <div class="w-16 h-16 rounded-full bg-pink-100 flex items-center justify-center text-3xl border-2" style="border-color: ${data.color || '#ec4899'}">👶</div>
+                        </div>
+                        <div class="space-y-3 text-sm text-gray-600 mb-6">
+                            <p>📞 ${data.phone || '+569 XXX XXX XXX'}</p>
+                            <p>📍 ${data.address || 'Dirección del consultorio'}</p>
+                        </div>
+                        <div class="border-t-2 pt-4" style="border-color: ${data.color || '#ec4899'}20">
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Nombre del paciente:</label>
+                                    <div class="border-b border-gray-300 h-6"></div>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Edad:</label>
+                                    <div class="border-b border-gray-300 h-6 w-32"></div>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Diagnóstico / Receta:</label>
+                                    <div class="border border-gray-300 rounded h-32 p-2"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-8 flex justify-between items-end">
+                            <div class="text-xs text-gray-400">Fecha: ___/___/______</div>
+                            <div class="border-t border-gray-400 w-48 text-center text-xs text-gray-500 pt-1">Firma Médico</div>
+                        </div>
+                    </div>
+                `
+            },
+            2: {
+                name: 'Clásica',
+                color: '#10b981',
+                render: (data) => `
+                    <div class="bg-white p-6 rounded shadow-lg" style="min-height: 700px; border: 2px solid ${data.color || '#10b981'}">
+                        <div class="border-b-2 pb-4 mb-4 text-center" style="border-color: ${data.color || '#10b981'}">
+                            <h2 class="text-3xl font-bold mb-1" style="color: ${data.color || '#10b981'}">Dr. ${data.doctorName || '[Tu Nombre]'}</h2>
+                            <p class="text-lg" style="color: ${data.color || '#10b981'}">${data.specialty || 'Medicina General'}</p>
+                            <p class="text-sm text-gray-600">RUT: ${data.rut || 'XX.XXX.XXX-X'}</p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 text-sm text-gray-600 mb-6">
+                            <div>📞 ${data.phone || '+569 XXX XXX XXX'}</div>
+                            <div>📍 ${data.address || 'Dirección'}</div>
+                        </div>
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-gray-500 mb-2">Paciente:</label>
+                                <div class="border-b-2 border-gray-300 h-8"></div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-gray-500 mb-2">Receta Médica:</label>
+                                <div class="border-2 border-gray-200 rounded h-48 p-3"></div>
+                            </div>
+                        </div>
+                        <div class="mt-12 flex justify-between">
+                            <div class="text-sm">Fecha: ___/___/______</div>
+                            <div class="border-t-2 border-gray-400 w-40 text-center text-xs pt-1">Firma</div>
+                        </div>
+                    </div>
+                `
+            },
+            3: {
+                name: 'Moderna',
+                color: '#8b5cf6',
+                render: (data) => `
+                    <div class="bg-white rounded shadow-lg overflow-hidden" style="min-height: 700px">
+                        <div class="p-4 text-white" style="background: linear-gradient(135deg, ${data.color || '#8b5cf6'} 0%, ${(data.color || '#8b5cf6') + '80'} 100%)">
+                            <h2 class="text-2xl font-bold">Dr. ${data.doctorName || '[Tu Nombre]'}</h2>
+                            <p class="text-sm opacity-90">${data.specialty || 'Especialidad Médica'}</p>
+                            <p class="text-xs opacity-75">RUT: ${data.rut || 'XX.XXX.XXX-X'}</p>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex gap-4 text-xs text-gray-600 mb-6 bg-gray-50 p-3 rounded">
+                                <span>📞 ${data.phone || '+569 XXX XXX XXX'}</span>
+                                <span>📍 ${data.address || 'Dirección'}</span>
+                            </div>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 mb-1">NOMBRE DEL PACIENTE</label>
+                                    <div class="bg-gray-50 h-8 rounded"></div>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 mb-1">INDICACIONES MÉDICAS</label>
+                                    <div class="bg-gray-50 border-2 h-40 rounded p-2"></div>
+                                </div>
+                            </div>
+                            <div class="mt-8 flex justify-between items-center">
+                                <div class="text-xs text-gray-400">Fecha: ___/___/______</div>
+                                <div class="w-32 border-t-2 border-gray-400 text-center text-xs text-gray-500 pt-1">Firma Médico</div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            }
+        };
+
+        function selectTemplate(num) {
+            currentTemplate = num;
+            document.getElementById('editor').classList.remove('hidden');
+            document.getElementById('editor').scrollIntoView({ behavior: 'smooth' });
+            updatePreview();
+        }
+
+        function updatePreview() {
+            const data = {
+                doctorName: document.getElementById('doctorName').value,
+                specialty: document.getElementById('specialty').value,
+                rut: document.getElementById('rut').value,
+                phone: document.getElementById('phone').value,
+                address: document.getElementById('address').value,
+                color: document.getElementById('primaryColor').value
+            };
+            
+            const template = templates[currentTemplate];
+            document.getElementById('recipePreview').innerHTML = template.render(data);
+            calculatePrice();
+        }
+
+        function calculatePrice() {
+            const type = document.getElementById('paperType').value;
+            const qty = parseInt(document.getElementById('quantity').value) || 1;
+            const total = prices[type] * qty;
+            document.getElementById('totalPrice').textContent = '$' + total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        }
+
+        function orderRecipe() {
+            const data = {
+                name: document.getElementById('doctorName').value,
+                specialty: document.getElementById('specialty').value,
+                rut: document.getElementById('rut').value,
+                phone: document.getElementById('phone').value,
+                address: document.getElementById('address').value,
+                color: document.getElementById('primaryColor').value,
+                paperType: document.getElementById('paperType').value,
+                quantity: document.getElementById('quantity').value,
+                template: templates[currentTemplate].name
+            };
+
+            if (!data.name) {
+                alert('Por favor ingresa al menos el nombre del doctor');
+                return;
+            }
+
+            const total = prices[data.paperType] * (parseInt(data.quantity) || 1);
+            const message = ` *PEDIDO RECETA MÉDICA*%0A%0A` +
+                `👨‍️ Doctor: ${data.name}%0A` +
+                `📋 Especialidad: ${data.specialty}%0A` +
+                `🎨 Plantilla: ${data.template}%0A` +
+                `🎨 Color: ${data.color}%0A` +
+                `📄 Tipo: ${data.paperType}%0A` +
+                `🔢 Cantidad: ${data.quantity} talonario(s)%0A` +
+                `💰 Total: $${total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}`;
+
+            window.open(`https://wa.me/56978472489?text=${message}`, '_blank');
+        }
+
+        function downloadPreview() {
+            alert('Función de descarga disponible en la versión completa. Para hacer tu pedido, usa el botón "Pedir por WhatsApp"');
+        }
+
+        function resetEditor() {
+            document.getElementById('doctorName').value = '';
+            document.getElementById('specialty').value = '';
+            document.getElementById('rut').value = '';
+            document.getElementById('phone').value = '';
+            document.getElementById('address').value = '';
+            document.getElementById('primaryColor').value = '#667eea';
+            document.getElementById('paperType').value = 'simple';
+            document.getElementById('quantity').value = '1';
+            updatePreview();
+        }
+
+        // Add event listeners
+        ['doctorName', 'specialty', 'rut', 'phone', 'address', 'primaryColor', 'paperType', 'quantity'].forEach(id => {
+            document.getElementById(id).addEventListener('input', updatePreview);
+        });
+    </script>
+</body>
+</html>
