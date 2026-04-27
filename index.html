@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Recetas Médicas Profesionales
-En pleno Centro de Puerto Montt</title>
+<title>Recetas Médicas Profesionales</title>
 
 <style>
 
@@ -150,15 +149,17 @@ body{
     ✔ Personalizado con tus datos<br>
     ✔ Listo para imprimir<br>
     ✔ Atención rápida por WhatsApp
-    ✔ Estamos ubicados en Urmeneta 300 Local 15
-    frente a la Plaza de Armas de Puerto Montt
+  </p>
+
+  <p style="font-size:14px; margin-top:10px;">
+    📍 Urmeneta 300 Local 15 Galería Caracol, Puerto Montt
   </p>
 
   <a class="btn" href="https://wa.me/56978472489?text=Hola%20quiero%20cotizar%20recetas%20médicas" target="_blank">
-    📲 Pedir ahora
+    📲 Pedir ahora por WhatsApp
   </a>
 
-  <p style="margin-top:10px; font-size:18px;">
+  <p style="margin-top:10px; font-size:14px;">
     ⚡ Cupos limitados por día
   </p>
 
@@ -175,13 +176,22 @@ body{
 
 <!-- FOOTER -->
 <div class="footer">
-  Puerto Montt | Imprenta local
+  📍 Urmeneta 300 Local 15 Galería Caracol, Puerto Montt<br>
+  📲 +56 9 7847 2489
 </div>
 
 <!-- BOTON WHATSAPP -->
-<a class="whatsapp" href="https://wa.me/569xxxxxxxx?text=Hola%20quiero%20información%20de%20recetas" target="_blank">
+<a class="whatsapp" href="https://wa.me/56978472489?text=Hola%20quiero%20información%20de%20recetas" target="_blank">
   💬
 </a>
+
+<script>
+
+const numero = "56978472489";
+
+const grid = document.getElementById("grid");
+
+for(let i=1;i<=14;i++){
 
   let mensaje = encodeURIComponent(
     "Hola, quiero el diseño de receta médica N° " + i
