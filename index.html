@@ -21,14 +21,25 @@ body{
   padding:60px 20px;
 }
 
+.header h1{
+  margin:0;
+  font-size:36px;
+}
+
+.header p{
+  margin:10px 0;
+}
+
+/* BOTON */
 .btn{
   display:inline-block;
   background:#25D366;
   color:white;
-  padding:12px 20px;
+  padding:15px 25px;
   margin-top:15px;
   text-decoration:none;
   border-radius:30px;
+  font-weight:bold;
 }
 
 /* GRID */
@@ -62,7 +73,6 @@ body{
   cursor:pointer;
 }
 
-/* BOTONES */
 .ver{
   background:#1f6f78;
   color:white;
@@ -128,12 +138,27 @@ body{
 
 <!-- HEADER -->
 <div class="header">
-  <h1>Recetas Médicas Profesionales</h1>
-  <p>Elige tu diseño y cotiza al instante</p>
 
-  <a class="btn" href="https://wa.me/569XXXXXXXX" target="_blank">
-    💬 Cotizar general
+  <h1>Recetarios Médicos Profesionales</h1>
+
+  <p style="font-size:18px;">
+    🆓 Diseño GRATIS + Entrega en 24 horas
+  </p>
+
+  <p>
+    ✔ Personalizado con tus datos<br>
+    ✔ Listo para imprimir<br>
+    ✔ Atención rápida por WhatsApp
+  </p>
+
+  <a class="btn" href="https://wa.me/569XXXXXXXX?text=Hola%20quiero%20cotizar%20recetas%20médicas" target="_blank">
+    📲 Pedir ahora
   </a>
+
+  <p style="margin-top:10px; font-size:14px;">
+    ⚡ Cupos limitados por día
+  </p>
+
 </div>
 
 <!-- GRID -->
@@ -150,14 +175,14 @@ body{
   Puerto Montt | Imprenta local
 </div>
 
-<!-- BOTÓN WHATSAPP -->
-<a class="whatsapp" href="https://wa.me/56978472489" target="_blank">
+<!-- BOTON WHATSAPP -->
+<a class="whatsapp" href="https://wa.me/569XXXXXXXX?text=Hola%20quiero%20información%20de%20recetas" target="_blank">
   💬
 </a>
 
 <script>
 
-const numero = "56978472489"; // CAMBIAR
+const numero = "569XXXXXXXX"; // CAMBIAR POR TU NUMERO
 
 const grid = document.getElementById("grid");
 
