@@ -1,1075 +1,184 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Librería Central - Editor Avanzado de Recetas</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/interact.js/1.10.17/interact.min.js"></script>
-    <style>
-        body { font-family: 'Roboto', sans-serif; }
-        .gradient-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .template-card { transition: all 0.3s ease; }
-        .template-card:hover { transform: translateY(-8px); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
-        .editor-panel { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); }
-        .preview-canvas { 
-            background-image: 
-                linear-gradient(45deg, #e5e7eb 25%, transparent 25%), 
-                linear-gradient(-45deg, #e5e7eb 25%, transparent 25%), 
-                linear-gradient(45deg, transparent 75%, #e5e7eb 75%), 
-                linear-gradient(-45deg, transparent 75%, #e5e7eb 75%);
-            background-size: 20px 20px;
-            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
-        }
-        .color-picker::-webkit-color-swatch-wrapper { padding: 0; }
-        .color-picker::-webkit-color-swatch { border: none; border-radius: 6px; }
-        .btn-animate:active { transform: scale(0.95); }
-        
-        .draggable-element {
-            position: absolute;
-            cursor: move;
-            cursor: -webkit-grab;
-            cursor: grab;
-            border: 2px dashed transparent;
-            transition: border-color 0.2s;
-            padding: 8px;
-            min-width: 50px;
-            min-height: 30px;
-        }
-        .draggable-element:hover {
-            border-color: #3b82f6;
-            background: rgba(59, 130, 246, 0.1);
-        }
-        .draggable-element.selected {
-            border-color: #8b5cf6;
-            background: rgba(139, 92, 246, 0.15);
-            cursor: -webkit-grabbing;
-            cursor: grabbing;
-        }
-        .resize-handle {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background: #8b5cf6;
-            border: 2px solid white;
-            border-radius: 50%;
-            display: none;
-            z-index: 10;
-        }
-        .draggable-element.selected .resize-handle { display: block; }
-        .resize-handle.se { bottom: -5px; right: -5px; cursor: se-resize; }
-        .resize-handle.sw { bottom: -5px; left: -5px; cursor: sw-resize; }
-        .resize-handle.ne { top: -5px; right: -5px; cursor: ne-resize; }
-        .resize-handle.nw { top: -5px; left: -5px; cursor: nw-resize; }
-        
-        .uploaded-logo { max-width: 150px; max-height: 150px; object-fit: contain; }
-        .property-panel {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        input[type=range] {
-            -webkit-appearance: none;
-            width: 100%;
-            background: transparent;
-        }
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            height: 16px;
-            width: 16px;
-            border-radius: 50%;
-            background: #3b82f6;
-            cursor: pointer;
-            margin-top: -6px;
-        }
-        input[type=range]::-webkit-slider-runnable-track {
-            width: 100%;
-            height: 4px;
-            cursor: pointer;
-            background: #e5e7eb;
-            border-radius: 2px;
-        }
-        .title-suggestions { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
-        .title-suggestion { 
-            background: white; 
-            border: 2px solid #e5e7eb; 
-            padding: 4px 10px; 
-            border-radius: 20px; 
-            font-size: 11px; 
-            cursor: pointer; 
-            transition: all 0.2s;
-        }
-        .title-suggestion:hover { 
-            background: #667eea; 
-            color: white; 
-            border-color: #667eea; 
-        }
-        .upload-zone {
-            border: 3px dashed #cbd5e1;
-            transition: all 0.3s;
-        }
-        .upload-zone:hover, .upload-zone.dragover {
-            border-color: #3b82f6;
-            background: rgba(59, 130, 246, 0.05);
-        }
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-fade { animation: fadeIn 0.5s ease; }
-        
-        /* Canvas oculto para generación de imagen */
-        #exportCanvas {
-            position: fixed;
-            top: -9999px;
-            left: -9999px;
-            z-index: -1;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recetas Médicas Profesionales</title>
+
+<style>
+
+body{
+  margin:0;
+  font-family:Arial;
+  background:#f5f7fa;
+}
+
+/* HEADER */
+.header{
+  background:linear-gradient(135deg,#1f6f78,#3fa7b3);
+  color:white;
+  text-align:center;
+  padding:60px 20px;
+}
+
+.btn{
+  display:inline-block;
+  background:#25D366;
+  color:white;
+  padding:12px 20px;
+  margin-top:15px;
+  text-decoration:none;
+  border-radius:30px;
+}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:20px;
+  padding:40px;
+}
+
+/* CARD */
+.card{
+  background:white;
+  border-radius:10px;
+  overflow:hidden;
+  box-shadow:0 5px 15px rgba(0,0,0,0.1);
+  text-align:center;
+}
+
+.card img{
+  width:100%;
+  height:250px;
+  object-fit:cover;
+}
+
+.card button{
+  margin:10px;
+  padding:10px;
+  border:none;
+  background:#1f6f78;
+  color:white;
+  border-radius:5px;
+  cursor:pointer;
+}
+
+/* MODAL */
+.modal{
+  display:none;
+  position:fixed;
+  z-index:1000;
+  left:0;
+  top:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.8);
+  justify-content:center;
+  align-items:center;
+}
+
+.modal img{
+  max-width:90%;
+  max-height:90%;
+  border-radius:10px;
+}
+
+.close{
+  position:absolute;
+  top:20px;
+  right:30px;
+  color:white;
+  font-size:30px;
+  cursor:pointer;
+}
+
+/* FOOTER */
+.footer{
+  background:#1f6f78;
+  color:white;
+  text-align:center;
+  padding:20px;
+}
+
+/* WHATSAPP */
+.whatsapp{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#25D366;
+  color:white;
+  padding:15px;
+  border-radius:50%;
+  text-decoration:none;
+}
+
+</style>
 </head>
-<body class="bg-gray-50">
 
-    <!-- Header -->
-    <header class="gradient-header text-white shadow-2xl sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-4">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="mb-3 md:mb-0 text-center md:text-left">
-                    <h1 class="text-3xl md:text-4xl font-black tracking-tight">🏥 Librería Central</h1>
-                    <p class="text-sm opacity-95 mt-1">Editor Avanzado de Recetas - Puerto Montt</p>
-                </div>
-                <div class="text-sm text-center md:text-right bg-white/20 p-3 rounded-xl backdrop-blur-sm">
-                    <p class="font-semibold">📍 Urmeneta #300, Galería Caracol Local 15</p>
-                    <p>📱 +569 78 47 2489</p>
-                </div>
-            </div>
-        </div>
-    </header>
+<body>
 
-    <!-- Hero Section -->
-    <section class="py-12 bg-white">
-        <div class="container mx-auto px-4 text-center">
-            <h2 class="text-4xl md:text-5xl font-black text-gray-800 mb-4">
-                 Diseña tu Receta <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">100% Personalizable</span>
-            </h2>
-            <p class="text-lg text-gray-600 max-w-3xl mx-auto mb-6">
-                Elige una plantilla, <strong>arrastra los elementos</strong>, cambia tamaños, sube tu logo y personaliza todo.
-            </p>
-            <div class="flex flex-wrap justify-center gap-4 text-sm">
-                <div class="bg-blue-100 text-blue-800 px-4 py-2 rounded-full">🖱️ Arrastra y Suelta</div>
-                <div class="bg-green-100 text-green-800 px-4 py-2 rounded-full">📏 Redimensiona</div>
-                <div class="bg-purple-100 text-purple-800 px-4 py-2 rounded-full">🖼️ Sube tu Logo</div>
-                <div class="bg-pink-100 text-pink-800 px-4 py-2 rounded-full">📥 Descarga JPG/PDF</div>
-            </div>
-        </div>
-    </section>
+<!-- HEADER -->
+<div class="header">
+  <h1>Recetas Médicas Profesionales</h1>
+  <p>Diseño + impresión personalizada</p>
 
-    <!-- Templates Gallery -->
-    <section class="py-12 bg-gray-100">
-        <div class="container mx-auto px-4">
-            <h3 class="text-3xl font-bold text-center mb-4">🎨 Selecciona una Plantilla Base</h3>
-            <p class="text-center text-gray-600 mb-12">Luego podrás editar TODO: mover, redimensionar, cambiar colores</p>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-green-400" onclick="selectTemplate(1)">
-                    <div class="h-64 bg-gradient-to-br from-green-50 to-emerald-100 p-4 flex items-center justify-center">
-                        <div class="text-center"><div class="text-5xl mb-2">🦷</div><div class="font-bold text-green-800">Dental</div></div>
-                    </div>
-                    <div class="p-4"><h4 class="font-bold text-gray-800">1. Plantilla Dental</h4><button class="mt-2 w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 font-semibold">Usar Plantilla</button></div>
-                </div>
-                <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-gray-700" onclick="selectTemplate(2)">
-                    <div class="h-64 bg-gray-100 p-4 flex items-center justify-center">
-                        <div class="text-center"><div class="text-5xl mb-2">⚕️</div><div class="font-bold text-gray-800">Clásica</div></div>
-                    </div>
-                    <div class="p-4"><h4 class="font-bold text-gray-800">2. Clásica Minimalista</h4><button class="mt-2 w-full bg-gray-700 text-white py-2 rounded-lg hover:bg-gray-800 font-semibold">Usar Plantilla</button></div>
-                </div>
-                <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-green-500" onclick="selectTemplate(3)">
-                    <div class="h-64 bg-gradient-to-br from-green-100 to-teal-100 p-4 flex items-center justify-center">
-                        <div class="text-center"><div class="text-5xl mb-2">✚</div><div class="font-bold text-green-800">Verde</div></div>
-                    </div>
-                    <div class="p-4"><h4 class="font-bold text-gray-800">3. Verde Moderna</h4><button class="mt-2 w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 font-semibold">Usar Plantilla</button></div>
-                </div>
-                <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-blue-600" onclick="selectTemplate(4)">
-                    <div class="h-64 bg-gradient-to-br from-blue-50 to-indigo-100 p-4 flex items-center justify-center">
-                        <div class="text-center"><div class="text-5xl mb-2">🏥</div><div class="font-bold text-blue-800">Azul</div></div>
-                    </div>
-                    <div class="p-4"><h4 class="font-bold text-gray-800">4. Azul Profesional</h4><button class="mt-2 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 font-semibold">Usar Plantilla</button></div>
-                </div>
-                <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-purple-500" onclick="selectTemplate(5)">
-                    <div class="h-64 bg-gradient-to-br from-purple-50 to-pink-100 p-4 flex items-center justify-center">
-                        <div class="text-center"><div class="text-5xl mb-2">🐾</div><div class="font-bold text-purple-800">Veterinaria</div></div>
-                    </div>
-                    <div class="p-4"><h4 class="font-bold text-gray-800">5. Veterinaria</h4><button class="mt-2 w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 font-semibold">Usar Plantilla</button></div>
-                </div>
-                <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-red-500" onclick="selectTemplate(6)">
-                    <div class="h-64 bg-gray-100 p-4 flex items-center justify-center">
-                        <div class="text-center"><div class="text-5xl mb-2">📋</div><div class="font-bold text-red-800">Sidebar</div></div>
-                    </div>
-                    <div class="p-4"><h4 class="font-bold text-gray-800">6. Barra Lateral</h4><button class="mt-2 w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 font-semibold">Usar Plantilla</button></div>
-                </div>
-                <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-pink-500" onclick="selectTemplate(7)">
-                    <div class="h-64 bg-gradient-to-br from-pink-50 to-rose-100 p-4 flex items-center justify-center">
-                        <div class="text-center"><div class="text-5xl mb-2">🎨</div><div class="font-bold text-pink-800">Moderna</div></div>
-                    </div>
-                    <div class="p-4"><h4 class="font-bold text-gray-800">7. Formas Modernas</h4><button class="mt-2 w-full bg-pink-500 text-white py-2 rounded-lg hover:bg-pink-600 font-semibold">Usar Plantilla</button></div>
-                </div>
-                <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-cyan-500" onclick="selectTemplate(8)">
-                    <div class="h-64 bg-gradient-to-br from-cyan-50 to-blue-100 p-4 flex items-center justify-center">
-                        <div class="text-center"><div class="text-5xl mb-2">👁️</div><div class="font-bold text-cyan-800">Optometría</div></div>
-                    </div>
-                    <div class="p-4"><h4 class="font-bold text-gray-800">8. Optometría</h4><button class="mt-2 w-full bg-cyan-600 text-white py-2 rounded-lg hover:bg-cyan-700 font-semibold">Usar Plantilla</button></div>
-                </div>
-                <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-yellow-500" onclick="selectTemplate(9)">
-                    <div class="h-64 bg-gradient-to-br from-yellow-50 to-orange-100 p-4 flex items-center justify-center">
-                        <div class="text-center"><div class="text-5xl mb-2">🌈</div><div class="font-bold text-yellow-800">Colorida</div></div>
-                    </div>
-                    <div class="p-4"><h4 class="font-bold text-gray-800">9. Header Colorido</h4><button class="mt-2 w-full bg-gradient-to-r from-yellow-400 to-pink-500 text-white py-2 rounded-lg hover:opacity-90 font-semibold">Usar Plantilla</button></div>
-                </div>
-                <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-teal-600" onclick="selectTemplate(10)">
-                    <div class="h-64 bg-gradient-to-br from-teal-50 to-blue-50 p-4 flex items-center justify-center">
-                        <div class="text-center"><div class="text-5xl mb-2">☤</div><div class="font-bold text-teal-800">Caduceo</div></div>
-                    </div>
-                    <div class="p-4"><h4 class="font-bold text-gray-800">10. Sidebar Vertical</h4><button class="mt-2 w-full bg-teal-600 text-white py-2 rounded-lg hover:bg-teal-700 font-semibold">Usar Plantilla</button></div>
-                </div>
-                <div class="template-card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer border-4 border-transparent hover:border-blue-500" onclick="selectTemplate(11)">
-                    <div class="h-64 bg-gradient-to-br from-blue-50 to-gray-50 p-4 flex items-center justify-center">
-                        <div class="text-center"><div class="text-5xl mb-2">📄</div><div class="font-bold text-blue-800">Header</div></div>
-                    </div>
-                    <div class="p-4"><h4 class="font-bold text-gray-800">11. Header Derecho</h4><button class="mt-2 w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 font-semibold">Usar Plantilla</button></div>
-                </div>
-            </div>
-        </div>
-    </section>
+  <a class="btn" href="https://wa.me/569XXXXXXXX" target="_blank">
+    💬 Cotizar por WhatsApp
+  </a>
+</div>
 
-    <!-- Advanced Editor Section -->
-    <section id="editor" class="py-12 bg-white hidden">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-6">
-                <h3 class="text-3xl font-bold mb-2">✏️ Editor Avanzado - Arrastra, Redimensiona y Personaliza</h3>
-                <p class="text-gray-600">Haz clic en cualquier elemento para seleccionarlo. Arrástralo para moverlo. Usa las esquinas para redimensionar.</p>
-            </div>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <!-- Left Panel -->
-                <div class="lg:col-span-3 space-y-4">
-                    <div class="editor-panel rounded-2xl p-4 shadow-lg">
-                        <h4 class="font-bold text-gray-800 mb-3 border-b pb-2">📝 Datos Básicos</h4>
-                        <div class="mb-3">
-                            <label class="block text-xs font-semibold text-gray-700 mb-1">Título</label>
-                            <input type="text" id="titlePrefix" class="w-full px-3 py-2 border-2 border-gray-300 rounded-lg text-sm" value="Dr." onchange="updateElementText()">
-                            <div class="title-suggestions mt-1">
-                                <span class="title-suggestion" onclick="setTitle('Dr.')">Dr.</span>
-                                <span class="title-suggestion" onclick="setTitle('Dra.')">Dra.</span>
-                                <span class="title-suggestion" onclick="setTitle('Méd. Vet.')">Vet.</span>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="block text-xs font-semibold text-gray-700 mb-1">Nombre</label>
-                            <input type="text" id="doctorName" class="w-full px-3 py-2 border-2 border-gray-300 rounded-lg text-sm" placeholder="Tu Nombre" onchange="updateElementText()">
-                        </div>
-                        <div class="mb-3">
-                            <label class="block text-xs font-semibold text-gray-700 mb-1">Especialidad</label>
-                            <input type="text" id="specialty" class="w-full px-3 py-2 border-2 border-gray-300 rounded-lg text-sm" placeholder="Especialidad" onchange="updateElementText()">
-                        </div>
-                        <div class="mb-3">
-                            <label class="block text-xs font-semibold text-gray-700 mb-1">Teléfono</label>
-                            <input type="text" id="phone" class="w-full px-3 py-2 border-2 border-gray-300 rounded-lg text-sm" onchange="updateElementText()">
-                        </div>
-                        <div class="mb-3">
-                            <label class="block text-xs font-semibold text-gray-700 mb-1">Color Principal</label>
-                            <input type="color" id="primaryColor" class="w-full h-10 cursor-pointer rounded" onchange="updateTemplateColors()">
-                        </div>
-                    </div>
+<!-- GRID -->
+<div class="grid">
 
-                    <div class="property-panel rounded-2xl p-4 shadow-lg" id="elementProperties" style="display: none;">
-                        <h4 class="font-bold text-gray-800 mb-3 border-b pb-2">🎨 Propiedades</h4>
-                        <div class="mb-3">
-                            <label class="block text-xs font-semibold text-gray-700 mb-1">Tamaño de Letra</label>
-                            <input type="range" id="fontSize" min="8" max="72" value="16" class="w-full" oninput="updateElementStyle()">
-                            <div class="text-xs text-gray-600 text-center mt-1"><span id="fontSizeValue">16</span>px</div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="block text-xs font-semibold text-gray-700 mb-1">Color del Texto</label>
-                            <input type="color" id="textColor" class="w-full h-10 cursor-pointer rounded" onchange="updateElementStyle()">
-                        </div>
-                        <div class="mb-3">
-                            <label class="block text-xs font-semibold text-gray-700 mb-1">Alineación</label>
-                            <div class="flex gap-1">
-                                <button onclick="setTextAlign('left')" class="flex-1 py-1 bg-gray-200 rounded hover:bg-gray-300 text-xs">⬅️</button>
-                                <button onclick="setTextAlign('center')" class="flex-1 py-1 bg-gray-200 rounded hover:bg-gray-300 text-xs">⬆️⬇️</button>
-                                <button onclick="setTextAlign('right')" class="flex-1 py-1 bg-gray-200 rounded hover:bg-gray-300 text-xs">➡️</button>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="block text-xs font-semibold text-gray-700 mb-1">Opacidad</label>
-                            <input type="range" id="opacity" min="0" max="100" value="100" class="w-full" oninput="updateElementStyle()">
-                        </div>
-                        <button onclick="deleteSelectedElement()" class="w-full bg-red-500 text-white py-2 rounded-lg text-sm hover:bg-red-600 mt-2">🗑️ Eliminar</button>
-                    </div>
+  <div class="card">
+    <img src="img/plantilla1.jpg">
+    <p>Clínica Moderna</p>
+    <button onclick="abrirModal('img/plantilla1.jpg')">Ver diseño grande</button>
+  </div>
 
-                    <div class="property-panel rounded-2xl p-4 shadow-lg">
-                        <h4 class="font-bold text-gray-800 mb-3 border-b pb-2">🖼️ Logo/Imagen</h4>
-                        <div class="upload-zone rounded-lg p-4 text-center cursor-pointer mb-3" onclick="document.getElementById('logoInput').click()" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
-                            <input type="file" id="logoInput" class="hidden" accept="image/*" onchange="handleLogoUpload(event)">
-                            <div class="text-3xl mb-2">📁</div>
-                            <p class="text-xs text-gray-600">Arrastra o haz clic para subir</p>
-                            <p class="text-xs text-gray-400 mt-1">PNG, JPG (máx. 5MB)</p>
-                        </div>
-                        <div class="mb-3">
-                            <label class="block text-xs font-semibold text-gray-700 mb-1">Ancho del Logo</label>
-                            <input type="range" id="logoWidth" min="20" max="200" value="100" class="w-full" oninput="updateLogoSize()">
-                            <div class="text-xs text-gray-600 text-center"><span id="logoWidthValue">100</span>px</div>
-                        </div>
-                    </div>
+  <div class="card">
+    <img src="img/plantilla2.jpg">
+    <p>Dental</p>
+    <button onclick="abrirModal('img/plantilla2.jpg')">Ver diseño grande</button>
+  </div>
 
-                    <div class="property-panel rounded-2xl p-4 shadow-lg bg-green-50">
-                        <h4 class="font-bold text-gray-800 mb-3 border-b pb-2">💰 Pedido</h4>
-                        <div class="mb-3">
-                            <label class="block text-xs font-semibold text-gray-700 mb-1">Tipo de Papel</label>
-                            <select id="paperType" class="w-full px-3 py-2 border-2 border-gray-300 rounded-lg text-sm" onchange="calculatePrice()">
-                                <option value="simple">Simple - $9.990</option>
-                                <option value="duplicado">Duplicado - $14.990</option>
-                                <option value="triplicado">Triplicado - $19.990</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="block text-xs font-semibold text-gray-700 mb-1">Cantidad</label>
-                            <input type="number" id="quantity" min="1" value="1" class="w-full px-3 py-2 border-2 border-gray-300 rounded-lg text-sm" onchange="calculatePrice()">
-                        </div>
-                        <div class="text-center mb-3">
-                            <div class="text-xs text-gray-600">Total:</div>
-                            <div class="text-2xl font-black text-green-600" id="totalPrice">$9.990</div>
-                        </div>
-                        <button onclick="orderRecipe()" id="btnOrder" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg text-sm btn-animate flex items-center justify-center gap-2">
-                            <span>📱</span> <span id="btnOrderText">Pedir por WhatsApp</span>
-                        </button>
-                        <p class="text-xs text-gray-600 mt-2 text-center">Se descargará la imagen automáticamente</p>
-                    </div>
-                </div>
+  <div class="card">
+    <img src="img/plantilla3.jpg">
+    <p>Veterinaria</p>
+    <button onclick="abrirModal('img/plantilla3.jpg')">Ver diseño grande</button>
+  </div>
 
-                <!-- Center - Canvas -->
-                <div class="lg:col-span-9">
-                    <div class="preview-canvas rounded-2xl border-4 border-gray-300 p-8 min-h-[800px] flex items-center justify-center bg-white shadow-inner relative overflow-auto">
-                        <div id="recipeCanvas" class="bg-white w-full max-w-2xl shadow-2xl relative" style="min-height: 900px; position: relative;">
-                            <div class="text-center text-gray-400 py-20">
-                                <div class="text-6xl mb-4">🎨</div>
-                                <p class="text-lg font-semibold">Selecciona una plantilla para comenzar</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mt-4 flex gap-3 justify-center flex-wrap">
-                        <button onclick="addElement('text')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition btn-animate">➕ Agregar Texto</button>
-                        <button onclick="downloadRecipe('jpg')" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-semibold transition btn-animate">📥 Descargar JPG</button>
-                        <button onclick="downloadRecipe('pdf')" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold transition btn-animate">📄 Descargar PDF</button>
-                        <button onclick="resetCanvas()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold transition btn-animate">🔄 Reiniciar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+</div>
 
-    <!-- Canvas oculto para exportación -->
-    <canvas id="exportCanvas"></canvas>
+<!-- MODAL -->
+<div id="modal" class="modal" onclick="cerrarModal()">
+  <span class="close">&times;</span>
+  <img id="imagenModal">
+</div>
 
-    <script>
-        let currentTemplate = null;
-        let selectedElement = null;
-        let elementCounter = 0;
-        let currentPrimaryColor = '#10b981';
-        let generatedImageBlob = null;
-        const prices = { simple: 9990, duplicado: 14990, triplicado: 19990 };
+<!-- FOOTER -->
+<div class="footer">
+  Puerto Montt | Imprenta local
+</div>
 
-        const templateConfigs = {
-            1: { name: 'Dental', color: '#10b981', icon: '🦷' },
-            2: { name: 'Clásica', color: '#1f2937', icon: '⚕️' },
-            3: { name: 'Verde', color: '#10b981', icon: '✚' },
-            4: { name: 'Azul', color: '#2563eb', icon: '🏥' },
-            5: { name: 'Veterinaria', color: '#8b5cf6', icon: '🐾' },
-            6: { name: 'Sidebar', color: '#dc2626', icon: '📋' },
-            7: { name: 'Moderna', color: '#ec4899', icon: '🎨' },
-            8: { name: 'Optometría', color: '#06b6d4', icon: '👁️' },
-            9: { name: 'Colorida', color: '#fbbf24', icon: '🌈' },
-            10: { name: 'Caduceo', color: '#0f766e', icon: '☤' },
-            11: { name: 'Header', color: '#64748b', icon: '📄' }
-        };
+<!-- WHATSAPP -->
+<a class="whatsapp" href="https://wa.me/569XXXXXXXX" target="_blank">
+  💬
+</a>
 
-        function selectTemplate(num) {
-            currentTemplate = num;
-            currentPrimaryColor = templateConfigs[num].color;
-            document.getElementById('primaryColor').value = currentPrimaryColor;
-            document.getElementById('editor').classList.remove('hidden');
-            document.getElementById('editor').scrollIntoView({ behavior: 'smooth' });
-            initTemplate(num);
-        }
+<script>
 
-        function initTemplate(num) {
-            const canvas = document.getElementById('recipeCanvas');
-            canvas.innerHTML = '';
-            elementCounter = 0;
-            
-            const elements = getTemplateElements(num);
-            elements.forEach(el => {
-                if (el.type === 'shape') {
-                    createShapeOnCanvas(el);
-                } else {
-                    createElementOnCanvas(el);
-                }
-            });
-            
-            calculatePrice();
-        }
+function abrirModal(src){
+  document.getElementById("modal").style.display="flex";
+  document.getElementById("imagenModal").src = src;
+}
 
-        function getTemplateElements(num) {
-            const color = currentPrimaryColor;
-            
-            switch(num) {
-                case 1: // Dental
-                    return [
-                        { type: 'shape', shape: 'circle', x: 500, y: 30, width: 100, height: 100, color: color + '20', borderRadius: '50%' },
-                        { type: 'text', content: '🦷', x: 520, y: 55, fontSize: 50, color: color, width: 60, textAlign: 'center' },
-                        { type: 'line', x: 50, y: 40, width: 400, height: 4, color: color },
-                        { type: 'text', content: 'Dr. [Tu Nombre]', x: 50, y: 60, fontSize: 32, color: color, fontWeight: 'bold', width: 400, id: 'title' },
-                        { type: 'text', content: 'Odontólogo', x: 50, y: 100, fontSize: 18, color: color + 'cc', width: 300, id: 'specialty' },
-                        { type: 'text', content: '📞 +569 XXX XXX XXX', x: 50, y: 130, fontSize: 14, color: '#6b7280', width: 250, id: 'phone' },
-                        { type: 'text', content: 'Paciente:', x: 50, y: 200, fontSize: 14, color: '#374151', width: 100 },
-                        { type: 'line', x: 150, y: 205, width: 400, height: 2, color: '#9ca3af' },
-                        { type: 'text', content: 'Edad:', x: 50, y: 250, fontSize: 14, color: '#374151', width: 60 },
-                        { type: 'line', x: 120, y: 255, width: 150, height: 2, color: '#9ca3af' },
-                        { type: 'text', content: 'Tratamiento:', x: 50, y: 310, fontSize: 16, color: color, fontWeight: 'bold', width: 150 },
-                        { type: 'shape', shape: 'rect', x: 50, y: 340, width: 500, height: 300, color: color + '10', borderRadius: '12px' },
-                        { type: 'text', content: 'Fecha: ___/___/______', x: 50, y: 750, fontSize: 12, color: '#6b7280', width: 150 },
-                        { type: 'text', content: 'Firma:', x: 450, y: 750, fontSize: 12, color: '#6b7280', width: 80 },
-                    ];
-                    
-                case 2: // Clásica Minimalista
-                    return [
-                        { type: 'line', x: 50, y: 30, width: 500, height: 6, color: '#1f2937' },
-                        { type: 'text', content: '⚕️', x: 260, y: 50, fontSize: 50, color: '#1f2937', width: 60, textAlign: 'center' },
-                        { type: 'text', content: 'Dr. [Tu Nombre]', x: 50, y: 120, fontSize: 36, color: '#1f2937', fontWeight: 'bold', width: 500, textAlign: 'center', id: 'title' },
-                        { type: 'text', content: 'Medicina General', x: 50, y: 165, fontSize: 18, color: '#6b7280', width: 500, textAlign: 'center', id: 'specialty' },
-                        { type: 'line', x: 50, y: 195, width: 500, height: 3, color: '#1f2937' },
-                        { type: 'text', content: 'RUT: XX.XXX.XXX-X | Tel: +569 XXX XXX XXX', x: 50, y: 215, fontSize: 13, color: '#6b7280', width: 500, textAlign: 'center', id: 'phone' },
-                        { type: 'text', content: 'Nombre del Paciente:', x: 50, y: 270, fontSize: 14, color: '#374151', width: 180 },
-                        { type: 'line', x: 240, y: 275, width: 310, height: 2, color: '#9ca3af' },
-                        { type: 'text', content: 'Receta Médica:', x: 50, y: 320, fontSize: 16, color: '#374151', fontWeight: 'bold', width: 150 },
-                        { type: 'shape', shape: 'rect', x: 50, y: 350, width: 500, height: 350, color: '#f3f4f6', borderRadius: '8px' },
-                        { type: 'text', content: 'Fecha: ___/___/______', x: 50, y: 750, fontSize: 12, color: '#6b7280', width: 150 },
-                        { type: 'text', content: 'Firma y Timbre:', x: 400, y: 750, fontSize: 12, color: '#6b7280', width: 120 },
-                    ];
-                    
-                case 3: // Verde Moderna
-                    return [
-                        { type: 'shape', shape: 'rect', x: 0, y: 0, width: 600, height: 8, color: color, borderRadius: '8px 8px 0 0' },
-                        { type: 'text', content: '✚', x: 50, y: 30, fontSize: 50, color: color, width: 60 },
-                        { type: 'text', content: 'Dr. [Tu Nombre]', x: 120, y: 50, fontSize: 28, color: color, fontWeight: 'bold', width: 400, id: 'title' },
-                        { type: 'text', content: 'Especialidad Médica', x: 120, y: 85, fontSize: 16, color: color + 'cc', width: 300, id: 'specialty' },
-                        { type: 'shape', shape: 'rect', x: 50, y: 120, width: 500, height: 80, color: color + '15', borderRadius: '12px' },
-                        { type: 'text', content: '📞 +569 XXX XXX XXX', x: 70, y: 140, fontSize: 14, color: '#374151', width: 300, id: 'phone' },
-                        { type: 'text', content: '📍 Dirección del consultorio', x: 70, y: 170, fontSize: 14, color: '#374151', width: 300 },
-                        { type: 'text', content: 'Paciente:', x: 50, y: 230, fontSize: 14, color: color, fontWeight: 'bold', width: 100 },
-                        { type: 'shape', shape: 'rect', x: 50, y: 255, width: 500, height: 40, color: color + '08', borderRadius: '8px' },
-                        { type: 'text', content: 'Diagnóstico / Receta:', x: 50, y: 320, fontSize: 14, color: color, fontWeight: 'bold', width: 200 },
-                        { type: 'shape', shape: 'rect', x: 50, y: 350, width: 500, height: 350, color: color + '08', borderRadius: '8px', border: '2px dashed ' + color + '30' },
-                        { type: 'text', content: 'Fecha: ___/___/______', x: 50, y: 750, fontSize: 12, color: '#6b7280', width: 150 },
-                        { type: 'text', content: 'Firma:', x: 450, y: 750, fontSize: 12, color: '#6b7280', width: 80 },
-                    ];
-                    
-                case 4: // Azul Profesional
-                    return [
-                        { type: 'shape', shape: 'rect', x: 0, y: 0, width: 600, height: 120, color: color, borderRadius: '0 0 20px 20px' },
-                        { type: 'text', content: 'Dr. [Tu Nombre]', x: 50, y: 40, fontSize: 36, color: '#ffffff', fontWeight: 'bold', width: 500, id: 'title' },
-                        { type: 'text', content: 'Medicina General', x: 50, y: 85, fontSize: 20, color: '#ffffff', width: 400, id: 'specialty' },
-                        { type: 'text', content: 'RUT: XX.XXX.XXX-X', x: 50, y: 110, fontSize: 14, color: '#ffffff', width: 300 },
-                        { type: 'shape', shape: 'rect', x: 50, y: 140, width: 500, height: 60, color: color + '10', borderRadius: '12px' },
-                        { type: 'text', content: '📞 +569 XXX XXX XXX', x: 70, y: 155, fontSize: 14, color: '#374151', width: 250, id: 'phone' },
-                        { type: 'text', content: '📍 Dirección', x: 320, y: 155, fontSize: 14, color: '#374151', width: 200 },
-                        { type: 'text', content: 'Paciente:', x: 50, y: 230, fontSize: 14, color: color, fontWeight: 'bold', width: 100 },
-                        { type: 'shape', shape: 'rect', x: 50, y: 255, width: 500, height: 40, color: color + '10', borderRadius: '8px' },
-                        { type: 'text', content: 'Indicaciones Médicas:', x: 50, y: 320, fontSize: 16, color: color, fontWeight: 'bold', width: 220 },
-                        { type: 'shape', shape: 'rect', x: 50, y: 350, width: 500, height: 350, color: color + '10', borderRadius: '8px' },
-                        { type: 'text', content: 'Fecha: ___/___/______', x: 50, y: 750, fontSize: 12, color: '#6b7280', width: 150 },
-                        { type: 'text', content: 'Firma Médico:', x: 400, y: 750, fontSize: 12, color: '#6b7280', width: 120 },
-                    ];
-                    
-                case 5: // Veterinaria
-                    return [
-                        { type: 'shape', shape: 'rect', x: 0, y: 0, width: 600, height: 600, color: color + '05' },
-                        { type: 'text', content: '🐾', x: 500, y: 40, fontSize: 60, color: color, width: 70 },
-                        { type: 'text', content: 'Dr. [Tu Nombre]', x: 50, y: 60, fontSize: 32, color: color, fontWeight: 'bold', width: 400, id: 'title' },
-                        { type: 'text', content: 'Médico Veterinario', x: 50, y: 100, fontSize: 18, color: color + 'cc', width: 300, id: 'specialty' },
-                        { type: 'shape', shape: 'rect', x: 50, y: 130, width: 300, height: 60, color: color + '20', borderRadius: '12px' },
-                        { type: 'text', content: 'RUT: XX.XXX.XXX-X', x: 70, y: 150, fontSize: 13, color: '#374151', width: 250 },
-                        { type: 'text', content: '📞 +569 XXX XXX XXX', x: 70, y: 175, fontSize: 13, color: '#374151', width: 250, id: 'phone' },
-                        { type: 'text', content: 'Dueño:', x: 50, y: 220, fontSize: 14, color: color, fontWeight: 'bold', width: 80 },
-                        { type: 'shape', shape: 'rect', x: 50, y: 245, width: 500, height: 35, color: color + '15', borderRadius: '8px' },
-                        { type: 'text', content: 'Paciente (Mascota):', x: 50, y: 300, fontSize: 14, color: color, fontWeight: 'bold', width: 180 },
-                        { type: 'shape', shape: 'rect', x: 50, y: 325, width: 500, height: 35, color: color + '15', borderRadius: '8px' },
-                        { type: 'text', content: 'Receta / Tratamiento:', x: 50, y: 380, fontSize: 16, color: color, fontWeight: 'bold', width: 220 },
-                        { type: 'shape', shape: 'rect', x: 50, y: 410, width: 500, height: 250, color: color + '10', borderRadius: '12px' },
-                        { type: 'text', content: 'Fecha: ___/___/______', x: 50, y: 750, fontSize: 12, color: '#6b7280', width: 150 },
-                        { type: 'text', content: 'Firma:', x: 450, y: 750, fontSize: 12, color: '#6b7280', width: 80 },
-                    ];
-                    
-                case 6: // Barra Lateral
-                    return [
-                        { type: 'shape', shape: 'rect', x: 0, y: 0, width: 70, height: 900, color: color },
-                        { type: 'text', content: '⚕️', x: 20, y: 30, fontSize: 40, color: '#ffffff', width: 40, textAlign: 'center' },
-                        { type: 'text', content: 'RECETA', x: 15, y: 80, fontSize: 12, color: '#ffffff', width: 50, textAlign: 'center' },
-                        { type: 'line', x: 80, y: 50, width: 3, height: 60, color: color },
-                        { type: 'text', content: 'Dr. [Tu Nombre]', x: 100, y: 50, fontSize: 28, color: color, fontWeight: 'bold', width: 400, id: 'title' },
-                        { type: 'text', content: 'Especialidad', x: 100, y: 85, fontSize: 16, color: color + 'cc', width: 300, id: 'specialty' },
-                        { type: 'text', content: 'RUT: XX.XXX.XXX-X', x: 100, y: 115, fontSize: 13, color: '#6b7280', width: 250 },
-                        { type: 'text', content: '📞 +569 XXX XXX XXX', x: 100, y: 140, fontSize: 13, color: '#6b7280', width: 250, id: 'phone' },
-                        { type: 'text', content: '📍 Dirección del consultorio', x: 100, y: 165, fontSize: 13, color: '#6b7280', width: 300 },
-                        { type: 'text', content: 'Paciente:', x: 100, y: 220, fontSize: 14, color: '#374151', width: 100 },
-                        { type: 'shape', shape: 'rect', x: 100, y: 245, width: 450, height: 40, color: color + '10', borderRadius: '8px' },
-                        { type: 'text', content: 'Receta:', x: 100, y: 310, fontSize: 14, color: '#374151', width: 80 },
-                        { type: 'shape', shape: 'rect', x: 100, y: 335, width: 450, height: 400, color: color + '08', borderRadius: '8px' },
-                        { type: 'text', content: 'Fecha: ___/___/______', x: 100, y: 780, fontSize: 12, color: '#6b7280', width: 150 },
-                        { type: 'text', content: 'Firma:', x: 450, y: 780, fontSize: 12, color: '#6b7280', width: 80 },
-                    ];
-                    
-                case 7: // Moderna Formas
-                    return [
-                        { type: 'shape', shape: 'circle', x: 450, y: -30, width: 180, height: 180, color: color + '20', borderRadius: '50%' },
-                        { type: 'shape', shape: 'circle', x: -20, y: 650, width: 140, height: 140, color: color + '15', borderRadius: '50%' },
-                        { type: 'text', content: 'Dr. [Tu Nombre]', x: 50, y: 50, fontSize: 32, color: color, fontWeight: 'bold', width: 450, id: 'title' },
-                        { type: 'text', content: 'Especialidad Médica', x: 50, y: 95, fontSize: 18, color: color + 'cc', width: 350, id: 'specialty' },
-                        { type: 'shape', shape: 'rect', x: 50, y: 130, width: 500, height: 70, color: color + '15', borderRadius: '20px' },
-                        { type: 'text', content: '📞 +569 XXX XXX XXX', x: 70, y: 155, fontSize: 14, color: '#374151', width: 300, id: 'phone' },
-                        { type: 'text', content: '📍 Dirección', x: 70, y: 180, fontSize: 14, color: '#374151', width: 250 },
-                        { type: 'text', content: 'Paciente:', x: 50, y: 230, fontSize: 14, color: color, fontWeight: 'bold', width: 100 },
-                        { type: 'shape', shape: 'rect', x: 50, y: 255, width: 500, height: 40, color: color + '10', borderRadius: '16px' },
-                        { type: 'text', content: 'Receta Médica:', x: 50, y: 320, fontSize: 16, color: color, fontWeight: 'bold', width: 180 },
-                        { type: 'shape', shape: 'rect', x: 50, y: 350, width: 500, height: 350, color: color + '08', borderRadius: '20px', border: '2px dashed ' + color + '30' },
-                        { type: 'text', content: 'Fecha: ___/___/______', x: 50, y: 750, fontSize: 12, color: '#6b7280', width: 150 },
-                        { type: 'text', content: 'Firma:', x: 450, y: 750, fontSize: 12, color: '#6b7280', width: 80 },
-                    ];
-                    
-                case 8: // Optometría
-                    return [
-                        { type: 'text', content: '👁️', x: 50, y: 40, fontSize: 50, color: color, width: 60 },
-                        { type: 'text', content: 'Dr. [Tu Nombre]', x: 120, y: 50, fontSize: 28, color: color, fontWeight: 'bold', width: 400, id: 'title' },
-                        { type: 'text', content: 'Optometrista', x: 120, y: 85, fontSize: 16, color: color + 'cc', width: 250, id: 'specialty' },
-                        { type: 'line', x: 50, y: 110, width: 500, height: 4, color: color },
-                        { type: 'shape', shape: 'rect', x: 50, y: 125, width: 500, height: 50, color: color + '10', borderRadius: '8px' },
-                        { type: 'text', content: 'RUT: XX.XXX.XXX-X | Tel: +569 XXX XXX XXX', x: 70, y: 150, fontSize: 13, color: '#374151', width: 450, id: 'phone' },
-                        { type: 'text', content: 'Paciente:', x: 50, y: 200, fontSize: 14, color: color, fontWeight: 'bold', width: 100 },
-                        { type: 'shape', shape: 'rect', x: 50, y: 225, width: 500, height: 35, color: color + '10', borderRadius: '8px' },
-                        { type: 'text', content: 'OJO DERECHO (OD)', x: 50, y: 285, fontSize: 14, color: color, fontWeight: 'bold', width: 180 },
-                        { type: 'shape', shape: 'rect', x: 50, y: 310, width: 240, height: 120, color: color + '10', borderRadius: '8px' },
-                        { type: 'text', content: 'OJO IZQUIERDO (OI)', x: 310, y: 285, fontSize: 14, color: color, fontWeight: 'bold', width: 180 },
-                        { type: 'shape', shape: 'rect', x: 310, y: 310, width: 240, height: 120, color: color + '10', borderRadius: '8px' },
-                        { type: 'text', content: 'Observaciones:', x: 50, y: 455, fontSize: 14, color: color, fontWeight: 'bold', width: 150 },
-                        { type: 'shape', shape: 'rect', x: 50, y: 480, width: 500, height: 200, color: color + '10', borderRadius: '8px' },
-                        { type: 'text', content: 'Fecha: ___/___/______', x: 50, y: 750, fontSize: 12, color: '#6b7280', width: 150 },
-                        { type: 'text', content: 'Firma:', x: 450, y: 750, fontSize: 12, color: '#6b7280', width: 80 },
-                    ];
-                    
-                case 9: // Header Colorido
-                    return [
-                        { type: 'shape', shape: 'rect', x: 0, y: 0, width: 600, height: 90, color: 'linear-gradient(90deg, #fbbf24, #ec4899, #8b5cf6)' },
-                        { type: 'text', content: 'Dr. [Tu Nombre]', x: 50, y: 25, fontSize: 32, color: '#ffffff', fontWeight: 'bold', width: 400, id: 'title' },
-                        { type: 'text', content: 'Especialidad Médica', x: 50, y: 60, fontSize: 16, color: '#ffffff', width: 350, id: 'specialty' },
-                        { type: 'text', content: '⚕️', x: 520, y: 25, fontSize: 50, color: '#ffffff', width: 60 },
-                        { type: 'shape', shape: 'rect', x: 50, y: 105, width: 500, height: 70, color: color + '10', borderRadius: '12px' },
-                        { type: 'text', content: '📞 +569 XXX XXX XXX', x: 70, y: 125, fontSize: 14, color: '#374151', width: 300, id: 'phone' },
-                        { type: 'text', content: '📍 Dirección del consultorio', x: 70, y: 155, fontSize: 14, color: '#374151', width: 300 },
-                        { type: 'text', content: 'Paciente:', x: 50, y: 200, fontSize: 14, color: '#374151', width: 100 },
-                        { type: 'shape', shape: 'rect', x: 50, y: 225, width: 500, height: 40, color: color + '10', borderRadius: '8px' },
-                        { type: 'text', content: 'Receta / Indicaciones:', x: 50, y: 290, fontSize: 16, color: '#374151', fontWeight: 'bold', width: 220 },
-                        { type: 'shape', shape: 'rect', x: 50, y: 320, width: 500, height: 380, color: color + '08', borderRadius: '12px' },
-                        { type: 'text', content: 'Fecha: ___/___/______', x: 50, y: 750, fontSize: 12, color: '#6b7280', width: 150 },
-                        { type: 'text', content: 'Firma Médico:', x: 400, y: 750, fontSize: 12, color: '#6b7280', width: 120 },
-                    ];
-                    
-                case 10: // Caduceo Sidebar
-                    return [
-                        { type: 'shape', shape: 'rect', x: 0, y: 0, width: 12, height: 900, color: color },
-                        { type: 'text', content: '☤', x: 40, y: 40, fontSize: 50, color: '#be185d', width: 60 },
-                        { type: 'text', content: 'Dr. [Tu Nombre]', x: 110, y: 50, fontSize: 32, color: '#111827', fontWeight: 'bold', width: 450, id: 'title' },
-                        { type: 'text', content: 'Médico', x: 110, y: 90, fontSize: 18, color: '#374151', width: 300, id: 'specialty' },
-                        { type: 'text', content: '12234567', x: 110, y: 115, fontSize: 14, color: '#6b7280', width: 200 },
-                        { type: 'text', content: 'Departamento de Medicina', x: 110, y: 140, fontSize: 14, color: '#6b7280', width: 300 },
-                        { type: 'line', x: 110, y: 170, width: 450, height: 2, color: '#e5e7eb' },
-                        { type: 'text', content: 'Nombre:', x: 110, y: 210, fontSize: 14, color: '#374151', width: 90 },
-                        { type: 'line', x: 210, y: 215, width: 350, height: 1, color: '#9ca3af' },
-                        { type: 'text', content: 'Sexo:', x: 110, y: 250, fontSize: 14, color: '#374151', width: 60 },
-                        { type: 'line', x: 180, y: 255, width: 200, height: 1, color: '#9ca3af' },
-                        { type: 'text', content: 'Edad:', x: 110, y: 290, fontSize: 14, color: '#374151', width: 60 },
-                        { type: 'line', x: 180, y: 295, width: 150, height: 1, color: '#9ca3af' },
-                        { type: 'text', content: 'Rp.', x: 110, y: 350, fontSize: 24, color: color, fontWeight: 'italic', width: 60 },
-                        { type: 'shape', shape: 'rect', x: 110, y: 390, width: 450, height: 300, color: color + '08', borderRadius: '8px', border: '2px dashed ' + color + '30' },
-                        { type: 'text', content: 'Fecha', x: 350, y: 750, fontSize: 14, color: '#6b7280', width: 80, textAlign: 'center' },
-                        { type: 'line', x: 350, y: 745, width: 80, height: 1, color: '#9ca3af' },
-                        { type: 'text', content: 'Firma', x: 500, y: 750, fontSize: 14, color: '#6b7280', width: 80, textAlign: 'center' },
-                        { type: 'line', x: 500, y: 745, width: 80, height: 1, color: '#9ca3af' },
-                        { type: 'line', x: 110, y: 790, width: 450, height: 1, color: color + '30' },
-                        { type: 'text', content: '📍 Calle de Miguel Servet, 17, 28012 Madrid / 622 333 333', x: 130, y: 810, fontSize: 12, color: '#6b7280', width: 450, id: 'phone' },
-                        { type: 'text', content: '✉ nombre@edit.org', x: 130, y: 835, fontSize: 12, color: '#6b7280', width: 250 },
-                        { type: 'text', content: '🌐 www.edit.org', x: 130, y: 860, fontSize: 12, color: '#6b7280', width: 200 },
-                    ];
-                    
-                case 11: // Header Derecho
-                    return [
-                        { type: 'text', content: '☤', x: 50, y: 40, fontSize: 60, color: color, width: 70 },
-                        { type: 'text', content: 'Dr. Agustín Rodríguez Lorca', x: 130, y: 50, fontSize: 32, color: color, fontWeight: 'bold', width: 450, id: 'title' },
-                        { type: 'text', content: 'Doctor | 12234567', x: 130, y: 90, fontSize: 14, color: '#374151', width: 250 },
-                        { type: 'text', content: 'Departamento de Medicina', x: 130, y: 115, fontSize: 14, color: '#374151', width: 300, id: 'specialty' },
-                        { type: 'shape', shape: 'rect', x: 560, y: 0, width: 40, height: 900, color: color },
-                        { type: 'text', content: '📍', x: 570, y: 30, fontSize: 18, color: '#ffffff', width: 20, textAlign: 'center' },
-                        { type: 'text', content: '📞', x: 570, y: 60, fontSize: 18, color: '#ffffff', width: 20, textAlign: 'center' },
-                        { type: 'text', content: '🌐', x: 570, y: 90, fontSize: 18, color: '#ffffff', width: 20, textAlign: 'center' },
-                        { type: 'text', content: '✉', x: 570, y: 120, fontSize: 18, color: '#ffffff', width: 20, textAlign: 'center' },
-                        { type: 'text', content: 'Calle Amalarico, 7, 28019 Madrid', x: 250, y: 20, fontSize: 13, color: '#374151', width: 300, textAlign: 'right' },
-                        { type: 'text', content: '91 222 22 22', x: 250, y: 45, fontSize: 13, color: '#374151', width: 300, textAlign: 'right', id: 'phone' },
-                        { type: 'text', content: 'www.edit.org', x: 250, y: 70, fontSize: 13, color: '#374151', width: 300, textAlign: 'right' },
-                        { type: 'text', content: 'name@edit.org', x: 250, y: 95, fontSize: 13, color: '#374151', width: 300, textAlign: 'right' },
-                        { type: 'text', content: 'Name:', x: 50, y: 170, fontSize: 14, color: '#374151', fontWeight: 'bold', width: 70 },
-                        { type: 'line', x: 130, y: 175, width: 300, height: 1, color: '#9ca3af', border: 'dashed' },
-                        { type: 'text', content: 'Edad:', x: 450, y: 170, fontSize: 14, color: '#374151', fontWeight: 'bold', width: 60 },
-                        { type: 'line', x: 520, y: 175, width: 80, height: 1, color: '#9ca3af', border: 'dashed' },
-                        { type: 'text', content: 'Sexo:', x: 50, y: 205, fontSize: 14, color: '#374151', fontWeight: 'bold', width: 60 },
-                        { type: 'line', x: 130, y: 210, width: 300, height: 1, color: '#9ca3af', border: 'dashed' },
-                        { type: 'text', content: 'Fecha:', x: 450, y: 205, fontSize: 14, color: '#374151', fontWeight: 'bold', width: 60 },
-                        { type: 'line', x: 520, y: 210, width: 80, height: 1, color: '#9ca3af', border: 'dashed' },
-                        { type: 'shape', shape: 'rect', x: 50, y: 250, width: 500, height: 550, color: color + '05', borderRadius: '8px' },
-                        { type: 'text', content: '☤', x: 250, y: 650, fontSize: 150, color: color, width: 100, textAlign: 'center', opacity: '0.05' },
-                        { type: 'shape', shape: 'rect', x: 520, y: 820, width: 60, height: 60, color: 'transparent', border: '2px dashed #9ca3af', borderRadius: '4px' },
-                        { type: 'text', content: 'TU LOGO', x: 525, y: 840, fontSize: 10, color: '#9ca3af', width: 50, textAlign: 'center' },
-                    ];
-                    
-                default:
-                    return [];
-            }
-        }
+function cerrarModal(){
+  document.getElementById("modal").style.display="none";
+}
 
-        function createElementOnCanvas(config) {
-            const canvas = document.getElementById('recipeCanvas');
-            const el = document.createElement('div');
-            
-            if (config.type === 'text') {
-                el.className = 'draggable-element';
-                el.contentEditable = true;
-                el.innerText = config.content;
-                el.style.left = config.x + 'px';
-                el.style.top = config.y + 'px';
-                el.style.fontSize = config.fontSize + 'px';
-                el.style.color = config.color;
-                el.style.fontWeight = config.fontWeight || 'normal';
-                el.style.width = config.width + 'px';
-                el.style.position = 'absolute';
-                el.style.textAlign = config.textAlign || 'left';
-                el.id = 'el-' + (config.id || elementCounter++);
-                el.innerHTML += '<div class="resize-handle se"></div><div class="resize-handle sw"></div><div class="resize-handle ne"></div><div class="resize-handle nw"></div>';
-                
-            } else if (config.type === 'line') {
-                el.className = 'draggable-element';
-                el.style.left = config.x + 'px';
-                el.style.top = config.y + 'px';
-                el.style.width = config.width + 'px';
-                el.style.height = config.height + 'px';
-                el.style.backgroundColor = config.color;
-                el.style.position = 'absolute';
-                el.id = 'el-' + (config.id || elementCounter++);
-                if (config.border === 'dashed') {
-                    el.style.borderTop = '2px dashed ' + config.color;
-                    el.style.backgroundColor = 'transparent';
-                    el.style.height = '2px';
-                }
-            }
-            
-            el.addEventListener('click', function(e) {
-                e.stopPropagation();
-                selectElement(el);
-            });
-            
-            el.addEventListener('blur', function() {
-                if (el.id === 'el-title') updateDataFromElement(el, 'titlePrefix', 'doctorName');
-                if (el.id === 'el-specialty') document.getElementById('specialty').value = el.innerText;
-                if (el.id === 'el-phone') document.getElementById('phone').value = el.innerText;
-            }, true);
-            
-            canvas.appendChild(el);
-            makeDraggable(el);
-        }
+</script>
 
-        function createShapeOnCanvas(config) {
-            const canvas = document.getElementById('recipeCanvas');
-            const el = document.createElement('div');
-            
-            el.className = 'draggable-element';
-            el.style.left = config.x + 'px';
-            el.style.top = config.y + 'px';
-            el.style.width = config.width + 'px';
-            el.style.height = config.height + 'px';
-            el.style.position = 'absolute';
-            el.style.borderRadius = config.borderRadius || '0';
-            el.style.backgroundColor = config.color;
-            if (config.border) {
-                el.style.border = config.border;
-            }
-            el.id = 'el-shape-' + elementCounter++;
-            
-            el.addEventListener('click', function(e) {
-                e.stopPropagation();
-                selectElement(el);
-            });
-            
-            canvas.appendChild(el);
-            makeDraggable(el);
-        }
-
-        function makeDraggable(element) {
-            interact(element).draggable({
-                listeners: {
-                    move: function(event) {
-                        const target = event.target;
-                        const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
-                        const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-                        target.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
-                        target.setAttribute('data-x', x);
-                        target.setAttribute('data-y', y);
-                    }
-                },
-                modifiers: [
-                    interact.modifiers.restrictRect({
-                        restriction: 'parent',
-                        endOnly: true
-                    })
-                ]
-            });
-            
-            interact(element).resizable({
-                edges: { left: true, right: true, bottom: true, top: false },
-                listeners: {
-                    move: function(event) {
-                        const target = event.target;
-                        let width = parseFloat(target.getAttribute('data-width')) || target.offsetWidth;
-                        width += event.deltaRect.left;
-                        target.style.width = width + 'px';
-                        target.setAttribute('data-width', width);
-                        
-                        if (target.contentEditable) {
-                            const newFontSize = Math.max(8, Math.min(72, width / 10));
-                            target.style.fontSize = newFontSize + 'px';
-                            document.getElementById('fontSize').value = newFontSize;
-                            document.getElementById('fontSizeValue').textContent = Math.round(newFontSize);
-                        }
-                    }
-                }
-            });
-        }
-
-        function selectElement(el) {
-            if (selectedElement) selectedElement.classList.remove('selected');
-            selectedElement = el;
-            el.classList.add('selected');
-            document.getElementById('elementProperties').style.display = 'block';
-            
-            if (el.contentEditable) {
-                document.getElementById('fontSize').value = parseInt(el.style.fontSize) || 16;
-                document.getElementById('fontSizeValue').textContent = parseInt(el.style.fontSize) || 16;
-                document.getElementById('textColor').value = rgbToHex(el.style.color) || '#000000';
-            }
-        }
-
-        function updateElementText() {
-            const title = document.getElementById('titlePrefix').value;
-            const name = document.getElementById('doctorName').value;
-            const specialty = document.getElementById('specialty').value;
-            const phone = document.getElementById('phone').value;
-            
-            const titleEl = document.getElementById('el-title');
-            const specEl = document.getElementById('el-specialty');
-            const phoneEl = document.getElementById('el-phone');
-            
-            if (titleEl) titleEl.innerText = title + ' ' + name;
-            if (specEl) specEl.innerText = specialty;
-            if (phoneEl) phoneEl.innerText = phone;
-        }
-
-        function updateTemplateColors() {
-            currentPrimaryColor = document.getElementById('primaryColor').value;
-            const canvas = document.getElementById('recipeCanvas');
-            const elements = canvas.querySelectorAll('.draggable-element');
-            elements.forEach(el => {
-                if (el.id === 'el-title' || el.id.includes('title')) {
-                    el.style.color = currentPrimaryColor;
-                }
-            });
-        }
-
-        function updateElementStyle() {
-            if (!selectedElement) return;
-            const fontSize = document.getElementById('fontSize').value;
-            const color = document.getElementById('textColor').value;
-            const opacity = document.getElementById('opacity').value / 100;
-            
-            selectedElement.style.fontSize = fontSize + 'px';
-            selectedElement.style.color = color;
-            selectedElement.style.opacity = opacity;
-            document.getElementById('fontSizeValue').textContent = fontSize;
-        }
-
-        function setTextAlign(align) {
-            if (!selectedElement) return;
-            selectedElement.style.textAlign = align;
-        }
-
-        function deleteSelectedElement() {
-            if (!selectedElement) return;
-            selectedElement.remove();
-            selectedElement = null;
-            document.getElementById('elementProperties').style.display = 'none';
-        }
-
-        function handleLogoUpload(event) {
-            const file = event.target.files[0];
-            if (file) processLogo(file);
-        }
-
-        function handleDrop(event) {
-            event.preventDefault();
-            event.currentTarget.classList.remove('dragover');
-            const file = event.dataTransfer.files[0];
-            if (file && file.type.startsWith('image/')) processLogo(file);
-        }
-
-        function handleDragOver(event) {
-            event.preventDefault();
-            event.currentTarget.classList.add('dragover');
-        }
-
-        function handleDragLeave(event) {
-            event.currentTarget.classList.remove('dragover');
-        }
-
-        function processLogo(file) {
-            if (file.size > 5 * 1024 * 1024) {
-                alert('El archivo es muy grande. Máximo 5MB.');
-                return;
-            }
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const canvas = document.getElementById('recipeCanvas');
-                const el = document.createElement('div');
-                el.className = 'draggable-element';
-                el.style.left = '50px';
-                el.style.top = '50px';
-                el.style.width = '100px';
-                el.style.position = 'absolute';
-                el.innerHTML = '<img src="' + e.target.result + '" class="uploaded-logo" style="width: 100%;">';
-                el.id = 'el-logo-' + elementCounter++;
-                el.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    selectElement(el);
-                });
-                canvas.appendChild(el);
-                makeDraggable(el);
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function updateLogoSize() {
-            const width = document.getElementById('logoWidth').value;
-            document.getElementById('logoWidthValue').textContent = width;
-            const images = document.querySelectorAll('.uploaded-logo');
-            images.forEach(img => img.style.width = width + 'px');
-        }
-
-        function addElement(type) {
-            if (type === 'text') {
-                createElementOnCanvas({
-                    type: 'text',
-                    content: 'Nuevo Texto',
-                    x: 100 + (elementCounter * 20),
-                    y: 100 + (elementCounter * 20),
-                    fontSize: 16,
-                    color: '#000000',
-                    width: 200
-                });
-            }
-        }
-
-        function updateDataFromElement(el, inputId1, inputId2) {
-            const text = el.innerText;
-            const parts = text.split(' ');
-            if (parts.length > 0) {
-                document.getElementById(inputId1).value = parts[0];
-                document.getElementById(inputId2).value = parts.slice(1).join(' ');
-            }
-        }
-
-        function setTitle(title) {
-            document.getElementById('titlePrefix').value = title;
-            updateElementText();
-        }
-
-        function calculatePrice() {
-            const type = document.getElementById('paperType').value;
-            const qty = parseInt(document.getElementById('quantity').value) || 1;
-            const total = prices[type] * qty;
-            document.getElementById('totalPrice').textContent = '$' + total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-        }
-
-        // Función para generar imagen de alta calidad
-        async function generateHighQualityImage() {
-            const canvas = document.getElementById('recipeCanvas');
-            
-            // Ocultar bordes de selección
-            const selected = canvas.querySelector('.selected');
-            if (selected) selected.classList.remove('selected');
-            
-            try {
-                const canvasElement = await html2canvas(canvas, {
-                    scale: 3, // Alta resolución (3x)
-                    useCORS: true,
-                    allowTaint: true,
-                    backgroundColor: '#ffffff',
-                    logging: false
-                });
-                
-                // Restaurar selección si existía
-                if (selected) selected.classList.add('selected');
-                
-                return canvasElement.toDataURL('image/jpeg', 0.95);
-            } catch (error) {
-                console.error('Error generando imagen:', error);
-                alert('Error al generar la imagen. Intenta de nuevo.');
-                return null;
-            }
-        }
-
-        // Descargar receta
-        async function downloadRecipe(format) {
-            const btn = event.target;
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<span class="loading"></span> Generando...';
-            btn.disabled = true;
-            
-            const imageData = await generateHighQualityImage();
-            
-            if (!imageData) {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-                return;
-            }
-            
-            if (format === 'jpg') {
-                // Descargar como JPG
-                const link = document.createElement('a');
-                link.download = 'receta-medica-' + Date.now() + '.jpg';
-                link.href = imageData;
-                link.click();
-            } else if (format === 'pdf') {
-                // Descargar como PDF
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                const imgWidth = 210;
-                const pageHeight = 297;
-                const imgHeight = canvas.height * imgWidth / canvas.width;
-                
-                pdf.addImage(imageData, 'JPEG', 0, 0, imgWidth, imgHeight);
-                pdf.save('receta-medica-' + Date.now() + '.pdf');
-            }
-            
-            // Guardar blob para enviar por WhatsApp
-            fetch(imageData).then(res => res.blob()).then(blob => {
-                generatedImageBlob = blob;
-            });
-            
-            btn.innerHTML = originalText;
-            btn.disabled = false;
-            
-            setTimeout(() => {
-                alert('✅ ¡Receta descargada exitosamente!\n\nAhora puedes:\n1. Imprimirla directamente\n2. Adjuntarla al pedir por WhatsApp\n3. Guardarla en tu dispositivo');
-            }, 500);
-        }
-
-        // Pedir por WhatsApp con imagen
-        async function orderRecipe() {
-            const btn = document.getElementById('btnOrder');
-            const btnText = document.getElementById('btnOrderText');
-            const originalText = btnText.textContent;
-            
-            btnText.textContent = 'Generando imagen...';
-            btn.disabled = true;
-            
-            // Generar imagen primero
-            const imageData = await generateHighQualityImage();
-            
-            if (!imageData) {
-                btnText.textContent = originalText;
-                btn.disabled = false;
-                return;
-            }
-            
-            const total = document.getElementById('totalPrice').textContent;
-            const templateName = templateConfigs[currentTemplate].name;
-            const paperType = document.getElementById('paperType').value;
-            const quantity = document.getElementById('quantity').value;
-            
-            const message = ` *PEDIDO RECETA PERSONALIZADA*%0A%0A` +
-                `🎨 *Plantilla:* ${templateName}%0A` +
-                `📄 *Tipo:* ${paperType}%0A` +
-                `🔢 *Cantidad:* ${quantity}%0A` +
-                `💰 *Total:* ${total}%0A%0A` +
-                `✅ Diseño personalizado con editor avanzado%0A%0A` +
-                `📎 *Adjunto imagen de la receta en alta resolución*`;
-            
-            // Descargar imagen automáticamente
-            const link = document.createElement('a');
-            link.download = 'receta-' + templateName.toLowerCase().replace(' ', '-') + '-' + Date.now() + '.jpg';
-            link.href = imageData;
-            link.click();
-            
-            // Abrir WhatsApp
-            setTimeout(() => {
-                window.open(`https://wa.me/56978472489?text=${message}`, '_blank');
-                
-                alert('📱 Se abrió WhatsApp con tu pedido.\n\n📥 La imagen de tu receta se descargó automáticamente.\n\n📎 Por favor adjunta la imagen descargada al mensaje de WhatsApp antes de enviar.');
-                
-                btnText.textContent = originalText;
-                btn.disabled = false;
-            }, 1000);
-        }
-
-        function resetCanvas() {
-            if (confirm('¿Reiniciar el diseño?')) {
-                initTemplate(currentTemplate);
-            }
-        }
-
-        function rgbToHex(rgb) {
-            if (!rgb || rgb.indexOf('rgb') !== 0) return rgb;
-            const values = rgb.match(/\d+/g);
-            return '#' + values.map(x => {
-                const hex = parseInt(x).toString(16);
-                return hex.length === 1 ? '0' + hex : hex;
-            }).join('');
-        }
-
-        document.addEventListener('click', function(e) {
-            if (e.target.id === 'recipeCanvas' || e.target.closest('.preview-canvas')) {
-                if (selectedElement) {
-                    selectedElement.classList.remove('selected');
-                    selectedElement = null;
-                    document.getElementById('elementProperties').style.display = 'none';
-                }
-            }
-        });
-    </script>
 </body>
 </html>
