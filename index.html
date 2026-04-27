@@ -131,81 +131,21 @@ body{
 <!-- GRID -->
 <div class="grid">
 
-  <div class="card">
-    <img src="img/plantilla1.jpg">
-    <p>Clínica Moderna</p>
-    <button onclick="abrirModal('img/plantilla1.jpg')">Ver diseño grande</button>
-  </div>
+<!-- GENERA 14 TARJETAS -->
+<script>
+for(let i=1;i<=14;i++){
+  document.write(`
+    <div class="card">
+      <img src="img/plantilla${i}.jpg">
+      <p>Diseño ${i}</p>
+      <button onclick="abrirModal('img/plantilla${i}.jpg')">
+        Ver diseño grande
+      </button>
+    </div>
+  `);
+}
+</script>
 
-  <div class="card">
-    <img src="img/plantilla2.jpg">
-    <p>Dental</p>
-    <button onclick="abrirModal('img/plantilla2.jpg')">Ver diseño grande</button>
-  </div>
-
-  <div class="card">
-    <img src="img/plantilla3.jpg">
-    <p>Veterinaria</p>
-    <button onclick="abrirModal('img/plantilla3.jpg')">Ver diseño grande</button>
-  </div>
-
-  <div class="grid">
-
-  <div class="card">
-    <img src="img/plantilla4.jpg">
-    <p>Clínica Moderna</p>
-    <button onclick="abrirModal('img/plantilla4.jpg')">Ver diseño grande</button>
-  </div>
-    
-<div class="grid">
-
-  <div class="card">
-    <img src="img/plantilla5.jpg">
-    <p>Clínica Moderna</p>
-    <button onclick="abrirModal('img/plantilla5.jpg')">Ver diseño grande</button>
-  </div>
-
-  <div class="grid">
-
-  <div class="card">
-    <img src="img/plantilla6.jpg">
-    <p>Clínica Moderna</p>
-    <button onclick="abrirModal('img/plantilla6.jpg')">Ver diseño grande</button>
-  </div>
-
-    <div class="grid">
-
-  <div class="card">
-    <img src="img/plantilla7.jpg">
-    <p>Clínica Moderna</p>
-    <button onclick="abrirModal('img/plantilla7.jpg')">Ver diseño grande</button>
-  </div>
-
-<div class="grid">
-
-  <div class="card">
-    <img src="img/plantilla8.jpg">
-    <p>Clínica Moderna</p>
-    <button onclick="abrirModal('img/plantilla8.jpg')">Ver diseño grande</button>
-  </div>
-<div class="grid">
-
-  <div class="card">
-    <img src="img/plantilla9.jpg">
-    <p>Clínica Moderna</p>
-    <button onclick="abrirModal('img/plantilla9.jpg')">Ver diseño grande</button>
-  </div>
-<div class="grid">
-
-  <div class="card">
-    <img src="img/plantilla10.jpg">
-    <p>Clínica Moderna</p>
-    <button onclick="abrirModal('img/plantilla10.jpg')">Ver diseño grande</button>
-  </div>
-
-
-
-  
 </div>
 
 <!-- MODAL -->
