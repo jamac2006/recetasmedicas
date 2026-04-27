@@ -55,13 +55,22 @@ body{
 }
 
 .card button{
-  margin:10px;
+  margin:5px;
   padding:10px;
   border:none;
-  background:#1f6f78;
-  color:white;
   border-radius:5px;
   cursor:pointer;
+}
+
+/* BOTONES */
+.ver{
+  background:#1f6f78;
+  color:white;
+}
+
+.elegir{
+  background:#25D366;
+  color:white;
 }
 
 /* MODAL */
@@ -81,7 +90,6 @@ body{
 .modal img{
   max-width:90%;
   max-height:90%;
-  border-radius:10px;
 }
 
 .close{
@@ -101,7 +109,7 @@ body{
   padding:20px;
 }
 
-/* WHATSAPP */
+/* WHATSAPP FLOAT */
 .whatsapp{
   position:fixed;
   bottom:20px;
@@ -121,32 +129,15 @@ body{
 <!-- HEADER -->
 <div class="header">
   <h1>Recetas Médicas Profesionales</h1>
-  <p>Diseño + impresión personalizada</p>
+  <p>Elige tu diseño y cotiza al instante</p>
 
   <a class="btn" href="https://wa.me/569XXXXXXXX" target="_blank">
-    💬 Cotizar por WhatsApp
+    💬 Cotizar general
   </a>
 </div>
 
 <!-- GRID -->
-<div class="grid">
-
-<!-- GENERA 14 TARJETAS -->
-<script>
-for(let i=1;i<=14;i++){
-  document.write(`
-    <div class="card">
-      <img src="img/plantilla${i}.jpg">
-      <p>Diseño ${i}</p>
-      <button onclick="abrirModal('img/plantilla${i}.jpg')">
-        Ver diseño grande
-      </button>
-    </div>
-  `);
-}
-</script>
-
-</div>
+<div class="grid" id="grid"></div>
 
 <!-- MODAL -->
 <div id="modal" class="modal" onclick="cerrarModal()">
@@ -159,13 +150,42 @@ for(let i=1;i<=14;i++){
   Puerto Montt | Imprenta local
 </div>
 
-<!-- WHATSAPP -->
+<!-- BOTÓN WHATSAPP -->
 <a class="whatsapp" href="https://wa.me/569XXXXXXXX" target="_blank">
   💬
 </a>
 
 <script>
 
+const numero = "569XXXXXXXX"; // CAMBIAR
+
+const grid = document.getElementById("grid");
+
+for(let i=1;i<=14;i++){
+
+  let mensaje = encodeURIComponent(
+    "Hola, quiero el diseño de receta médica N° " + i
+  );
+
+  let link = "https://wa.me/" + numero + "?text=" + mensaje;
+
+  grid.innerHTML += `
+    <div class="card">
+      <img src="img/plantilla${i}.jpg">
+      <p>Diseño ${i}</p>
+
+      <button class="ver" onclick="abrirModal('img/plantilla${i}.jpg')">
+        Ver diseño
+      </button>
+
+      <button class="elegir" onclick="window.open('${link}','_blank')">
+        Elegir este diseño
+      </button>
+    </div>
+  `;
+}
+
+/* MODAL */
 function abrirModal(src){
   document.getElementById("modal").style.display="flex";
   document.getElementById("imagenModal").src = src;
